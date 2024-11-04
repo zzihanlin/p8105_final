@@ -1,19 +1,18 @@
 # p8105_final_project
 
 
-
-**Data source: **
+Data source:
 Asthma surveillance data at a national and state level
 Across years 
 https://www.cdc.gov/asthma/data-visualizations/default.htm
 
-**Background: **
-Why is asthma important? Were experiencing more extreme weather due to climate change, so asthma prevalence may be increasing 
+Background: 
+Why is asthma important? We are experiencing more extreme weather due to climate change, so asthma prevalence may be increasing 
 Hotter summers
 More pollen 
 Asthma is a comorbidity for chronic disease and worsens status → we saw this with COVID 
 
-**Analysis plan: **
+Analysis plan:
 Correlation analysis 
 Asthma correlates with extreme temperatures
 with some spatial mapping 

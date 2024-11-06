@@ -17,3 +17,24 @@ Exploring the Link Between Asthma Trends and Climate Change //
 #### Motivation 
 
 Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. In this project, we want to focus specifically on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Asthma is a comorbidity for other chronic diseases and also disproportionately affects those from a lower economic status. Studying these trends will help understand the health risks in vulnerable populations.
+
+
+### Data Sources
+
+Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on Asthma (2021-2001) https://www.cdc.gov/asthma/brfss/default.htm
+TIGER/Line Shapefiles
+Weather data
+
+### Coding Plan
+We would need to merge the overall asthma by state datasets from 2021 to 2001 by state code. 
+
+### Analysis Plan
+
+**Exploratory Analysis**
+
+We will merge the shape file dataset, with the asthma dataset by state fips codes. We can use this initial dataframe to graphically show using a barchart asthma over the years. This will allow us to explore the states with the highest cases of asthma. We are also able to code this graphically using the shapefile data and display the health outcome of asthma in the latest year. 
+
+**Correlation Analysis** 
+
+Fit a linear regression between extreme weather temperature and asthma prevalence and incidence where prevalence and incidence are the dependent variable. To calculate yearly incidence, we would need to subtract existing cases from the previous year from the next. We could retain the beta coefficient and p-values for each state to display the relationship between these two variables and the extent to which the results we are seeing are due to chance or not in a dataframe. 
+

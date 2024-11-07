@@ -21,12 +21,12 @@ Extreme weather is on the rise due to climate change, with many, especially thos
 
 ### Data Sources
 
-Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on Asthma (2021-2001) https://www.cdc.gov/asthma/brfss/default.htm
-TIGER/Line Shapefiles
-Weather data
+Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on Asthma (2021-2001) https://www.cdc.gov/asthma/brfss/default.htm  
+TIGER/Line Shapefiles  
+Weather data (from the rnoaa library)  
 
 ### Coding Plan
-We would need to download the asthma data from the BRSS through the download table from html method for 2021-2001. We would need to add a year column and then merge this data by state.  This will give us a data-frame of asthma cases for every year between 2021-2001 for each state. We would need to do data-cleaning to remove any columns we are not going to use and then pivot longer so that we have year and  yearly case for each state in two columns. We would also need to merge state with the TIGER state fips shape files to visually map asthma and temperatures across all US states. We could then create a bar chart to display cases over the years 2021-2001 at a national level. This can guide us to select which year of data we can map the values of asthma cases for each state and separately map the values of temperature for each state. We could also then display the distribution of yearly asthma cases across all the states between 2021-2001 with box plots or violin plots. This will inform us which states have the highest cases of asthma and will guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases.  
+We would need to download the asthma data from the BRSS through the download table from html method for 2021-2001. We would need to add a year column and then merge this data by state.  This will give us a data-frame of asthma cases for every year between 2021-2001 for each state. We would need to do data-cleaning to remove any columns we are not going to use and then pivot longer so that we have year and  yearly case for each state in two columns. To get the temperature data, we would need to get create a function to get monthly temperature readings from at least 10 randomly selected stations from each state. We would then take the average of these temperatures to get one monthly temperature from each state. Based on the month, we would add a season column (e.g. months 6-8 will be summer). We would then group by season, year, and state to find the average seasonal temperature for each sate in each year. We would also need to merge state with the TIGER state fips shape files to visually map asthma and temperatures across all US states. We could then create a bar chart to display cases over the years 2021-2001 at a national level. This can guide us to select which year of data we can map the values of asthma cases for each state and separately map the values of temperature for each state. We could also then display the distribution of yearly asthma cases across all the states between 2021-2001 with box plots or violin plots. This will inform us which states have the highest cases of asthma and will guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases.  
 
 ### Analysis Plan
 

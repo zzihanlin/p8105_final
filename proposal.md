@@ -32,8 +32,23 @@ TIGER/Line Shapefiles Weather data
 
 ### Coding Plan
 
-We would need to merge the overall asthma by state datasets from 2021 to
-2001 by state code.
+We would need to download the asthma data from the BRSS through the
+download table from html method for 2021-2001. We would need to add a
+year column and then merge this data by state. This will give us a
+data-frame of asthma cases for every year between 2021-2001 for each
+state. We would need to do data-cleaning to remove any columns we are
+not going to use and then pivot longer so that we have year and yearly
+case for each state in two columns. We would also need to merge state
+with the TIGER state fips shape files to visually map asthma and
+temperatures across all US states. We could then create a bar chart to
+display cases over the years 2021-2001 at a national level. This can
+guide us to select which year of data we can map the values of asthma
+cases for each state and separately map the values of temperature for
+each state. We could also then display the distribution of yearly asthma
+cases across all the states between 2021-2001 with box plots or violin
+plots. This will inform us which states have the highest cases of asthma
+and will guide the direction of our analysis to plot weather
+temperatures in these states with the most density of asthma cases.
 
 ### Analysis Plan
 
@@ -41,7 +56,7 @@ We would need to merge the overall asthma by state datasets from 2021 to
 
 We will merge the shape file dataset, with the asthma dataset by state
 fips codes. We can use this initial dataframe to graphically show using
-a barchart asthma over the years. This will allow us to explore the
+a bar chart asthma over the years. This will allow us to explore the
 states with the highest cases of asthma. We are also able to code this
 graphically using the shapefile data and display the health outcome of
 asthma in the latest year.

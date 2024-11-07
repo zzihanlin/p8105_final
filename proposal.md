@@ -78,3 +78,15 @@ subtract existing cases from the previous year from the next. We could
 retain the beta coefficient and p-values for each state to display the
 relationship between these two variables and the extent to which the
 results we are seeing are due to chance or not in a dataframe.
+
+### Project Timeline
+
+|          Date          |                   Descriptions                   |
+|:----------------------:|:------------------------------------------------:|
+|       11/08/2024       |              Complete the proposal               |
+| 11/11/2024- 11/15/2024 |          Project review (ZOOM MEETING)           |
+| 11/16/2024- 12/05/2024 | Complete project report, webpage, video overview |
+| 12/05/2024- 12/07/2024 |              Finish peer assesement              |
+|       12/12/2024       |               In-class Discussion                |
+| 12/13/2024-12/20/2024  |    Modify project based on discussion results    |
+|       12/21/2024       |                     Submit!!                     |

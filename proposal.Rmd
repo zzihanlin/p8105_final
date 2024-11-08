@@ -1,45 +1,33 @@
 ---
-title: "Project Proposal"
 output: github_document
 ---
+<center>
+# Project Proposal 
+</center>
 
-#### Group Members
-
-Tasya Dita - tpd2121  
-Zihan Lin - zl3543  
-Adeena Moghni - am6592  
-Kimberly Palaguachi-Lopez - kp2809  //
+### Group Members  
+  
+Tasya Dita (tpd2121), Zihan Lin (zl3543), Adeena Moghni (am6592), Kimberly Palaguachi-Lopez (kp2809)  
 
 #### Tentative Project Title
 
-Exploring the Link Between Asthma Trends and Climate Change //
+Exploring the Link Between Asthma Trends and Climate Change 
 
-#### Motivation 
+### Motivation 
 
-Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. In this project, we want to focus specifically on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Asthma is a comorbidity for other chronic diseases and also disproportionately affects those from a lower economic status. Studying these trends will help understand the health risks in vulnerable populations.
+Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence/incidence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
 
+### Intended products
+
+A website containing the analysis and visualizations of our project, include traditional and interactive charts.
 
 ### Data Sources
 
-* Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on Asthma (2021-2001) https://www.cdc.gov/asthma/brfss/default.htm  
-* TIGER/Line Shapefiles  
-* Weather data (from the rnoaa library)  
+[Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on Asthma (2021-2001)](https://www.cdc.gov/asthma/data-visualizations/default.htm), TIGER/Line Shapefiles, Weather data (from the rnoaa library)  
 
-### Coding Plan
-We would need to download the asthma data from the BRSS through the download table from html method for 2021-2001. We would need to add a year column and then merge this data by state.  This will give us a data-frame of asthma cases for every year between 2021-2001 for each state. We would need to do data-cleaning to remove any columns we are not going to use and then pivot longer so that we have year and  yearly case for each state in two columns. To get the temperature data, we would need to get create a function to get monthly temperature readings from at least 10 randomly selected stations from each state. We would then take the average of these temperatures to get one monthly temperature from each state. Based on the month, we would add a season column (e.g. months 6-8 will be summer). We would then group by season, year, and state to find the average seasonal temperature for each sate in each year. We would also need to merge state with the TIGER state fips shape files to visually map asthma and temperatures across all US states. We could then create a bar chart to display cases over the years 2021-2001 at a national level. This can guide us to select which year of data we can map the values of asthma cases for each state and separately map the values of temperature for each state. We could also then display the distribution of yearly asthma cases across all the states between 2021-2001 with box plots or violin plots. This will inform us which states have the highest cases of asthma and will guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases.  
+### Analysis/Visualization/Coding Plan
 
-### Analysis Plan
-
-**Exploratory Analysis**
-
-We will merge the shape file dataset, with the asthma dataset by state fips codes. We can use this initial dataframe to graphically show using a bar chart asthma over the years. This will allow us to explore the states with the highest cases of asthma. We are also able to code this graphically using the shapefile data and display the health outcome of asthma in the latest year. 
-
-**Correlation Analysis** 
-
-Fit a linear regression between extreme weather temperature and asthma prevalence and incidence where prevalence and incidence are the dependent variable. To calculate yearly incidence, we would need to subtract existing cases from the previous year from the next. We could retain the beta coefficient and p-values for each state to display the relationship between these two variables and the extent to which the results we are seeing are due to chance or not in a dataframe. 
-
-## Intended products
-A website showcasing all the introduction, analysis, and visualization of our project. The chart will include both traditional and interactive chart, showcasing the relationship between climate and asthma incidence in the United States over the years. 
+Import BRSS asthma data using read_html() for 2001- 2021 (would add a year column and merge by state). Clean and tidy data. Write a function to get monthly temp. readings using at least 10 randomly chosen station from each state using the rnoaa package and find the seasonal average of each state using group_by() and summarize(). Merge this data with TIGER state fips shape files to visually map asthma and temperatures across all US states and display the health outcome of asthma in the latest year. Display the distibution of asthma cases from 2001-2021 using box or violin plots to guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases. Fit a linear regression between extreme weather temperature (x) and asthma prevalence/incidence (y). To calculate yearly incidence, we would need to subtract existing cases from the previous year from the next. We could retain the beta coefficient and p-values for each state to display the relationship between these two variables.
 
 ### Project Timeline
 

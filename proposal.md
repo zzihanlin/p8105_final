@@ -26,10 +26,10 @@ populations.
 
 ### Data Sources
 
-Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on
-Asthma (2021-2001) <https://www.cdc.gov/asthma/brfss/default.htm>  
-TIGER/Line Shapefiles  
-Weather data (from the rnoaa library)
+- Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data on
+  Asthma (2021-2001) <https://www.cdc.gov/asthma/brfss/default.htm>  
+- TIGER/Line Shapefiles  
+- Weather data (from the rnoaa library)
 
 ### Coding Plan
 
@@ -78,6 +78,13 @@ subtract existing cases from the previous year from the next. We could
 retain the beta coefficient and p-values for each state to display the
 relationship between these two variables and the extent to which the
 results we are seeing are due to chance or not in a dataframe.
+
+## Intended products
+
+A website showcasing all the introduction, analysis, and visualization
+of our project. The chart will include both traditional and interactive
+chart, showcasing the relationship between climate and asthma incidence
+in the United States over the years.
 
 ### Project Timeline
 

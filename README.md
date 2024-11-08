@@ -20,6 +20,4 @@ Adding boxplots to show distribution across years → might want to only do this
 
 → average weather by season 
 → we can integrate the weather data from class to show side by side the extreme weathers
----------------------------------------------------------------------------------------------
-the proposal.rmd is over a page long when knit to pdf. we need to cut back on the coding plan to fit one page
 

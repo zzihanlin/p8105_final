@@ -8,7 +8,7 @@
 ### Group Members
 
 Tasya Dita (tpd2121), Zihan Lin (zl3543), Adeena Moghni (am6592),
-Kimberly Palaguachi-Lopez (kp2809)
+Kimberly Palaguachi-Lopez (kp2809), Hanchuan Chen (hc3563)
 
 #### Tentative Project Title
 

@@ -100,5 +100,72 @@ asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>%
 
 #write the functions for data loading
 
+asthma_hmtl = function(url, year_name) {
+  
+  df = 
+    read_html(url) %>% 
+    html_table() %>% 
+    bind_rows() %>% 
+    janitor::clean_names() %>% 
+    select(-x) %>% 
+    filter(!state %in% c("U.S. Total**", "Territories", "PR")) %>% 
+    mutate(year = year_name)
+}
+
+asthma_dataset = 
+  bind_rows(
+    asthma_hmtl("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm", "2011"),
+    asthma_hmtl("https://www.cdc.gov/asthma/brfss/2012/tableC1.htm", "2012")
+  )
+
+asthma_hmtl = function(url) {
+  
+  df = 
+    read_html(url) %>% 
+    html_table() %>% 
+    bind_rows() %>% 
+    janitor::clean_names() %>% 
+    select(-x) %>% 
+    filter(!state %in% c("U.S. Total**", "Territories", "PR"))
+}
+
+asthma_dataset = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    "https://www.cdc.gov/asthma/brfss/2011/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2012/tableC1.htm", 
+    "https://www.cdc.gov/asthma/brfss/2013/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2014/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2015/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2016/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2017/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2018/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2019/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2020/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2021/tableC1.html")
+  ) %>% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl)) %>% 
+  unnest(asthma_byyear) %>% 
+  print()
+
+asthma_master = tibble(
+  year_name = 2011:2021, 
+  data_url = c(
+    "https://www.cdc.gov/asthma/brfss/2011/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2012/tableC1.htm", 
+    "https://www.cdc.gov/asthma/brfss/2013/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2014/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2015/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2016/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2017/tableC1.htm",
+    "https://www.cdc.gov/asthma/brfss/2018/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2019/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2020/tableC1.html",
+    "https://www.cdc.gov/asthma/brfss/2021/tableC1.html"
+    )
+)
+
+
 ```
 

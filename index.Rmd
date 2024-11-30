@@ -83,3 +83,22 @@ seasonal_avg_temps = bind_rows(temp_data_list) %>%
 ```
 
 ## Asthma data
+```{r asthma dataset}
+library(rvest)
+library(httr)
+
+#write the data loading steps
+asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>% 
+  html_table() %>% 
+  bind_rows() %>% 
+  janitor::clean_names() %>% 
+  select(-x) %>% 
+  filter(!state %in% c("U.S. Total**", "Territories", "PR")) %>% 
+  mutate(year = "2011")
+
+#i use current asthma prevalence (table c1) rather than lifetime prevalence and also hasn't removed any columns yet as i'm unsure are we using numbers or percentage. 
+
+#write the functions for data loading
+
+```
+

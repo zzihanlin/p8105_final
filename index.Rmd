@@ -15,7 +15,7 @@ library(rnoaa)
 ```{r tidying rnoaa data}
 state_codes = c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY")
 
-year = 2001:2021
+year = 2011:2021
 
 state_stations = ghcnd_stations() %>% 
   filter(state %in% state_codes) %>% 
@@ -31,7 +31,7 @@ temp_func <- function(monitor_id, state) {
   avg_temp <- meteo_pull_monitors(
     monitors = monitor_id,
     var = c("TMAX", "TMIN"),
-    date_min = "2001-01-01",
+    date_min = "2011-01-01",
     date_max = "2021-12-31"
   )
   
@@ -80,6 +80,8 @@ temp_data_list =
 seasonal_avg_temps = bind_rows(temp_data_list) %>% 
   group_by(state, year, season) %>% 
   summarize(avg_temp = mean(tavg_daily, na.rm = TRUE))
+
+write.csv(seasonal_avg_temps, "temp_data.csv", row.names = FALSE)
 ```
 
 ## Asthma data

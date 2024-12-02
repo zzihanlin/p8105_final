@@ -142,3 +142,22 @@ asthma_dataset =
 
 ```
 
+## fit linear regression
+```{r}
+# 1. merge asthma prevalance and temp data 
+temp_df = read_csv("./temp_data.csv")
+summary(temp_df)
+# 2. do EDA and check distribution assumption
+temp_df |> 
+  ggplot(aes(x = avg_temp)) +
+  geom_histogram() +
+  labs(
+    title = "distribution of average temperature in 2011-2021",
+    xlab = "average temperature",
+    ylab = "frequency"
+  )
+# 3. do linear regression
+
+# 4. results explanation and visualization
+```
+

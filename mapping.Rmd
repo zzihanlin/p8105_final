@@ -12,6 +12,7 @@ library(sf)
 library(usmap) # May need to install.packages to run this 
 library(ggplot2)
 library(dplyr)
+library(forecast)
 ```
 
 
@@ -19,8 +20,10 @@ Downloading state shape file Data
 
 ```{r}
 shape_files = usmap::us_map()
+
 asthma_df = read_csv("data/asthma_data.csv")|>
   mutate(year= year_name)
+
 weather_df = read_csv("data/temp_data.csv")
 
 ```
@@ -106,11 +109,81 @@ Do regions with higher asthma prevalence overlap with areas of lower average tem
 Does analyzing prevalence data stratified by time and temperature make a difference?
 
 - could stratify by creating temperature categories 
-- could then conduct if prevalence differs across tempatures categories 
+- could then conduct if prevalence differs across temperatures categories 
+
 ```{r}
+final_df= 
+  final_df |>
+  mutate(
+    temp_category = case_when(
+      avg_temp < 0 ~ "Cold",
+      avg_temp >= 0 & avg_temp < 15 ~ "Mild",
+      avg_temp >= 15 ~ "Warm"))|> 
+  select(-c("abbr","fips", "year_name"))|>
+  select(state,prevalence_percent,avg_temp, season,year,temp_category,everything())
+
+final_df
 
 ```
+Does Correlation differ by state?
+
+```{r}
+cor_results= 
+  final_df |>
+  group_by(state) |>
+  summarise(
+    cor_test = list(cor.test(avg_temp, prevalence_percent)),
+    .groups = "drop")|>
+  rowwise()|>
+  mutate(
+    corr=cor_test[["estimate"]],
+    p_value= cor_test[["p.value"]])|>
+  ungroup()|>
+  select(-cor_test)
+
+cor_results
+```
+Correlation is small across all states 
+
+Asthma Trend Across the Us over time: 
+```{r}
+aggregated_data=
+  final_df|>
+  group_by(year)|>
+  summarise(avg_prevalence = mean(prevalence_percent, na.rm = TRUE))
+
+ts_data= ts(aggregated_data[["avg_prevalence"]], start = min(aggregated_data[["year"]]), frequency = 1)
+
+plot.ts(ts_data, 
+        main = "Asthma Trend Across the US Over Time", 
+        ylab = "Average Asthma Prevalence (%)",
+        xlab = "Year")
+```
+
+Does the effect of prevalence differ by state: 
+```{r}
+
+state_trends= 
+  final_df |>
+  group_by(state) |>
+  summarise(
+    model = list(lm(prevalence_percent ~ year)))
 
 
+state_trends= 
+  state_trends |>
+  mutate(
+    model_summary = map(model, broom::tidy)) |>
+  unnest(model_summary)|>
+  filter(term == "year")|>
+  select(
+    state, 
+    slope = estimate, 
+    intercept = NULL, 
+    p_value = p.value)|>
+  st_drop_geometry()|>
+  knitr::kable(digits=5)
 
+state_trends
+```
 

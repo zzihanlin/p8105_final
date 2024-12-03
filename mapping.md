@@ -12,12 +12,12 @@ library(ggplot2)
 library(dplyr)
 ```
 
-Downloading state shape file Data Merging Asthma & temp & shapefile data
+Downloading state shape file Data
 
 ``` r
 shape_files = usmap::us_map()
-
-asthma_df = read_csv("data/asthma_data.csv")
+asthma_df = read_csv("data/asthma_data.csv")|>
+  mutate(year= year_name)
 ```
 
     ## Rows: 559 Columns: 3
@@ -42,42 +42,26 @@ weather_df = read_csv("data/temp_data.csv")
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
+Merging Asthma & temp & shapefile data
+
 ``` r
-merged_data=  
-  shape_files|> 
-  left_join(asthma_df, by = c("abbr" = "state")) |>
-  mutate(state= abbr)
-
-annual_weather =
-  weather_df|>
-  group_by(state, year) |>
-  summarize(avg_temp_annual = mean(avg_temp, na.rm = TRUE), .groups = "drop")
-
-
-asthma_weather= 
+asthma_weather = 
   asthma_df |>
-  left_join(weather_df, by = c("state"))|>
-  select(-year_name)
-```
+  left_join(weather_df, by = c("state", "year")) 
 
-    ## Warning in left_join(asthma_df, weather_df, by = c("state")): Detected an unexpected many-to-many relationship between `x` and `y`.
-    ## ℹ Row 1 of `x` matches multiple rows in `y`.
-    ## ℹ Row 45 of `y` matches multiple rows in `x`.
-    ## ℹ If a many-to-many relationship is expected, set `relationship =
-    ##   "many-to-many"` to silence this warning.
 
-``` r
-final_df=
+final_df =
   shape_files |>
-  mutate(state= abbr)|>
-  left_join(asthma_weather, by = "state")
+  mutate(state = abbr) |>                           
+  left_join(asthma_weather, by = "state") |>        
+  drop_na()                                         
 ```
 
 Mapping Prevalence data by state:
 
 ``` r
 final_df|> 
-  filter(year==2011)|>
+  filter(year==2011)|> 
   ggplot() +
   geom_sf(aes(fill = prevalence_percent), color = "white") +
   scale_fill_viridis_c(na.value = "grey90") + 
@@ -94,7 +78,7 @@ final_df|>
   )
 ```
 
-![](mapping_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](mapping_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 final_df|> 
@@ -115,7 +99,7 @@ final_df|>
   )
 ```
 
-![](mapping_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
+![](mapping_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ``` r
 final_df|> 
@@ -136,4 +120,13 @@ final_df|>
   )
 ```
 
-![](mapping_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
+![](mapping_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+
+Do regions with higher asthma prevalence overlap with areas of lower
+average temperature?
+
+Does analyzing prevalence data stratified by time and temperature make a
+difference?
+
+- could stratify by creating temperature categories
+- could then conduct if prevalence differs across tempatures categories

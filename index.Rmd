@@ -255,13 +255,88 @@ plot(model_log)
 
 
 
+## Race Data & Asthma Prevalance 
+
+Function to download and tidy html table from online 
+```{r}
+race_table = function(url, year ){
+  
+  table= 
+    read_html(url)|>
+    html_table()|>
+    first()|>
+    slice(-1:-5)
+  
+  table|>
+    janitor::clean_names()|>
+    select(-c(x,x95_percent_ci_number))|> 
+    mutate(year= year)
+  
+}
+
+race_table1 = function(url, year){
+  
+  table= 
+    read_html(url)|>
+    html_table()|>
+    first()|>
+    slice(-1:-5)
+  
+  table|>
+    janitor::clean_names()|> 
+    mutate( year= year)
+  
+}
+
+race_table_a8 = function(url, year){
+  
+  html= read_html(url)
+  
+  table=
+    html|>
+    html_table()|>
+    first()|>
+    slice(-1:-5)
+  
+  table|>
+    janitor::clean_names()|> 
+    select(-c(x))|> 
+    mutate( 
+      year= year)
+  
+}
+```
+
+Run function on all years: 
+```{r}
+race_2011= race_table("https://www.cdc.gov/asthma/brfss/2011/tableL5.htm", 2011)
 
 
+race_2012= race_table("https://www.cdc.gov/asthma/brfss/2012/tableL5.htm", 2012)
+race_2013= race_table("https://www.cdc.gov/asthma/brfss/2013/tableL5.htm", 2013)
+race_2014= race_table("https://www.cdc.gov/asthma/brfss/2014/tableL5.htm", 2014)
+race_2015= race_table("https://www.cdc.gov/asthma/brfss/2015/tableL5.htm", 2015)
+race_2016= race_table("https://www.cdc.gov/asthma/brfss/2016/tableL5.htm", 2016)
+race_2017= race_table1("https://www.cdc.gov/asthma/brfss/2017/tableL5.htm", 2017)
+race_2018= race_table_a8("https://www.cdc.gov/asthma/brfss/2018/tableL5.html", 2018)
+race_2019= race_table_a8("https://www.cdc.gov/asthma/brfss/2019/tableL5.html", 2019)
+race_2020= race_table_a8("https://www.cdc.gov/asthma/brfss/2020/tableL5.html", 2020)|> 
+  mutate( race_ethnicity= race_ethnicityg)|> 
+  select(-race_ethnicityg)
+```
+
+I excluded 2021 since the brackets for race ethnicity were changed and no longer consistent with the previous years where there was a multirace NH category which was no longer used. 
+
+Merged Race data: 
+```{r}
+race_data= 
+  bind_rows(race_2011, race_2012, race_2013, race_2014, race_2015, race_2016, 
+                           race_2017, race_2018, race_2019, race_2020)|> 
+  select(-c(x,weighted_number,x95_percent_ci_weighted_number, weighted_numbere, x95_percent_c_id_weighted_number, x95_percent_c_id_percent, sample_sizec, sample_size,   prevalence_number , x95_percent_ci_percent, standard_error))
 
 
-
-
-
+race_data
+```
 
 
 

@@ -8,6 +8,9 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(rnoaa)
+library(furrr)
+library(rvest)
+library(httr)
 ```
 
 ##Weather data
@@ -37,7 +40,7 @@ temp_func <- function(monitor_id, state) {
   
   if ("tmin" %in% colnames(avg_temp) && "tmax" %in% colnames(avg_temp)) {
     
-    avg_temp <- avg_temp %>%
+    avg_temp = avg_temp %>%
       mutate(
         state = state, 
         tmin = tmin / 10,  
@@ -65,8 +68,6 @@ temp_func <- function(monitor_id, state) {
 ```
 
 ```{r}
-library(furrr)
-
 plan(multisession, workers = parallel::detectCores() - 1)
 
 temp_data_list = 
@@ -86,9 +87,6 @@ write.csv(seasonal_avg_temps, "temp_data.csv", row.names = FALSE)
 
 ## Asthma data
 ```{r asthma dataset}
-library(rvest)
-library(httr)
-
 #write the data loading steps
 asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>% 
   html_table() %>% 

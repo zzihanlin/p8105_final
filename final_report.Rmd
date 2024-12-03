@@ -1,0 +1,14 @@
+---
+title: "final_report"
+author: "Adeena Moghni"
+date: "2024-12-03"
+output: pdf_document
+---
+
+## Motivation
+
+Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence/incidence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
+
+## Data
+
+To retrieve the temperature data, different options were explored from within the rnoaa package. meteo_pull_monitors() was first explored, but due to the number of monitors from each state, it was not realistic to pull data from each monitor to calculate the average temperature over a 10-year period. ncdc() was then investigated for use. This uses the National Climatic Data Center to access weather data and already has a TAVG variable for the average temperature. However, there were limitations as it could only gather data one year at a time and there was also issues with the API of this site. Using online resources was not realistic as datasets online were typically separated by year/month/day so getting a seasonal average was not possible. In the end, the temperature data was extracted using meteo_pull_monitors(). 30 monitors from each state were randomly selected and the daily mean of each station was found by averaging the minimum and maximum temperatures (the TAVG as reported by meteo_pull_monitors() could not be used as many stations were missing this data) for every day from 1/1/2011 to 12/31/2021 in every state. The data was then grouped by state, year, and season to find the seasonal average for every state in every year. 

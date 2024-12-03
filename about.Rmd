@@ -1,0 +1,9 @@
+---
+title: About this Site
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+This is the website for the p8105 final project. In this website, you will find info for the asthma prevalence by state and race from 2011 to 2021. Regression analyses are also included to see if there is an association with rising temperatures and asthma prevalence

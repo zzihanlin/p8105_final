@@ -169,10 +169,10 @@ asthma_dataset %>%
 ```{r}
 # 1. merge asthma prevalance and temp data 
 # import two dataset
-temp_df = read_csv("./temp_data.csv")
+temp_df = read_csv("data/temp_data.csv")
 summary(temp_df)
 
-asthma_df = read_csv("./asthma_data.csv")
+asthma_df = read_csv("data/asthma_data.csv")
 summary(asthma_df)
 
 # find the yearly temperature by state

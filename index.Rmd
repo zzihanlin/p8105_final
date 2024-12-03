@@ -168,8 +168,28 @@ asthma_dataset %>%
 ## fit linear regression
 ```{r}
 # 1. merge asthma prevalance and temp data 
+# import two dataset
 temp_df = read_csv("./temp_data.csv")
 summary(temp_df)
+
+asthma_df = read_csv("./asthma_data.csv")
+summary(asthma_df)
+
+# find the yearly temperature by state
+temp_yearly_df = 
+  temp_df |> 
+  group_by(state, year) |> 
+  summarize(avg_yearly = mean(avg_temp)) |> 
+  select(state, year_name = year, avg_temp_yearly = avg_yearly)
+
+# merge two dataset
+merged_df = 
+  left_join(asthma_df, temp_yearly_df, by=c("state", "year_name")) |> 
+  drop_na() 
+# after merging yearly avg temperature and prevalence, DC has no temp data
+```
+
+```{r}
 # 2. do EDA and check distribution assumption
 temp_df |> 
   ggplot(aes(x = avg_temp)) +
@@ -179,8 +199,73 @@ temp_df |>
     xlab = "average temperature",
     ylab = "frequency"
   )
-# 3. do linear regression
 
+asthma_df |> 
+  ggplot(aes(x = prevalence_percent)) +
+  geom_histogram() +
+  labs(
+    title = "distribution of prevalence in 2011-2021",
+    xlab = "prevalence (percent)",
+    ylab = "frequency"
+  )
+
+# two variables generally follows normal distribution
+```
+
+```{r}
+# bar plot of temperature and line plot of prevalence by each state
+merged_df |> 
+  mutate(state = reorder(state, avg_temp_yearly)) |> 
+  group_by(state) |> 
+  summarize(prevalence = mean(prevalence_percent),
+            temp = mean(avg_temp_yearly)) |> 
+  ggplot(aes(x = state)) +
+    geom_bar(aes(y = temp), stat = "identity", fill = "skyblue") +
+    geom_line(aes(y = prevalence, group = 1)) +
+    geom_point(aes(y = prevalence), color = "red") +
+    scale_y_continuous(
+      name = "temperature",
+      sec.axis = sec_axis(~., name = "Prevalence (%)")
+    ) +
+  labs(
+    title = "Temperature and Prevalence by State",
+    color = "legend"
+  )
+
+```
+
+```{r}
+# 3. do linear regression
+model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
+summary(model)
+
+par(mfrow = c(2,2))
+plot(model)
+
+# try log transform outcome
+model_log = 
+  merged_df |> 
+    mutate(log_precalence = log(prevalence_percent)) |> 
+    lm(log_precalence ~ avg_temp_yearly, data = _)
+summary(model_log)
+
+par(mfrow = c(2,2))
+plot(model_log)
 # 4. results explanation and visualization
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

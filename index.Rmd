@@ -1,10 +1,40 @@
 ---
-title: "Untitled"
-author: "Adeena Moghni"
-date: "2024-11-25"
-output: html_document
+title: Exploring the Link Between Asthma Trends and Climate Change
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
 
+## Welcome!
+
+Our project is focused on exploring the possible adverse health effects that could be associated to global climate change.  Specifically, we focused on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
+
+
+## Temperature Trends
+
+(brief summary of findings and link to maps page here)
+
+## Regression Analysis
+
+(brief summary of findings and link to regression here)
+
+## Report
+
+For more insight on our motivation, methods, and analyses, please read our report (here)[final_report.html]
+
+## Meet Our Team Members!
+
+This project was completed by:
+
+Hanchuan Chen
+Tasya Dita 
+Zihan Lin
+Adeena Moghni
+Kimberly Palaguachi-Lopez
+
+## Screencast
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(rnoaa)
@@ -12,81 +42,8 @@ library(furrr)
 library(rvest)
 library(httr)
 ```
-
-##Weather data
-
-```{r tidying rnoaa data}
-state_codes = c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY")
-
-year = 2011:2021
-
-state_stations = ghcnd_stations() %>% 
-  filter(state %in% state_codes) %>% 
-  select(id, state) %>% 
-  group_by(state) %>% 
-  sample_n(30) %>% 
-  ungroup()
-```
-
-```{r function rnoaa}
-temp_func <- function(monitor_id, state) {
- 
-  avg_temp <- meteo_pull_monitors(
-    monitors = monitor_id,
-    var = c("TMAX", "TMIN"),
-    date_min = "2011-01-01",
-    date_max = "2021-12-31"
-  )
-  
-  if ("tmin" %in% colnames(avg_temp) && "tmax" %in% colnames(avg_temp)) {
-    
-    avg_temp = avg_temp %>%
-      mutate(
-        state = state, 
-        tmin = tmin / 10,  
-        tmax = tmax / 10,  
-        tavg_daily = (tmin + tmax) / 2,  
-        date = as.character(date)
-      ) %>%
-      separate(date, into = c("year", "month", "day"), sep = "-") %>%
-      mutate(
-        across(c(year, month, day), as.numeric),  
-        season = case_when(
-          month %in% c(12, 1, 2) ~ "Winter",
-          month %in% c(3, 4, 5) ~ "Spring",
-          month %in% c(6, 7, 8) ~ "Summer",
-          month %in% c(9, 10, 11) ~ "Fall"
-        )
-      ) %>%
-      drop_na()  
-    
-    return(avg_temp)
-  } else {
-    return(NULL)
-  }
-}
-```
-
-```{r}
-plan(multisession, workers = parallel::detectCores() - 1)
-
-temp_data_list = 
-  future_map2(state_stations$id, 
-              state_stations$state, 
-              temp_func, 
-              .options = furrr_options(seed = TRUE))
-```
-
-```{r}
-seasonal_avg_temps = bind_rows(temp_data_list) %>% 
-  group_by(state, year, season) %>% 
-  summarize(avg_temp = mean(tavg_daily, na.rm = TRUE))
-
-write.csv(seasonal_avg_temps, "temp_data.csv", row.names = FALSE)
-```
-
 ## Asthma data
-```{r asthma dataset}
+```{r asthma dataset, }
 #write the data loading steps
 asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>% 
   html_table() %>% 

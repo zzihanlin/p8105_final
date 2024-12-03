@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Adeena Moghni" />
 
+<meta name="date" content="2024-12-03" />
 
-<title>About Us</title>
+<title>temperature_function</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +31,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -224,69 +223,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -294,16 +230,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -366,31 +292,65 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">About Us</h1>
+<h1 class="title toc-ignore">temperature_function</h1>
+<h4 class="author">Adeena Moghni</h4>
+<h4 class="date">2024-12-03</h4>
 
 </div>
 
 
-<div id="tasya-dita-tpd2121" class="section level2">
-<h2>Tasya Dita (tpd2121)</h2>
-</div>
-<div id="zihan-lin-zl3543" class="section level2">
-<h2>Zihan Lin (zl3543)</h2>
-</div>
-<div id="adeena-moghni-am6592" class="section level2">
-<h2>Adeena Moghni (am6592)</h2>
-</div>
-<div id="kimberly-palaguachi-lopez-kp2809" class="section level2">
-<h2>Kimberly Palaguachi-Lopez (kp2809)</h2>
-</div>
-<div id="hanchuan-chen-hc3563" class="section level2">
-<h2>Hanchuan Chen (hc3563)</h2>
+<div id="weather-data" class="section level2">
+<h2>Weather data</h2>
+<p>{r tidying rnoaa data} state_codes = c(“AL”, “AK”, “AZ”, “AR”, “CA”,
+“CO”, “CT”, “DE”, “FL”, “GA”, “HI”, “ID”, “IL”, “IN”, “IA”, “KS”, “KY”,
+“LA”, “ME”, “MD”, “MA”, “MI”, “MN”, “MS”, “MO”, “MT”, “NE”, “NV”, “NH”,
+“NJ”, “NM”, “NY”, “NC”, “ND”, “OH”, “OK”, “OR”, “PA”, “RI”, “SC”, “SD”,
+“TN”, “TX”, “UT”, “VT”, “VA”, “WA”, “WV”, “WI”, “WY”)</p>
+<p>year = 2011:2021</p>
+<p>state_stations = ghcnd_stations() %&gt;% filter(state %in%
+state_codes) %&gt;% select(id, state) %&gt;% group_by(state) %&gt;%
+sample_n(30) %&gt;% ungroup()</p>
+<p>{r function rnoaa} temp_func &lt;- function(monitor_id, state) {</p>
+<p>avg_temp &lt;- meteo_pull_monitors( monitors = monitor_id, var =
+c(“TMAX”, “TMIN”), date_min = “2011-01-01”, date_max = “2021-12-31”
+)</p>
+<p>if (“tmin” %in% colnames(avg_temp) &amp;&amp; “tmax” %in%
+colnames(avg_temp)) {</p>
+<pre><code>avg_temp = avg_temp %&gt;%
+  mutate(
+    state = state, 
+    tmin = tmin / 10,  
+    tmax = tmax / 10,  
+    tavg_daily = (tmin + tmax) / 2,  
+    date = as.character(date)
+  ) %&gt;%
+  separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;-&quot;) %&gt;%
+  mutate(
+    across(c(year, month, day), as.numeric),  
+    season = case_when(
+      month %in% c(12, 1, 2) ~ &quot;Winter&quot;,
+      month %in% c(3, 4, 5) ~ &quot;Spring&quot;,
+      month %in% c(6, 7, 8) ~ &quot;Summer&quot;,
+      month %in% c(9, 10, 11) ~ &quot;Fall&quot;
+    )
+  ) %&gt;%
+  drop_na()  
+
+return(avg_temp)</code></pre>
+<p>} else { return(NULL) } }</p>
+<p>{r} plan(multisession, workers = parallel::detectCores() - 1)</p>
+<p>temp_data_list = future_map2(state_stations<span
+class="math inline">\(id,
+              state_stations\)</span>state, temp_func, .options =
+furrr_options(seed = TRUE))</p>
+<p>{r} seasonal_avg_temps = bind_rows(temp_data_list) %&gt;%
+group_by(state, year, season) %&gt;% summarize(avg_temp =
+mean(tavg_daily, na.rm = TRUE))</p>
+<p>write.csv(seasonal_avg_temps, “temp_data.csv”, row.names = FALSE)</p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -423,35 +383,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

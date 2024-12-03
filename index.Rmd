@@ -332,13 +332,22 @@ Merged Race data:
 race_data= 
   bind_rows(race_2011, race_2012, race_2013, race_2014, race_2015, race_2016, 
                            race_2017, race_2018, race_2019, race_2020)|> 
-  select(-c(x,weighted_number,x95_percent_ci_weighted_number, weighted_numbere, x95_percent_c_id_weighted_number, x95_percent_c_id_percent, sample_sizec, sample_size,   prevalence_number , x95_percent_ci_percent, standard_error))
+  select(-c(x,weighted_number,x95_percent_ci_weighted_number, weighted_numbere, x95_percent_c_id_weighted_number, x95_percent_c_id_percent, sample_sizec, sample_size,   prevalence_number , x95_percent_ci_percent, standard_error)) %>% 
+ rename(year_name = year)
 
 
 race_data
 ```
 
+```{r}
+race_asthma_df =
+  left_join(merged_df, race_data, by = c("state", "year_name")) %>% 
+  drop_na() %>% 
+  select(-prevalence_percent.x)
 
+lm_by_race = lm(prevalence_percent.y ~ avg_temp_yearly + race_ethnicity, data = merged_race_asthma)
+summary(lm_by_race)
+```
 
 
 

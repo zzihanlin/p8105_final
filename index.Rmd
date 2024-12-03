@@ -141,13 +141,6 @@ asthma_dataset =
 #2020 and 2021 has U.S. totalf (removed)
 #2019 and 2021 only has 49 states (-NJ and -FL)
 
-library(plotly)
-
-asthma_dataset %>% 
-  plot_ly(x = ~year_name, y = ~prevalence_percent, color = ~state, type = "box", colors = "viridis")
-
-plot_ly(asthma_dataset, x = ~year_name, y = ~prevalence_percent, color = ~state, type = "scatter", showlegend = FALSE)
-
 asthma_dataset %>% 
   mutate(year_name = as.factor(year_name)) %>% 
   ggplot(aes(x = year_name, y = prevalence_percent)) + 

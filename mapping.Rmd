@@ -2,7 +2,7 @@
 title: "mapping"
 author: "Kimberly Lopez"
 date: "2024-12-03"
-output: github_document
+output: html_document
 ---
 
 ```{r message=FALSE, warning=FALSE}
@@ -13,6 +13,7 @@ library(usmap) # May need to install.packages to run this
 library(ggplot2)
 library(dplyr)
 library(forecast)
+library(plotly)
 ```
 
 
@@ -40,8 +41,6 @@ final_df =
   mutate(state = abbr) |>                           
   left_join(asthma_weather, by = "state") |>        
   drop_na()                                         
-
-
 ```
 
 
@@ -49,7 +48,9 @@ final_df =
 Mapping Prevalence data by state: 
 
 ```{r}
-final_df|> 
+
+ggplot= 
+  final_df|> 
   filter(year==2011)|> 
   ggplot() +
   geom_sf(aes(fill = prevalence_percent), color = "white") +
@@ -101,6 +102,10 @@ final_df|>
   )
 
 
+plotly_map <- ggplotly(ggplot)
+
+# Display the Plotly map
+plotly_map
 ```
 
 

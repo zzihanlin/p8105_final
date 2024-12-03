@@ -92,7 +92,7 @@ asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>%
   html_table() %>% 
   bind_rows() %>% 
   janitor::clean_names() %>% 
-  select(-x) %>% 
+  select(1:4) %>% 
   filter(!state %in% c("U.S. Total**", "Territories", "PR")) %>% 
   mutate(year = "2011")
 
@@ -108,12 +108,14 @@ asthma_hmtl = function(url) {
     html_table() %>% 
     bind_rows() %>% 
     janitor::clean_names() %>% 
-    select(state, prevalence_percent) %>% 
+    select(1:4) %>% 
+    mutate(standard_error = as.numeric(standard_error)) %>% 
     filter(!state %in% c("U.S. Total**", "U.S. Totalf", "Territories", "PR", "GU", "VI")) %>% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }
 
-asthma_dataset = 
+#prevalence
+asthma_prevalence = 
   tibble(
     year_name = 2011:2021,
     data_url = c(
@@ -131,7 +133,7 @@ asthma_dataset =
   ) %>% 
   mutate(asthma_byyear = map(data_url, asthma_hmtl)) %>% 
   unnest(asthma_byyear) %>% 
-  select(-data_url) %>% 
+  select(-data_url, -sample_size, -sample_sizec, -standard_error) %>% 
   group_by(year_name)
 
 #starting from 2016, has column called "weighted_number" instead of prevalence number
@@ -139,7 +141,7 @@ asthma_dataset =
 #2020 and 2021 has U.S. totalf (removed)
 #2019 and 2021 only has 49 states (-NJ and -FL)
 
-asthma_dataset %>% 
+asthma_prevalence %>% 
   mutate(year_name = as.factor(year_name)) %>% 
   ggplot(aes(x = year_name, y = prevalence_percent)) + 
   geom_boxplot(aes(fill = year_name), color = "blue", alpha = .5) + 
@@ -150,7 +152,7 @@ asthma_dataset %>%
   ) +
   theme_minimal()
 
-asthma_dataset %>% 
+asthma_prevalence %>% 
   ggplot(aes(x = state, y = prevalence_percent)) + 
   geom_boxplot() + 
   labs(
@@ -160,7 +162,77 @@ asthma_dataset %>%
   ) +
   theme_minimal()
 
+#function 2 for race and income data
+asthma_hmtl2 = function(url) {
+  
+  df = 
+    read_html(url) %>% 
+    html_table() %>% 
+    bind_rows() %>% 
+    janitor::clean_names() %>% 
+    select(1:4) %>% 
+    filter(!state %in% c("U.S. Total**", "U.S. Totalf", "Territories", "PR", "GU", "VI")) %>% 
+    mutate(prevalence_percent = as.numeric(prevalence_percent))
+}
 
+#race
+asthma_prace = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    "https://www.cdc.gov/asthma/brfss/2011/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2012/tableC4.htm", 
+    "https://www.cdc.gov/asthma/brfss/2013/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2014/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2015/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2016/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2017/tableC4.htm",
+    "https://www.cdc.gov/asthma/brfss/2018/tableC4.html",
+    "https://www.cdc.gov/asthma/brfss/2019/tableC4.html",
+    "https://www.cdc.gov/asthma/brfss/2020/tableC4.html",
+    "https://www.cdc.gov/asthma/brfss/2021/tableC4.html")
+  ) %>% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %>% 
+  unnest(asthma_byyear)
+
+#2020, race designation is in column raceg. 2021 in column race_ethnicityg
+asthma_prace = asthma_prace %>% 
+  select(-data_url, -sample_size, -sample_sizec) %>% 
+  mutate(
+    race = ifelse(is.na(race), raceg, race), 
+    race = ifelse(is.na(race), race_ethnicityg, race)
+    ) %>% 
+  select(-raceg, -race_ethnicityg) %>%
+  nest(race, prevalence_percent)
+
+#income
+asthma_pincome = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    "https://www.cdc.gov/asthma/brfss/2011/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2012/tableC7.htm", 
+    "https://www.cdc.gov/asthma/brfss/2013/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2014/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2015/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2016/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2017/tableC7.htm",
+    "https://www.cdc.gov/asthma/brfss/2018/tableC7.html",
+    "https://www.cdc.gov/asthma/brfss/2019/tableC7.html",
+    "https://www.cdc.gov/asthma/brfss/2020/tableC7.html",
+    "https://www.cdc.gov/asthma/brfss/2021/tableC6.html")
+  ) %>% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %>% 
+  unnest(asthma_byyear) %>% 
+  select(-data_url, -sample_size, -sample_sizec) %>% 
+  nest(income, prevalence_percent)
+
+#asthma dataset
+asthma_dataset = 
+  inner_join(asthma_prevalence, asthma_prace, by = c("year_name", "state")) %>% 
+  inner_join(asthma_pincome, by = c("year_name", "state")) %>% 
+  janitor::clean_names() %>% 
+  rename("race" = "data_x", "income" = "data_y")
 ```
 
 ## fit linear regression

@@ -343,11 +343,46 @@ race_data
 race_asthma_df =
   left_join(merged_df, race_data, by = c("state", "year_name")) %>% 
   drop_na() %>% 
-  select(-prevalence_percent.x)
+  select(-prevalence_percent.x) %>% 
+  rename(prevalence_percent = prevalence_percent.y) %>% 
+  mutate(prevalence_prop = prevalence_percent / 100)
+```
 
-lm_by_race = lm(prevalence_percent.y ~ avg_temp_yearly + race_ethnicity, data = merged_race_asthma)
+```{r}
+lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = race_asthma_df)
 summary(lm_by_race)
+
+plot(lm_by_race)
+
+interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
+summary(interaction_model)
+
+plot(interaction_model)
+
+fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+                   data = race_asthma_df, 
+                   family = binomial())
+summary(fit_logistic)
+
+plot(fit_logistic)
 ```
 
 
+```{r}
+race_asthma_df =
+  race_asthma_df %>% 
+  mutate(yhat = predict(lm_by_race, newdata = race_asthma_df)) 
+
+ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = race_ethnicity)) +
+  geom_point() +
+  geom_line(aes(y = yhat)) +
+  facet_wrap(~ race_ethnicity) +
+  labs(
+    title = "Asthma Prevalence by Race and Temperature",
+    x = "Average Yearly Temperature",
+    y = "Asthma Prevalence (%)",
+    caption = "line shows predicted prevalence % equation and data points show actual asthma prevalence"
+  ) +
+  theme(legend.position="none")
+```
 

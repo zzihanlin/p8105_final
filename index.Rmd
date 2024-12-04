@@ -14,7 +14,7 @@ Our project is focused on exploring the possible adverse health effects that cou
 
 ## Temperature Trends
 
-You can navigate through interactive [maps](https://klopez67.shinyapps.io/final_draft/) of asthma prevalance across the US
+You can navigate through interactive [maps](https://klopez67.shinyapps.io/final_draft/) of asthma prevalence across the US
 
 (brief summary of findings and link to maps page here)
 

@@ -1,5 +1,5 @@
 ---
-title: "mapping"
+title: "Data Visualizations"
 author: "Kimberly Lopez"
 date: "2024-12-03"
 output: html_document
@@ -14,12 +14,29 @@ library(ggplot2)
 library(dplyr)
 library(forecast)
 library(plotly)
+
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
-Downloading state shape file Data 
+Downloading state shape file Data:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 shape_files = usmap::us_map()
 
 asthma_df = read_csv("data/asthma_data.csv")|>
@@ -27,8 +44,10 @@ asthma_df = read_csv("data/asthma_data.csv")|>
 
 weather_df = read_csv("data/temp_data.csv")
 
+
 ```
-Merging Asthma & temp & shapefile data 
+
+Merging Asthma & temp & shape file data:
 ```{r}
 
 asthma_weather = 
@@ -46,18 +65,17 @@ final_df =
 
 
 Mapping Prevalence data by state: 
-
 ```{r}
 
 ggplot= 
   final_df|> 
-  filter(year==2011)|> 
+  filter(year==2021)|> 
   ggplot() +
   geom_sf(aes(fill = prevalence_percent), color = "white") +
   scale_fill_viridis_c(na.value = "grey90") + 
   theme_minimal() +
   labs(
-    title = "Asthma Prevalence by State (2011)",
+    title = "Adult Asthma Prevalence by State (2021)",
     fill = "Prevalence (%)"
   ) +
   theme(
@@ -67,55 +85,89 @@ ggplot=
     axis.ticks = element_blank()
   )
 
-final_df|> 
-  filter(year==2012)|>
-  ggplot() +
-  geom_sf(aes(fill = prevalence_percent), color = "white") +
-  scale_fill_viridis_c(na.value = "grey90") + 
-  theme_minimal() +
-  labs(
-    title = "Asthma Prevalence by State (2012)",
-    fill = "Prevalence (%)"
-  ) +
-  theme(
-    panel.grid = element_blank(), 
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    axis.ticks = element_blank()
-  )
+ggplot|>
+  ggplotly()
 
-final_df|> 
-  filter(year==2013)|>
-  ggplot() +
-  geom_sf(aes(fill = prevalence_percent), color = "white") +
-  scale_fill_viridis_c(na.value = "grey90") + 
-  theme_minimal() +
-  labs(
-    title = "Asthma Prevalence by State (2013)",
-    fill = "Prevalence (%)"
-  ) +
-  theme(
-    panel.grid = element_blank(), 
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    axis.ticks = element_blank()
-  )
-
-
-plotly_map <- ggplotly(ggplot)
-
-# Display the Plotly map
-plotly_map
 ```
 
+**Goals of Data Visualization**
 
-Do regions with higher asthma prevalence overlap with areas of lower average temperature?
+We aim to display the distribution of asthma cases from 2001-2021 using box or violin plots to guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases. We intend to draw insight for the following questions regarding our hypothesis: 
 
-Does analyzing prevalence data stratified by time and temperature make a difference?
+- What states have the most amount of asthma cases?
+- does this state have higher or cooler temperatures compared to the rest of the US?
+- have temperatures changed overtime? 
+- Do regions with higher asthma prevalence overlap with areas of lower average temperature?
+- Does analyzing prevalence data stratified by time and temperature make a difference?
+  - could stratify by creating temperature categories 
+  - could then conduct if prevalence differs across temperatures categories 
 
-- could stratify by creating temperature categories 
-- could then conduct if prevalence differs across temperatures categories 
+Asthma Trend Across the Us over time: 
+```{r}
+aggregated_data=
+  final_df|>
+  group_by(year)|>
+  summarise(avg_prevalence = mean(prevalence_percent, na.rm = TRUE))
 
+aggregated_data |>
+  ggplot(aes(x = year, y = avg_prevalence)) +
+  geom_line() +  # Line for the time series
+  geom_point(color = "red") +  # Scatter points
+  labs(
+    title = "Adult Asthma Trend Across the US Over Time",
+    x = "Year",
+    y = "Average Asthma Prevalence (%)"
+  ) +
+  theme_minimal()
+```
+
+**Distribution of Asthma across states:**
+
+The box plot method provided a clearer visual representation compared to the violin density plot, effectively illustrating the distribution of data and highlighting the concentration of values within each state.
+
+```{r}
+
+ggplotly( 
+  final_df|>
+  group_by(full)|>
+  ggplot(aes(x= reorder(full,prevalence_percent), y= prevalence_percent))+ 
+  geom_boxplot()+
+  labs(title= "Distribution of Adult Asthma across states" )+
+  xlab("State")+
+  ylab("Asthma Prevalance (%)")+
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)
+  ))
+
+```
+
+This plot shows the distribution of asthma across states across all years 2011-2021. States located further right on the plot are shown to have higher asthma prevalence by percent compared to other states. States located in the upper North East such as Maine, Rhode Island, Vermont, and New Hampshire had consistently higher asthma prevalence from 2011-2021 compared to other states. States with some of the lowest asthma prevalence (%) were Texas, South Dakota, Florida, Nebraska, and Minnesota. 
+
+```{r}
+ggplotly( 
+  final_df|> 
+  group_by(full)|>
+  ggplot(aes(x= reorder(full, avg_temp), y= avg_temp))+ 
+  geom_boxplot()+
+  labs(title= "Distribution of Temperature across states" )+
+  xlab("State")+
+  ylab("Temperature (C)")+
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)
+  ))
+```
+
+When comparing states with higher asthma prevalence to their temperature distributions, we observe that states such as Maine, Rhode Island, Vermont, and New Hampshire exhibit lower median average temperatures and larger interquartile ranges. This variation reflects the significant seasonal temperature fluctuations in these regions. Notably, when comparing the upper and lower 25% of temperature distributions in these states, the temperatures in the upper quartile are more variable. This variability is important to highlight, as previous studies have suggested that extreme temperatures may increase the risk of asthma exacerbation. Overall, varying temperature conditions (both high and low extremes) might influence asthma prevalence across states. 
+
+
+
+
+**have temperatures changed overtime? -> t.test across years? heatmap?**
+
+
+
+
+**Initial statistical anslysis** (Idk if we should keep this part )
 ```{r}
 final_df= 
   final_df |>
@@ -149,21 +201,6 @@ cor_results=
 cor_results
 ```
 Correlation is small across all states 
-
-Asthma Trend Across the Us over time: 
-```{r}
-aggregated_data=
-  final_df|>
-  group_by(year)|>
-  summarise(avg_prevalence = mean(prevalence_percent, na.rm = TRUE))
-
-ts_data= ts(aggregated_data[["avg_prevalence"]], start = min(aggregated_data[["year"]]), frequency = 1)
-
-plot.ts(ts_data, 
-        main = "Asthma Trend Across the US Over Time", 
-        ylab = "Average Asthma Prevalence (%)",
-        xlab = "Year")
-```
 
 Does the effect of prevalence differ by state: 
 ```{r}

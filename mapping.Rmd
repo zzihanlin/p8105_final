@@ -160,12 +160,7 @@ ggplotly(
 When comparing states with higher asthma prevalence to their temperature distributions, we observe that states such as Maine, Rhode Island, Vermont, and New Hampshire exhibit lower median average temperatures and larger interquartile ranges. This variation reflects the significant seasonal temperature fluctuations in these regions. Notably, when comparing the upper and lower 25% of temperature distributions in these states, the temperatures in the upper quartile are more variable. This variability is important to highlight, as previous studies have suggested that extreme temperatures may increase the risk of asthma exacerbation. Overall, varying temperature conditions (both high and low extremes) might influence asthma prevalence across states. 
 
 
-
-
 **have temperatures changed overtime? -> t.test across years? heatmap?**
-
-
-
 
 **Initial statistical anslysis** (Idk if we should keep this part )
 ```{r}
@@ -227,5 +222,6 @@ state_trends=
   knitr::kable(digits=5)
 
 state_trends
+
 ```
 

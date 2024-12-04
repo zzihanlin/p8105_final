@@ -4,7 +4,7 @@ author: "Kimberly Lopez"
 date: "2024-12-03"
 output: html_document
 ---
-
+ 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(tigris)

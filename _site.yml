@@ -5,6 +5,10 @@ navbar:
   right:
     - text: "About"
       href: about.html
+    - text: "Data Visulaization"
+      href: mapping.html
+    - text: "Shiny"
+      href: https://klopez67.shinyapps.io/final_draft/
     - icon: fa-envelope fa-lg
       menu:
         - text: Hanchuan Chen

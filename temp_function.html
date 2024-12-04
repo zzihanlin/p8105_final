@@ -301,52 +301,65 @@ $(document).ready(function () {
 
 <div id="weather-data" class="section level2">
 <h2>Weather data</h2>
-<p>{r tidying rnoaa data} state_codes = c(“AL”, “AK”, “AZ”, “AR”, “CA”,
-“CO”, “CT”, “DE”, “FL”, “GA”, “HI”, “ID”, “IL”, “IN”, “IA”, “KS”, “KY”,
-“LA”, “ME”, “MD”, “MA”, “MI”, “MN”, “MS”, “MO”, “MT”, “NE”, “NV”, “NH”,
-“NJ”, “NM”, “NY”, “NC”, “ND”, “OH”, “OK”, “OR”, “PA”, “RI”, “SC”, “SD”,
-“TN”, “TX”, “UT”, “VT”, “VA”, “WA”, “WV”, “WI”, “WY”)</p>
-<p>year = 2011:2021</p>
-<p>state_stations = ghcnd_stations() %&gt;% filter(state %in%
-state_codes) %&gt;% select(id, state) %&gt;% group_by(state) %&gt;%
-sample_n(30) %&gt;% ungroup()</p>
-<p>{r function rnoaa} temp_func &lt;- function(monitor_id, state) {</p>
-<p>avg_temp &lt;- meteo_pull_monitors( monitors = monitor_id, var =
-c(“TMAX”, “TMIN”), date_min = “2011-01-01”, date_max = “2021-12-31”
-)</p>
-<p>if (“tmin” %in% colnames(avg_temp) &amp;&amp; “tmax” %in%
-colnames(avg_temp)) {</p>
-<pre><code>avg_temp = avg_temp %&gt;%
-  mutate(
-    state = state, 
-    tmin = tmin / 10,  
-    tmax = tmax / 10,  
-    tavg_daily = (tmin + tmax) / 2,  
-    date = as.character(date)
-  ) %&gt;%
-  separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;-&quot;) %&gt;%
-  mutate(
-    across(c(year, month, day), as.numeric),  
-    season = case_when(
-      month %in% c(12, 1, 2) ~ &quot;Winter&quot;,
-      month %in% c(3, 4, 5) ~ &quot;Spring&quot;,
-      month %in% c(6, 7, 8) ~ &quot;Summer&quot;,
-      month %in% c(9, 10, 11) ~ &quot;Fall&quot;
-    )
-  ) %&gt;%
-  drop_na()  
+<pre class="r"><code>state_codes = c(&quot;AL&quot;, &quot;AK&quot;, &quot;AZ&quot;, &quot;AR&quot;, &quot;CA&quot;, &quot;CO&quot;, &quot;CT&quot;, &quot;DE&quot;, &quot;FL&quot;, &quot;GA&quot;, &quot;HI&quot;, &quot;ID&quot;, &quot;IL&quot;, &quot;IN&quot;, &quot;IA&quot;, &quot;KS&quot;, &quot;KY&quot;, &quot;LA&quot;, &quot;ME&quot;, &quot;MD&quot;, &quot;MA&quot;, &quot;MI&quot;, &quot;MN&quot;, &quot;MS&quot;, &quot;MO&quot;, &quot;MT&quot;, &quot;NE&quot;, &quot;NV&quot;, &quot;NH&quot;, &quot;NJ&quot;, &quot;NM&quot;, &quot;NY&quot;, &quot;NC&quot;, &quot;ND&quot;, &quot;OH&quot;, &quot;OK&quot;, &quot;OR&quot;, &quot;PA&quot;, &quot;RI&quot;, &quot;SC&quot;, &quot;SD&quot;, &quot;TN&quot;, &quot;TX&quot;, &quot;UT&quot;, &quot;VT&quot;, &quot;VA&quot;, &quot;WA&quot;, &quot;WV&quot;, &quot;WI&quot;, &quot;WY&quot;)
 
-return(avg_temp)</code></pre>
-<p>} else { return(NULL) } }</p>
-<p>{r} plan(multisession, workers = parallel::detectCores() - 1)</p>
-<p>temp_data_list = future_map2(state_stations<span
-class="math inline">\(id,
-              state_stations\)</span>state, temp_func, .options =
-furrr_options(seed = TRUE))</p>
-<p>{r} seasonal_avg_temps = bind_rows(temp_data_list) %&gt;%
-group_by(state, year, season) %&gt;% summarize(avg_temp =
-mean(tavg_daily, na.rm = TRUE))</p>
-<p>write.csv(seasonal_avg_temps, “temp_data.csv”, row.names = FALSE)</p>
+year = 2011:2021
+
+state_stations = ghcnd_stations() %&gt;% 
+  filter(state %in% state_codes) %&gt;% 
+  select(id, state) %&gt;% 
+  group_by(state) %&gt;% 
+  sample_n(30) %&gt;% 
+  ungroup()</code></pre>
+<pre class="r"><code>temp_func &lt;- function(monitor_id, state) {
+ 
+  avg_temp &lt;- meteo_pull_monitors(
+    monitors = monitor_id,
+    var = c(&quot;TMAX&quot;, &quot;TMIN&quot;),
+    date_min = &quot;2011-01-01&quot;,
+    date_max = &quot;2021-12-31&quot;
+  )
+  
+  if (&quot;tmin&quot; %in% colnames(avg_temp) &amp;&amp; &quot;tmax&quot; %in% colnames(avg_temp)) {
+    
+    avg_temp = avg_temp %&gt;%
+      mutate(
+        state = state, 
+        tmin = tmin / 10,  
+        tmax = tmax / 10,  
+        tavg_daily = (tmin + tmax) / 2,  
+        date = as.character(date)
+      ) %&gt;%
+      separate(date, into = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;), sep = &quot;-&quot;) %&gt;%
+      mutate(
+        across(c(year, month, day), as.numeric),  
+        season = case_when(
+          month %in% c(12, 1, 2) ~ &quot;Winter&quot;,
+          month %in% c(3, 4, 5) ~ &quot;Spring&quot;,
+          month %in% c(6, 7, 8) ~ &quot;Summer&quot;,
+          month %in% c(9, 10, 11) ~ &quot;Fall&quot;
+        )
+      ) %&gt;%
+      drop_na()  
+    
+    return(avg_temp)
+  } else {
+    return(NULL)
+  }
+}</code></pre>
+<pre class="r"><code>plan(multisession, workers = parallel::detectCores() - 1)
+
+temp_data_list = 
+  future_map2(state_stations$id, 
+              state_stations$state, 
+              temp_func, 
+              .options = furrr_options(seed = TRUE))
+
+seasonal_avg_temps = bind_rows(temp_data_list) %&gt;% 
+  group_by(state, year, season) %&gt;% 
+  summarize(avg_temp = mean(tavg_daily, na.rm = TRUE))
+
+write.csv(seasonal_avg_temps, &quot;temp_data.csv&quot;, row.names = FALSE)</code></pre>
 </div>
 
 

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Adeena Moghni" />
+
+<meta name="date" content="2024-12-04" />
+
+<title>asthma_data</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mailto:&lt;hc3563@cumc.columbia.edu&gt;">Hanchuan Chen</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;tpd2121@cumc.columbia.edu&gt;">Tasya Dita</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;zl3543@cumc.columbia.edu&gt;">Zihan Lin</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;am6592@cumc.columbia.edu&gt;">Adeena Moghni</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;kp2809@cumc.columbia.edu&gt;">Kimberly Palaguachi-Lopez</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/zzihanlin/p8105_final_project.git">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">asthma_data</h1>
+<h4 class="author">Adeena Moghni</h4>
+<h4 class="date">2024-12-04</h4>
+
+</div>
+
+
+<div id="asthma-data" class="section level2">
+<h2>Asthma data</h2>
+<pre class="r"><code>#write the data loading steps
+asthma_2011 = read_html(&quot;https://www.cdc.gov/asthma/brfss/2011/tableC1.htm&quot;) %&gt;% 
+  html_table() %&gt;% 
+  bind_rows() %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(1:4) %&gt;% 
+  filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;Territories&quot;, &quot;PR&quot;)) %&gt;% 
+  mutate(year = &quot;2011&quot;)
+
+#i use current asthma prevalence (table c1) rather than lifetime prevalence and only keep the prevalence percent (instead of numbers) 
+#i am excluding PR, VI, and GU
+
+#write the functions for data loading
+
+asthma_hmtl = function(url) {
+  
+  df = 
+    read_html(url) %&gt;% 
+    html_table() %&gt;% 
+    bind_rows() %&gt;% 
+    janitor::clean_names() %&gt;% 
+    select(1:4) %&gt;% 
+    mutate(standard_error = as.numeric(standard_error)) %&gt;% 
+    filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
+    mutate(prevalence_percent = as.numeric(prevalence_percent))
+}
+
+#prevalence
+asthma_prevalence = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    &quot;https://www.cdc.gov/asthma/brfss/2011/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2012/tableC1.htm&quot;, 
+    &quot;https://www.cdc.gov/asthma/brfss/2013/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2014/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2015/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2016/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2017/tableC1.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2018/tableC1.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2019/tableC1.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2020/tableC1.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2021/tableC1.html&quot;)
+  ) %&gt;% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl)) %&gt;% 
+  unnest(asthma_byyear) %&gt;% 
+  select(-data_url, -sample_size, -sample_sizec, -standard_error) %&gt;% 
+  group_by(year_name)</code></pre>
+<pre><code>## New names:
+## • `` -&gt; `...9`</code></pre>
+<pre><code>## Warning: There were 4 warnings in `mutate()`.
+## The first warning was:
+## ℹ In argument: `standard_error =
+##   as.numeric(standard_error)`.
+## Caused by warning:
+## ! There was 1 warning in `mutate()`.
+## ℹ In argument: `standard_error =
+##   as.numeric(standard_error)`.
+## Caused by warning:
+## ! NAs introduced by coercion
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 3
+##   remaining warnings.</code></pre>
+<pre class="r"><code>#starting from 2016, has column called &quot;weighted_number&quot; instead of prevalence number
+#2016 and 2021 includes VI (removed)
+#2020 and 2021 has U.S. totalf (removed)
+#2019 and 2021 only has 49 states (-NJ and -FL)
+
+asthma_prevalence %&gt;% 
+  mutate(year_name = as.factor(year_name)) %&gt;% 
+  ggplot(aes(x = year_name, y = prevalence_percent)) + 
+  geom_boxplot(aes(fill = year_name), color = &quot;blue&quot;, alpha = .5) + 
+  labs(
+    x = &quot;Year&quot;,
+    y = &quot;Prevalence_percent&quot;,
+    title = &quot;Asthma cases by year&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="asthma_function_files/figure-html/asthma%20dataset-1.png" width="672" /></p>
+<pre class="r"><code>asthma_prevalence %&gt;% 
+  ggplot(aes(x = state, y = prevalence_percent)) + 
+  geom_boxplot() + 
+  labs(
+    x = &quot;State&quot;,
+    y = &quot;Prevalence_percent&quot;,
+    title = &quot;Asthma cases by state&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="asthma_function_files/figure-html/asthma%20dataset-2.png" width="672" /></p>
+<pre class="r"><code>#function 2 for race and income data
+asthma_hmtl2 = function(url) {
+  
+  df = 
+    read_html(url) %&gt;% 
+    html_table() %&gt;% 
+    bind_rows() %&gt;% 
+    janitor::clean_names() %&gt;% 
+    select(1:4) %&gt;% 
+    filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
+    mutate(prevalence_percent = as.numeric(prevalence_percent))
+}
+
+#race
+asthma_prace = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    &quot;https://www.cdc.gov/asthma/brfss/2011/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2012/tableC4.htm&quot;, 
+    &quot;https://www.cdc.gov/asthma/brfss/2013/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2014/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2015/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2016/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2017/tableC4.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2018/tableC4.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2019/tableC4.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2020/tableC4.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2021/tableC4.html&quot;)
+  ) %&gt;% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %&gt;% 
+  unnest(asthma_byyear)
+
+#2020, race designation is in column raceg. 2021 in column race_ethnicityg
+asthma_prace = asthma_prace %&gt;% 
+  select(-data_url, -sample_size, -sample_sizec) %&gt;% 
+  mutate(
+    race = ifelse(is.na(race), raceg, race), 
+    race = ifelse(is.na(race), race_ethnicityg, race)
+    ) %&gt;% 
+  select(-raceg, -race_ethnicityg) %&gt;%
+  nest(race, prevalence_percent)</code></pre>
+<pre><code>## Warning: Supplying `...` without names was deprecated in tidyr
+## 1.0.0.
+## ℹ Please specify a name for each selection.
+## ℹ Did you want `data = c(race, prevalence_percent)`?
+## Call `lifecycle::last_lifecycle_warnings()` to see
+## where this warning was generated.</code></pre>
+<pre class="r"><code>#income
+asthma_pincome = 
+  tibble(
+    year_name = 2011:2021,
+    data_url = c(
+    &quot;https://www.cdc.gov/asthma/brfss/2011/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2012/tableC7.htm&quot;, 
+    &quot;https://www.cdc.gov/asthma/brfss/2013/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2014/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2015/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2016/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2017/tableC7.htm&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2018/tableC7.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2019/tableC7.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2020/tableC7.html&quot;,
+    &quot;https://www.cdc.gov/asthma/brfss/2021/tableC6.html&quot;)
+  ) %&gt;% 
+  mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %&gt;% 
+  unnest(asthma_byyear) %&gt;% 
+  select(-data_url, -sample_size, -sample_sizec) %&gt;% 
+  nest(income, prevalence_percent)</code></pre>
+<pre><code>## Warning: Supplying `...` without names was deprecated in tidyr
+## 1.0.0.
+## ℹ Please specify a name for each selection.
+## ℹ Did you want `data = c(income, prevalence_percent)`?
+## Call `lifecycle::last_lifecycle_warnings()` to see
+## where this warning was generated.</code></pre>
+<pre class="r"><code>#asthma dataset
+asthma_dataset = 
+  inner_join(asthma_prevalence, asthma_prace, by = c(&quot;year_name&quot;, &quot;state&quot;)) %&gt;% 
+  inner_join(asthma_pincome, by = c(&quot;year_name&quot;, &quot;state&quot;)) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(&quot;race&quot; = &quot;data_x&quot;, &quot;income&quot; = &quot;data_y&quot;)</code></pre>
+</div>
+<div id="fit-linear-regression" class="section level2">
+<h2>fit linear regression</h2>
+<pre class="r"><code># 1. merge asthma prevalance and temp data 
+# import two dataset
+temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
+<pre><code>## Rows: 2193 Columns: 4
+## ── Column specification ───────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (2): state, season
+## dbl (2): year, avg_temp
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>summary(temp_df)</code></pre>
+<pre><code>##     state                year         season             avg_temp     
+##  Length:2193        Min.   :2011   Length:2193        Min.   :-14.00  
+##  Class :character   1st Qu.:2013   Class :character   1st Qu.:  6.03  
+##  Mode  :character   Median :2016   Mode  :character   Median : 11.85  
+##                     Mean   :2016                      Mean   : 11.88  
+##                     3rd Qu.:2019                      3rd Qu.: 19.41  
+##                     Max.   :2021                      Max.   : 30.26</code></pre>
+<pre class="r"><code>asthma_df = read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
+<pre><code>## Rows: 559 Columns: 3
+## ── Column specification ───────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): state
+## dbl (2): year_name, prevalence_percent
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>summary(asthma_df)</code></pre>
+<pre><code>##    year_name       state           prevalence_percent
+##  Min.   :2011   Length:559         Min.   : 6.200    
+##  1st Qu.:2013   Class :character   1st Qu.: 8.500    
+##  Median :2016   Mode  :character   Median : 9.400    
+##  Mean   :2016                      Mean   : 9.423    
+##  3rd Qu.:2019                      3rd Qu.:10.200    
+##  Max.   :2021                      Max.   :13.200</code></pre>
+<pre class="r"><code># find the yearly temperature by state
+temp_yearly_df = 
+  temp_df |&gt; 
+  group_by(state, year) |&gt; 
+  summarize(avg_yearly = mean(avg_temp)) |&gt; 
+  select(state, year_name = year, avg_temp_yearly = avg_yearly)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;state&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code># merge two dataset
+merged_df = 
+  left_join(asthma_df, temp_yearly_df, by=c(&quot;state&quot;, &quot;year_name&quot;)) |&gt; 
+  drop_na() 
+# after merging yearly avg temperature and prevalence, DC has no temp data</code></pre>
+<pre class="r"><code># 2. do EDA and check distribution assumption
+temp_df |&gt; 
+  ggplot(aes(x = avg_temp)) +
+  geom_histogram() +
+  labs(
+    title = &quot;distribution of average temperature in 2011-2021&quot;,
+    xlab = &quot;average temperature&quot;,
+    ylab = &quot;frequency&quot;
+  )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>asthma_df |&gt; 
+  ggplot(aes(x = prevalence_percent)) +
+  geom_histogram() +
+  labs(
+    title = &quot;distribution of prevalence in 2011-2021&quot;,
+    xlab = &quot;prevalence (percent)&quot;,
+    ylab = &quot;frequency&quot;
+  )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code># two variables generally follows normal distribution</code></pre>
+<pre class="r"><code># bar plot of temperature and line plot of prevalence by each state
+merged_df |&gt; 
+  mutate(state = reorder(state, avg_temp_yearly)) |&gt; 
+  group_by(state) |&gt; 
+  summarize(prevalence = mean(prevalence_percent),
+            temp = mean(avg_temp_yearly)) |&gt; 
+  ggplot(aes(x = state)) +
+    geom_bar(aes(y = temp), stat = &quot;identity&quot;, fill = &quot;skyblue&quot;) +
+    geom_line(aes(y = prevalence, group = 1)) +
+    geom_point(aes(y = prevalence), color = &quot;red&quot;) +
+    scale_y_continuous(
+      name = &quot;temperature&quot;,
+      sec.axis = sec_axis(~., name = &quot;Prevalence (%)&quot;)
+    ) +
+  labs(
+    title = &quot;Temperature and Prevalence by State&quot;,
+    color = &quot;legend&quot;
+  )</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># 3. do linear regression
+model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = prevalence_percent ~ avg_temp_yearly, data = merged_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.4130 -0.8298 -0.0355  0.8194  3.6082 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     10.18623    0.13850  73.544  &lt; 2e-16 ***
+## avg_temp_yearly -0.06715    0.01085  -6.187 1.21e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.205 on 545 degrees of freedom
+## Multiple R-squared:  0.06562,    Adjusted R-squared:  0.0639 
+## F-statistic: 38.27 on 1 and 545 DF,  p-value: 1.209e-09</code></pre>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(model)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># try log transform outcome
+model_log = 
+  merged_df |&gt; 
+    mutate(log_precalence = log(prevalence_percent)) |&gt; 
+    lm(log_precalence ~ avg_temp_yearly, data = _)
+summary(model_log)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log_precalence ~ avg_temp_yearly, data = mutate(merged_df, 
+##     log_precalence = log(prevalence_percent)))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.43034 -0.08722  0.00406  0.09288  0.32761 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      2.316561   0.014729 157.280  &lt; 2e-16 ***
+## avg_temp_yearly -0.007225   0.001154  -6.259 7.84e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1281 on 545 degrees of freedom
+## Multiple R-squared:  0.06707,    Adjusted R-squared:  0.06535 
+## F-statistic: 39.18 on 1 and 545 DF,  p-value: 7.839e-10</code></pre>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(model_log)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code># 4. results explanation and visualization</code></pre>
+</div>
+<div id="race-data-asthma-prevalance" class="section level2">
+<h2>Race Data &amp; Asthma Prevalance</h2>
+<p>Function to download and tidy html table from online</p>
+<pre class="r"><code>race_table = function(url, year ){
+  
+  table= 
+    read_html(url)|&gt;
+    html_table()|&gt;
+    first()|&gt;
+    slice(-1:-5)
+  
+  table|&gt;
+    janitor::clean_names()|&gt;
+    select(-c(x,x95_percent_ci_number))|&gt; 
+    mutate(year= year)
+  
+}
+
+race_table1 = function(url, year){
+  
+  table= 
+    read_html(url)|&gt;
+    html_table()|&gt;
+    first()|&gt;
+    slice(-1:-5)
+  
+  table|&gt;
+    janitor::clean_names()|&gt; 
+    mutate( year= year)
+  
+}
+
+race_table_a8 = function(url, year){
+  
+  html= read_html(url)
+  
+  table=
+    html|&gt;
+    html_table()|&gt;
+    first()|&gt;
+    slice(-1:-5)
+  
+  table|&gt;
+    janitor::clean_names()|&gt; 
+    select(-c(x))|&gt; 
+    mutate( 
+      year= year)
+  
+}</code></pre>
+<p>Run function on all years:</p>
+<pre class="r"><code>race_2011= race_table(&quot;https://www.cdc.gov/asthma/brfss/2011/tableL5.htm&quot;, 2011)
+
+
+race_2012= race_table(&quot;https://www.cdc.gov/asthma/brfss/2012/tableL5.htm&quot;, 2012)
+race_2013= race_table(&quot;https://www.cdc.gov/asthma/brfss/2013/tableL5.htm&quot;, 2013)
+race_2014= race_table(&quot;https://www.cdc.gov/asthma/brfss/2014/tableL5.htm&quot;, 2014)
+race_2015= race_table(&quot;https://www.cdc.gov/asthma/brfss/2015/tableL5.htm&quot;, 2015)
+race_2016= race_table(&quot;https://www.cdc.gov/asthma/brfss/2016/tableL5.htm&quot;, 2016)
+race_2017= race_table1(&quot;https://www.cdc.gov/asthma/brfss/2017/tableL5.htm&quot;, 2017)
+race_2018= race_table_a8(&quot;https://www.cdc.gov/asthma/brfss/2018/tableL5.html&quot;, 2018)
+race_2019= race_table_a8(&quot;https://www.cdc.gov/asthma/brfss/2019/tableL5.html&quot;, 2019)
+race_2020= race_table_a8(&quot;https://www.cdc.gov/asthma/brfss/2020/tableL5.html&quot;, 2020)|&gt; 
+  mutate( race_ethnicity= race_ethnicityg)|&gt; 
+  select(-race_ethnicityg)</code></pre>
+<p>I excluded 2021 since the brackets for race ethnicity were changed
+and no longer consistent with the previous years where there was a
+multirace NH category which was no longer used.</p>
+<p>Merged Race data:</p>
+<pre class="r"><code>race_data= 
+  bind_rows(race_2011, race_2012, race_2013, race_2014, race_2015, race_2016, 
+                           race_2017, race_2018, race_2019, race_2020)|&gt; 
+  select(-c(x,weighted_number,x95_percent_ci_weighted_number, weighted_numbere, x95_percent_c_id_weighted_number, x95_percent_c_id_percent, sample_sizec, sample_size,   prevalence_number , x95_percent_ci_percent, standard_error)) %&gt;% 
+ rename(year_name = year)
+
+
+race_data</code></pre>
+<pre><code>## # A tibble: 2,611 × 4
+##    state race_ethnicity prevalence_percent year_name
+##    &lt;chr&gt; &lt;chr&gt;                       &lt;dbl&gt;     &lt;dbl&gt;
+##  1 AL    White NH                     12.4      2011
+##  2 AL    Black NH                     10.4      2011
+##  3 AL    Other NH                     10.3      2011
+##  4 AL    Multirace NH                 25.1      2011
+##  5 AL    Hispanic                     11.5      2011
+##  6 AK    White NH                     13.2      2011
+##  7 AK    Black NH                     26.4      2011
+##  8 AK    Other NH                     11.7      2011
+##  9 AK    Multirace NH                 18.6      2011
+## 10 AK    Hispanic                     19.7      2011
+## # ℹ 2,601 more rows</code></pre>
+<pre class="r"><code>race_asthma_df =
+  left_join(merged_df, race_data, by = c(&quot;state&quot;, &quot;year_name&quot;)) %&gt;% 
+  drop_na() %&gt;% 
+  select(-prevalence_percent.x) %&gt;% 
+  rename(prevalence_percent = prevalence_percent.y) %&gt;% 
+  mutate(prevalence_prop = prevalence_percent / 100)</code></pre>
+<pre class="r"><code>lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = race_asthma_df)
+summary(lm_by_race)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = prevalence_percent ~ avg_temp_yearly + race_ethnicity, 
+##     data = race_asthma_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -17.596  -2.661  -0.236   2.163  46.087 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                18.05933    0.72500  24.910  &lt; 2e-16 ***
+## avg_temp_yearly            -0.14368    0.02033  -7.068 2.04e-12 ***
+## race_ethnicityBlack NH      0.54138    0.72491   0.747 0.455239    
+## race_ethnicityHispanic     -2.64067    0.72081  -3.663 0.000254 ***
+## race_ethnicityMultirace-NH  6.37143    0.97186   6.556 6.73e-11 ***
+## race_ethnicityMultirace NH  7.10149    0.72471   9.799  &lt; 2e-16 ***
+## race_ethnicityOther-NH     -3.27755    0.97186  -3.372 0.000757 ***
+## race_ethnicityOther NH     -3.01021    0.72446  -4.155 3.36e-05 ***
+## race_ethnicityWhite-NH     -1.71429    0.97186  -1.764 0.077871 .  
+## race_ethnicityWhite NH     -2.59383    0.72381  -3.584 0.000346 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.81 on 2440 degrees of freedom
+## Multiple R-squared:  0.392,  Adjusted R-squared:  0.3898 
+## F-statistic: 174.8 on 9 and 2440 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>plot(lm_by_race)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<pre class="r"><code>interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
+summary(interaction_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = prevalence_percent ~ avg_temp_yearly * race_ethnicity, 
+##     data = race_asthma_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -17.873  -2.632  -0.269   2.138  45.727 
+## 
+## Coefficients:
+##                                             Estimate Std. Error t value
+## (Intercept)                                16.322601   1.650034   9.892
+## avg_temp_yearly                             0.009146   0.132043   0.069
+## race_ethnicityBlack NH                      2.941866   1.765883   1.666
+## race_ethnicityHispanic                     -0.441799   1.748380  -0.253
+## race_ethnicityMultirace-NH                  7.230360   2.333500   3.099
+## race_ethnicityMultirace NH                  9.985815   1.763028   5.664
+## race_ethnicityOther-NH                     -2.785581   2.333500  -1.194
+## race_ethnicityOther NH                     -1.608390   1.761363  -0.913
+## race_ethnicityWhite-NH                     -1.270860   2.333500  -0.545
+## race_ethnicityWhite NH                     -2.081505   1.759911  -1.183
+## avg_temp_yearly:race_ethnicityBlack NH     -0.208220   0.140793  -1.479
+## avg_temp_yearly:race_ethnicityHispanic     -0.191917   0.139604  -1.375
+## avg_temp_yearly:race_ethnicityMultirace-NH -0.075585   0.186737  -0.405
+## avg_temp_yearly:race_ethnicityMultirace NH -0.249496   0.140705  -1.773
+## avg_temp_yearly:race_ethnicityOther-NH     -0.043293   0.186737  -0.232
+## avg_temp_yearly:race_ethnicityOther NH     -0.124631   0.140559  -0.887
+## avg_temp_yearly:race_ethnicityWhite-NH     -0.039021   0.186737  -0.209
+## avg_temp_yearly:race_ethnicityWhite NH     -0.049777   0.140447  -0.354
+##                                            Pr(&gt;|t|)    
+## (Intercept)                                 &lt; 2e-16 ***
+## avg_temp_yearly                             0.94479    
+## race_ethnicityBlack NH                      0.09585 .  
+## race_ethnicityHispanic                      0.80053    
+## race_ethnicityMultirace-NH                  0.00197 ** 
+## race_ethnicityMultirace NH                 1.65e-08 ***
+## race_ethnicityOther-NH                      0.23270    
+## race_ethnicityOther NH                      0.36125    
+## race_ethnicityWhite-NH                      0.58607    
+## race_ethnicityWhite NH                      0.23703    
+## avg_temp_yearly:race_ethnicityBlack NH      0.13929    
+## avg_temp_yearly:race_ethnicityHispanic      0.16934    
+## avg_temp_yearly:race_ethnicityMultirace-NH  0.68568    
+## avg_temp_yearly:race_ethnicityMultirace NH  0.07632 .  
+## avg_temp_yearly:race_ethnicityOther-NH      0.81668    
+## avg_temp_yearly:race_ethnicityOther NH      0.37534    
+## avg_temp_yearly:race_ethnicityWhite-NH      0.83450    
+## avg_temp_yearly:race_ethnicityWhite NH      0.72306    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.804 on 2432 degrees of freedom
+## Multiple R-squared:  0.3955, Adjusted R-squared:  0.3913 
+## F-statistic:  93.6 on 17 and 2432 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>plot(interaction_model)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-9-5.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-6.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-7.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-8.png" width="672" /></p>
+<pre class="r"><code>fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+                   data = race_asthma_df, 
+                   family = binomial())</code></pre>
+<pre><code>## Warning in eval(family$initialize): non-integer #successes in a binomial glm!</code></pre>
+<pre class="r"><code>summary(fit_logistic)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+##     family = binomial(), data = race_asthma_df)
+## 
+## Coefficients:
+##                            Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                -1.50518    0.40697  -3.699 0.000217 ***
+## avg_temp_yearly            -0.01080    0.01164  -0.928 0.353562    
+## race_ethnicityBlack NH      0.03948    0.40637   0.097 0.922597    
+## race_ethnicityHispanic     -0.20688    0.40743  -0.508 0.611615    
+## race_ethnicityMultirace-NH  0.40727    0.51453   0.792 0.428626    
+## race_ethnicityMultirace NH  0.44988    0.40186   1.120 0.262921    
+## race_ethnicityOther-NH     -0.26112    0.57227  -0.456 0.648178    
+## race_ethnicityOther NH     -0.23854    0.41034  -0.581 0.561026    
+## race_ethnicityWhite-NH     -0.13058    0.55806  -0.234 0.814999    
+## race_ethnicityWhite NH     -0.20298    0.40931  -0.496 0.619958    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 65.418  on 2449  degrees of freedom
+## Residual deviance: 40.051  on 2440  degrees of freedom
+## AIC: 897.04
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<pre class="r"><code>plot(fit_logistic)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-9-9.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-10.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-11.png" width="672" /><img src="asthma_function_files/figure-html/unnamed-chunk-9-12.png" width="672" /></p>
+<pre class="r"><code>race_asthma_df =
+  race_asthma_df %&gt;% 
+  mutate(yhat = predict(lm_by_race, newdata = race_asthma_df)) 
+
+ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = race_ethnicity)) +
+  geom_point() +
+  geom_line(aes(y = yhat)) +
+  facet_wrap(~ race_ethnicity) +
+  labs(
+    title = &quot;Asthma Prevalence by Race and Temperature&quot;,
+    x = &quot;Average Yearly Temperature&quot;,
+    y = &quot;Asthma Prevalence (%)&quot;,
+    caption = &quot;line shows predicted prevalence % equation and data points show actual asthma prevalence&quot;
+  ) +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

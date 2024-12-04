@@ -5,10 +5,17 @@ navbar:
   right:
     - text: "About"
       href: about.html
+<<<<<<< HEAD
     - text: Data Import and EDA
       menu:
         - text: Temperature Data
           href: temp_function.html
+=======
+    - text: "Data Visulaization"
+      href: mapping.html
+    - text: "Shiny"
+      href: https://klopez67.shinyapps.io/final_draft/
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
     - icon: fa-envelope fa-lg
       menu:
         - text: Hanchuan Chen

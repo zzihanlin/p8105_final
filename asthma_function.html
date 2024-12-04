@@ -250,6 +250,12 @@ $(document).ready(function () {
         <li>
   <a href="about.html">About</a>
 </li>
+<li>
+  <a href="mapping.html">Data Visulaization</a>
+</li>
+<li>
+  <a href="https://klopez67.shinyapps.io/final_draft/">Shiny</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Data Import and EDA
@@ -375,9 +381,13 @@ asthma_prevalence =
 ##   as.numeric(standard_error)`.
 ## Caused by warning:
 ## ! NAs introduced by coercion
+<<<<<<< HEAD
 ## ℹ Run
 ##   `dplyr::last_dplyr_warnings()`
 ##   to see the 3 remaining
+=======
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 3 remaining
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
 ##   warnings.</code></pre>
 <pre class="r"><code>#starting from 2016, has column called &quot;weighted_number&quot; instead of prevalence number
 #2016 and 2021 includes VI (removed)
@@ -450,6 +460,7 @@ asthma_prace = asthma_prace %&gt;%
 <pre><code>## Warning: Supplying `...` without names
 ## was deprecated in tidyr
 ## 1.0.0.
+<<<<<<< HEAD
 ## ℹ Please specify a name for
 ##   each selection.
 ## ℹ Did you want `data =
@@ -459,6 +470,12 @@ asthma_prace = asthma_prace %&gt;%
 ## `lifecycle::last_lifecycle_warnings()`
 ## to see where this warning was
 ## generated.</code></pre>
+=======
+## ℹ Please specify a name for each selection.
+## ℹ Did you want `data = c(race, prevalence_percent)`?
+## Call `lifecycle::last_lifecycle_warnings()` to see where
+## this warning was generated.</code></pre>
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
 <pre class="r"><code>#income
 asthma_pincome = 
   tibble(
@@ -483,6 +500,7 @@ asthma_pincome =
 <pre><code>## Warning: Supplying `...` without names
 ## was deprecated in tidyr
 ## 1.0.0.
+<<<<<<< HEAD
 ## ℹ Please specify a name for
 ##   each selection.
 ## ℹ Did you want `data =
@@ -492,6 +510,12 @@ asthma_pincome =
 ## `lifecycle::last_lifecycle_warnings()`
 ## to see where this warning was
 ## generated.</code></pre>
+=======
+## ℹ Please specify a name for each selection.
+## ℹ Did you want `data = c(income, prevalence_percent)`?
+## Call `lifecycle::last_lifecycle_warnings()` to see where
+## this warning was generated.</code></pre>
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
 <pre class="r"><code>#asthma dataset
 asthma_dataset = 
   inner_join(asthma_prevalence, asthma_prace, by = c(&quot;year_name&quot;, &quot;state&quot;)) %&gt;% 
@@ -505,7 +529,11 @@ asthma_dataset =
 # import two dataset
 temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
+<<<<<<< HEAD
 ## ── Column specification ──────
+=======
+## ── Column specification ────────────────────────────────────
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -522,7 +550,11 @@ temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 ##                     Max.   :2021                      Max.   : 30.26</code></pre>
 <pre class="r"><code>asthma_df = read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
+<<<<<<< HEAD
 ## ── Column specification ──────
+=======
+## ── Column specification ────────────────────────────────────
+>>>>>>> 5e131e6fb3b6434be0fb1a17d891441a44f7c21f
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -760,16 +792,16 @@ summary(lm_by_race)</code></pre>
 ## 
 ## Coefficients:
 ##                            Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                18.05933    0.72500  24.910  &lt; 2e-16 ***
+## (Intercept)                18.60071    0.33528  55.478  &lt; 2e-16 ***
 ## avg_temp_yearly            -0.14368    0.02033  -7.068 2.04e-12 ***
-## race_ethnicityBlack NH      0.54138    0.72491   0.747 0.455239    
-## race_ethnicityHispanic     -2.64067    0.72081  -3.663 0.000254 ***
-## race_ethnicityMultirace-NH  6.37143    0.97186   6.556 6.73e-11 ***
-## race_ethnicityMultirace NH  7.10149    0.72471   9.799  &lt; 2e-16 ***
-## race_ethnicityOther-NH     -3.27755    0.97186  -3.372 0.000757 ***
-## race_ethnicityOther NH     -3.01021    0.72446  -4.155 3.36e-05 ***
-## race_ethnicityWhite-NH     -1.71429    0.97186  -1.764 0.077871 .  
-## race_ethnicityWhite NH     -2.59383    0.72381  -3.584 0.000346 ***
+## race_ethnicityBlack-NH     -0.54138    0.72491  -0.747  0.45524    
+## race_ethnicityHispanic     -3.18205    0.31672 -10.047  &lt; 2e-16 ***
+## race_ethnicityMultirace NH  6.56011    0.32544  20.158  &lt; 2e-16 ***
+## race_ethnicityMultirace-NH  5.83005    0.72491   8.042 1.36e-15 ***
+## race_ethnicityOther NH     -3.55159    0.32489 -10.932  &lt; 2e-16 ***
+## race_ethnicityOther-NH     -3.81893    0.72491  -5.268 1.50e-07 ***
+## race_ethnicityWhite NH     -3.13522    0.32345  -9.693  &lt; 2e-16 ***
+## race_ethnicityWhite-NH     -2.25567    0.72491  -3.112  0.00188 ** 
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -790,44 +822,44 @@ summary(interaction_model)</code></pre>
 ## -17.873  -2.632  -0.269   2.138  45.727 
 ## 
 ## Coefficients:
-##                                             Estimate Std. Error t value
-## (Intercept)                                16.322601   1.650034   9.892
-## avg_temp_yearly                             0.009146   0.132043   0.069
-## race_ethnicityBlack NH                      2.941866   1.765883   1.666
-## race_ethnicityHispanic                     -0.441799   1.748380  -0.253
-## race_ethnicityMultirace-NH                  7.230360   2.333500   3.099
-## race_ethnicityMultirace NH                  9.985815   1.763028   5.664
-## race_ethnicityOther-NH                     -2.785581   2.333500  -1.194
-## race_ethnicityOther NH                     -1.608390   1.761363  -0.913
-## race_ethnicityWhite-NH                     -1.270860   2.333500  -0.545
-## race_ethnicityWhite NH                     -2.081505   1.759911  -1.183
-## avg_temp_yearly:race_ethnicityBlack NH     -0.208220   0.140793  -1.479
-## avg_temp_yearly:race_ethnicityHispanic     -0.191917   0.139604  -1.375
-## avg_temp_yearly:race_ethnicityMultirace-NH -0.075585   0.186737  -0.405
-## avg_temp_yearly:race_ethnicityMultirace NH -0.249496   0.140705  -1.773
-## avg_temp_yearly:race_ethnicityOther-NH     -0.043293   0.186737  -0.232
-## avg_temp_yearly:race_ethnicityOther NH     -0.124631   0.140559  -0.887
-## avg_temp_yearly:race_ethnicityWhite-NH     -0.039021   0.186737  -0.209
-## avg_temp_yearly:race_ethnicityWhite NH     -0.049777   0.140447  -0.354
-##                                            Pr(&gt;|t|)    
-## (Intercept)                                 &lt; 2e-16 ***
-## avg_temp_yearly                             0.94479    
-## race_ethnicityBlack NH                      0.09585 .  
-## race_ethnicityHispanic                      0.80053    
-## race_ethnicityMultirace-NH                  0.00197 ** 
-## race_ethnicityMultirace NH                 1.65e-08 ***
-## race_ethnicityOther-NH                      0.23270    
-## race_ethnicityOther NH                      0.36125    
-## race_ethnicityWhite-NH                      0.58607    
-## race_ethnicityWhite NH                      0.23703    
-## avg_temp_yearly:race_ethnicityBlack NH      0.13929    
-## avg_temp_yearly:race_ethnicityHispanic      0.16934    
-## avg_temp_yearly:race_ethnicityMultirace-NH  0.68568    
-## avg_temp_yearly:race_ethnicityMultirace NH  0.07632 .  
-## avg_temp_yearly:race_ethnicityOther-NH      0.81668    
-## avg_temp_yearly:race_ethnicityOther NH      0.37534    
-## avg_temp_yearly:race_ethnicityWhite-NH      0.83450    
-## avg_temp_yearly:race_ethnicityWhite NH      0.72306    
+##                                            Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                                19.26447    0.62907  30.624  &lt; 2e-16
+## avg_temp_yearly                            -0.19907    0.04886  -4.075 4.76e-05
+## race_ethnicityBlack-NH                     -2.94187    1.76588  -1.666   0.0959
+## race_ethnicityHispanic                     -3.38366    0.85437  -3.960 7.70e-05
+## race_ethnicityMultirace NH                  7.04395    0.88396   7.969 2.44e-15
+## race_ethnicityMultirace-NH                  4.28849    1.76588   2.429   0.0152
+## race_ethnicityOther NH                     -4.55026    0.88064  -5.167 2.57e-07
+## race_ethnicityOther-NH                     -5.72745    1.76588  -3.243   0.0012
+## race_ethnicityWhite NH                     -5.02337    0.87773  -5.723 1.17e-08
+## race_ethnicityWhite-NH                     -4.21273    1.76588  -2.386   0.0171
+## avg_temp_yearly:race_ethnicityBlack-NH      0.20822    0.14079   1.479   0.1393
+## avg_temp_yearly:race_ethnicityHispanic      0.01630    0.06664   0.245   0.8068
+## avg_temp_yearly:race_ethnicityMultirace NH -0.04128    0.06892  -0.599   0.5493
+## avg_temp_yearly:race_ethnicityMultirace-NH  0.13264    0.14079   0.942   0.3463
+## avg_temp_yearly:race_ethnicityOther NH      0.08359    0.06862   1.218   0.2233
+## avg_temp_yearly:race_ethnicityOther-NH      0.16493    0.14079   1.171   0.2415
+## avg_temp_yearly:race_ethnicityWhite NH      0.15844    0.06839   2.317   0.0206
+## avg_temp_yearly:race_ethnicityWhite-NH      0.16920    0.14079   1.202   0.2296
+##                                               
+## (Intercept)                                ***
+## avg_temp_yearly                            ***
+## race_ethnicityBlack-NH                     .  
+## race_ethnicityHispanic                     ***
+## race_ethnicityMultirace NH                 ***
+## race_ethnicityMultirace-NH                 *  
+## race_ethnicityOther NH                     ***
+## race_ethnicityOther-NH                     ** 
+## race_ethnicityWhite NH                     ***
+## race_ethnicityWhite-NH                     *  
+## avg_temp_yearly:race_ethnicityBlack-NH        
+## avg_temp_yearly:race_ethnicityHispanic        
+## avg_temp_yearly:race_ethnicityMultirace NH    
+## avg_temp_yearly:race_ethnicityMultirace-NH    
+## avg_temp_yearly:race_ethnicityOther NH        
+## avg_temp_yearly:race_ethnicityOther-NH        
+## avg_temp_yearly:race_ethnicityWhite NH     *  
+## avg_temp_yearly:race_ethnicityWhite-NH        
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -848,16 +880,16 @@ summary(interaction_model)</code></pre>
 ## 
 ## Coefficients:
 ##                            Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)                -1.50518    0.40697  -3.699 0.000217 ***
-## avg_temp_yearly            -0.01080    0.01164  -0.928 0.353562    
-## race_ethnicityBlack NH      0.03948    0.40637   0.097 0.922597    
-## race_ethnicityHispanic     -0.20688    0.40743  -0.508 0.611615    
-## race_ethnicityMultirace-NH  0.40727    0.51453   0.792 0.428626    
-## race_ethnicityMultirace NH  0.44988    0.40186   1.120 0.262921    
-## race_ethnicityOther-NH     -0.26112    0.57227  -0.456 0.648178    
-## race_ethnicityOther NH     -0.23854    0.41034  -0.581 0.561026    
-## race_ethnicityWhite-NH     -0.13058    0.55806  -0.234 0.814999    
-## race_ethnicityWhite NH     -0.20298    0.40931  -0.496 0.619958    
+## (Intercept)                -1.46569    0.18788  -7.801 6.13e-15 ***
+## avg_temp_yearly            -0.01080    0.01164  -0.928   0.3536    
+## race_ethnicityBlack-NH     -0.03948    0.40637  -0.097   0.9226    
+## race_ethnicityHispanic     -0.24636    0.18331  -1.344   0.1790    
+## race_ethnicityMultirace NH  0.41040    0.17052   2.407   0.0161 *  
+## race_ethnicityMultirace-NH  0.36779    0.36390   1.011   0.3122    
+## race_ethnicityOther NH     -0.27802    0.18967  -1.466   0.1427    
+## race_ethnicityOther-NH     -0.30061    0.44180  -0.680   0.4962    
+## race_ethnicityWhite NH     -0.24247    0.18743  -1.294   0.1958    
+## race_ethnicityWhite-NH     -0.17006    0.42323  -0.402   0.6878    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 

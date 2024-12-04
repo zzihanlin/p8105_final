@@ -1,17 +1,17 @@
 ---
 title: "asthma_data"
-author: "Adeena Moghni"
-date: "2024-12-04"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(rnoaa)
-library(furrr)
 library(rvest)
 library(httr)
 ```
+
+For maps and figures on weather trends, please refer to the [maps page.](https://klopez67.shinyapps.io/final_draft/) 
+
 ## Asthma data
 ```{r asthma dataset, }
 #write the data loading steps

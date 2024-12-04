@@ -30,11 +30,11 @@ For more insight on our motivation, methods, and analyses, please read our repor
 
 This project was completed by:
 
-Hanchuan Chen
-Tasya Dita 
-Zihan Lin
-Adeena Moghni
-Kimberly Palaguachi-Lopez
+Hanchuan Chen  
+Tasya Dita   
+Zihan Lin  
+Adeena Moghni  
+<!-- Kimberly Palaguachi-Lopez   -->
 
 ## Screencast
 

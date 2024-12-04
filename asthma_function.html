@@ -9,16 +9,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Adeena Moghni" />
 
-<meta name="date" content="2024-12-04" />
 
 <title>asthma_data</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -254,6 +252,18 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Data Import and EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="temp_function.html">Temperature Data</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fa fa-envelope fa-lg"></span>
      
      
@@ -293,12 +303,12 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">asthma_data</h1>
-<h4 class="author">Adeena Moghni</h4>
-<h4 class="date">2024-12-04</h4>
 
 </div>
 
 
+<p>For maps and figures on weather trends, please refer to the <a
+href="https://klopez67.shinyapps.io/final_draft/">maps page.</a></p>
 <div id="asthma-data" class="section level2">
 <h2>Asthma data</h2>
 <pre class="r"><code>#write the data loading steps
@@ -351,18 +361,24 @@ asthma_prevalence =
   group_by(year_name)</code></pre>
 <pre><code>## New names:
 ## • `` -&gt; `...9`</code></pre>
-<pre><code>## Warning: There were 4 warnings in `mutate()`.
+<pre><code>## Warning: There were 4 warnings in
+## `mutate()`.
 ## The first warning was:
-## ℹ In argument: `standard_error =
+## ℹ In argument:
+##   `standard_error =
 ##   as.numeric(standard_error)`.
 ## Caused by warning:
-## ! There was 1 warning in `mutate()`.
-## ℹ In argument: `standard_error =
+## ! There was 1 warning in
+## `mutate()`.
+## ℹ In argument:
+##   `standard_error =
 ##   as.numeric(standard_error)`.
 ## Caused by warning:
 ## ! NAs introduced by coercion
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 3
-##   remaining warnings.</code></pre>
+## ℹ Run
+##   `dplyr::last_dplyr_warnings()`
+##   to see the 3 remaining
+##   warnings.</code></pre>
 <pre class="r"><code>#starting from 2016, has column called &quot;weighted_number&quot; instead of prevalence number
 #2016 and 2021 includes VI (removed)
 #2020 and 2021 has U.S. totalf (removed)
@@ -431,12 +447,18 @@ asthma_prace = asthma_prace %&gt;%
     ) %&gt;% 
   select(-raceg, -race_ethnicityg) %&gt;%
   nest(race, prevalence_percent)</code></pre>
-<pre><code>## Warning: Supplying `...` without names was deprecated in tidyr
+<pre><code>## Warning: Supplying `...` without names
+## was deprecated in tidyr
 ## 1.0.0.
-## ℹ Please specify a name for each selection.
-## ℹ Did you want `data = c(race, prevalence_percent)`?
-## Call `lifecycle::last_lifecycle_warnings()` to see
-## where this warning was generated.</code></pre>
+## ℹ Please specify a name for
+##   each selection.
+## ℹ Did you want `data =
+##   c(race,
+##   prevalence_percent)`?
+## Call
+## `lifecycle::last_lifecycle_warnings()`
+## to see where this warning was
+## generated.</code></pre>
 <pre class="r"><code>#income
 asthma_pincome = 
   tibble(
@@ -458,12 +480,18 @@ asthma_pincome =
   unnest(asthma_byyear) %&gt;% 
   select(-data_url, -sample_size, -sample_sizec) %&gt;% 
   nest(income, prevalence_percent)</code></pre>
-<pre><code>## Warning: Supplying `...` without names was deprecated in tidyr
+<pre><code>## Warning: Supplying `...` without names
+## was deprecated in tidyr
 ## 1.0.0.
-## ℹ Please specify a name for each selection.
-## ℹ Did you want `data = c(income, prevalence_percent)`?
-## Call `lifecycle::last_lifecycle_warnings()` to see
-## where this warning was generated.</code></pre>
+## ℹ Please specify a name for
+##   each selection.
+## ℹ Did you want `data =
+##   c(income,
+##   prevalence_percent)`?
+## Call
+## `lifecycle::last_lifecycle_warnings()`
+## to see where this warning was
+## generated.</code></pre>
 <pre class="r"><code>#asthma dataset
 asthma_dataset = 
   inner_join(asthma_prevalence, asthma_prace, by = c(&quot;year_name&quot;, &quot;state&quot;)) %&gt;% 
@@ -477,7 +505,7 @@ asthma_dataset =
 # import two dataset
 temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ───────────────────────────────
+## ── Column specification ──────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -494,7 +522,7 @@ temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 ##                     Max.   :2021                      Max.   : 30.26</code></pre>
 <pre class="r"><code>asthma_df = read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ───────────────────────────────
+## ── Column specification ──────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -515,8 +543,10 @@ temp_yearly_df =
   group_by(state, year) |&gt; 
   summarize(avg_yearly = mean(avg_temp)) |&gt; 
   select(state, year_name = year, avg_temp_yearly = avg_yearly)</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;state&#39;. You can
-## override using the `.groups` argument.</code></pre>
+<pre><code>## `summarise()` has grouped
+## output by &#39;state&#39;. You can
+## override using the `.groups`
+## argument.</code></pre>
 <pre class="r"><code># merge two dataset
 merged_df = 
   left_join(asthma_df, temp_yearly_df, by=c(&quot;state&quot;, &quot;year_name&quot;)) |&gt; 
@@ -531,7 +561,8 @@ temp_df |&gt;
     xlab = &quot;average temperature&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+<pre><code>## `stat_bin()` using `bins =
+## 30`. Pick better value with
 ## `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>asthma_df |&gt; 
@@ -542,7 +573,8 @@ temp_df |&gt;
     xlab = &quot;prevalence (percent)&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+<pre><code>## `stat_bin()` using `bins =
+## 30`. Pick better value with
 ## `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code># two variables generally follows normal distribution</code></pre>

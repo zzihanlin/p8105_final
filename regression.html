@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Analysis</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Data Import and EDA
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="temp_function.html">Temperature Data</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="mapping.html">Data Visualization</a>
+</li>
+<li>
+  <a href="https://klopez67.shinyapps.io/final_draft/">Shiny</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mailto:&lt;hc3563@cumc.columbia.edu&gt;">Hanchuan Chen</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;tpd2121@cumc.columbia.edu&gt;">Tasya Dita</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;zl3543@cumc.columbia.edu&gt;">Zihan Lin</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;am6592@cumc.columbia.edu&gt;">Adeena Moghni</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;kp2809@cumc.columbia.edu&gt;">Kimberly Palaguachi-Lopez</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/zzihanlin/p8105_final_project.git">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Regression Analysis</h1>
+
+</div>
+
+
+<p>We first conducted a linear regression on all data (no
+stratification), then on data stratified by race, then on data
+stratificed by race and income to see which was a better fit model</p>
+<div id="initial-regression-on-all-data" class="section level2">
+<h2>Initial Regression on all data</h2>
+<div id="check-distribution-assumption" class="section level3">
+<h3>Check distribution assumption</h3>
+<pre class="r"><code>temp_df |&gt; 
+  ggplot(aes(x = avg_temp)) +
+  geom_histogram() +
+  labs(
+    title = &quot;distribution of average temperature in 2011-2021&quot;,
+    xlab = &quot;average temperature&quot;,
+    ylab = &quot;frequency&quot;
+  )</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>asthma_df |&gt; 
+  ggplot(aes(x = prevalence_percent)) +
+  geom_histogram() +
+  labs(
+    title = &quot;distribution of prevalence in 2011-2021&quot;,
+    xlab = &quot;prevalence (percent)&quot;,
+    ylab = &quot;frequency&quot;
+  )</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-2.png" width="672" />
+As seen, the two variables generally follow normal distribution</p>
+</div>
+</div>
+<div id="regression-results" class="section level2">
+<h2>Regression Results</h2>
+<div id="linear-regression" class="section level3">
+<h3>Linear Regression:</h3>
+<pre class="r"><code>model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
+
+summary(model) %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">10.1862308</td>
+<td align="right">0.1385045</td>
+<td align="right">73.54440</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.0671492</td>
+<td align="right">0.0108541</td>
+<td align="right">-6.18651</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="linear-regression-on-log-transformed-data"
+class="section level3">
+<h3>Linear Regression on Log Transformed Data:</h3>
+<pre class="r"><code>model_log = 
+  merged_df |&gt; 
+    mutate(log_precalence = log(prevalence_percent)) |&gt; 
+    lm(log_precalence ~ avg_temp_yearly, data = _)
+
+summary(model_log) %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">2.3165614</td>
+<td align="right">0.0147289</td>
+<td align="right">157.27982</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.0072248</td>
+<td align="right">0.0011543</td>
+<td align="right">-6.25926</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(model_log)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="regression-of-data-stratified-by-race" class="section level3">
+<h3>Regression of Data Stratified by Race</h3>
+<div id="linear-regression-main-effects" class="section level4">
+<h4>Linear Regression (main effects):</h4>
+<pre class="r"><code>lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = race_asthma_df)
+
+summary(lm_by_race)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="39%" />
+<col width="15%" />
+<col width="14%" />
+<col width="15%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">18.0593269</td>
+<td align="right">0.7249971</td>
+<td align="right">24.9095155</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.1436844</td>
+<td align="right">0.0203280</td>
+<td align="right">-7.0682882</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityBlack NH</td>
+<td align="right">0.5413827</td>
+<td align="right">0.7249082</td>
+<td align="right">0.7468293</td>
+<td align="right">0.4552386</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityHispanic</td>
+<td align="right">-2.6406718</td>
+<td align="right">0.7208131</td>
+<td align="right">-3.6634624</td>
+<td align="right">0.0002541</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityMultirace-NH</td>
+<td align="right">6.3714286</td>
+<td align="right">0.9718625</td>
+<td align="right">6.5558948</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityMultirace NH</td>
+<td align="right">7.1014914</td>
+<td align="right">0.7247052</td>
+<td align="right">9.7991451</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityOther-NH</td>
+<td align="right">-3.2775510</td>
+<td align="right">0.9718625</td>
+<td align="right">-3.3724430</td>
+<td align="right">0.0007567</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityOther NH</td>
+<td align="right">-3.0102058</td>
+<td align="right">0.7244586</td>
+<td align="right">-4.1551108</td>
+<td align="right">0.0000336</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityWhite-NH</td>
+<td align="right">-1.7142857</td>
+<td align="right">0.9718625</td>
+<td align="right">-1.7639179</td>
+<td align="right">0.0778709</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityWhite NH</td>
+<td align="right">-2.5938328</td>
+<td align="right">0.7238144</td>
+<td align="right">-3.5835607</td>
+<td align="right">0.0003456</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>plot(lm_by_race)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<pre class="r"><code>race_asthma_df =
+  race_asthma_df %&gt;% 
+  mutate(yhat = predict(lm_by_race, newdata = race_asthma_df)) 
+
+ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = race_ethnicity)) +
+  geom_point() +
+  geom_line(aes(y = yhat)) +
+  facet_wrap(~ race_ethnicity) +
+  labs(
+    title = &quot;Asthma Prevalence by Race and Temperature&quot;,
+    x = &quot;Average Yearly Temperature&quot;,
+    y = &quot;Asthma Prevalence (%)&quot;,
+    caption = &quot;line shows predicted prevalence % equation and data points show actual asthma prevalence&quot;
+  ) +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-9-5.png" width="672" /></p>
+</div>
+<div id="linear-regression-interaction-model" class="section level4">
+<h4>Linear Regression (interaction model):</h4>
+<pre class="r"><code>interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
+
+summary(interaction_model)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="12%" />
+<col width="11%" />
+<col width="12%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">16.3226013</td>
+<td align="right">1.6500340</td>
+<td align="right">9.8922819</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">0.0091457</td>
+<td align="right">0.1320433</td>
+<td align="right">0.0692627</td>
+<td align="right">0.9447862</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityBlack NH</td>
+<td align="right">2.9418659</td>
+<td align="right">1.7658831</td>
+<td align="right">1.6659460</td>
+<td align="right">0.0958530</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityHispanic</td>
+<td align="right">-0.4417989</td>
+<td align="right">1.7483799</td>
+<td align="right">-0.2526905</td>
+<td align="right">0.8005288</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityMultirace-NH</td>
+<td align="right">7.2303596</td>
+<td align="right">2.3335004</td>
+<td align="right">3.0985037</td>
+<td align="right">0.0019672</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityMultirace NH</td>
+<td align="right">9.9858149</td>
+<td align="right">1.7630277</td>
+<td align="right">5.6640147</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityOther-NH</td>
+<td align="right">-2.7855812</td>
+<td align="right">2.3335004</td>
+<td align="right">-1.1937350</td>
+<td align="right">0.2326981</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityOther NH</td>
+<td align="right">-1.6083896</td>
+<td align="right">1.7613634</td>
+<td align="right">-0.9131503</td>
+<td align="right">0.3612540</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityWhite-NH</td>
+<td align="right">-1.2708602</td>
+<td align="right">2.3335004</td>
+<td align="right">-0.5446154</td>
+<td align="right">0.5860680</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityWhite NH</td>
+<td align="right">-2.0815052</td>
+<td align="right">1.7599110</td>
+<td align="right">-1.1827332</td>
+<td align="right">0.2370305</td>
+</tr>
+<tr class="odd">
+<td align="left">avg_temp_yearly:race_ethnicityBlack NH</td>
+<td align="right">-0.2082204</td>
+<td align="right">0.1407926</td>
+<td align="right">-1.4789163</td>
+<td align="right">0.1392922</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly:race_ethnicityHispanic</td>
+<td align="right">-0.1919172</td>
+<td align="right">0.1396038</td>
+<td align="right">-1.3747274</td>
+<td align="right">0.1693426</td>
+</tr>
+<tr class="odd">
+<td align="left">avg_temp_yearly:race_ethnicityMultirace-NH</td>
+<td align="right">-0.0755851</td>
+<td align="right">0.1867374</td>
+<td align="right">-0.4047666</td>
+<td align="right">0.6856846</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly:race_ethnicityMultirace NH</td>
+<td align="right">-0.2494959</td>
+<td align="right">0.1407047</td>
+<td align="right">-1.7731881</td>
+<td align="right">0.0763227</td>
+</tr>
+<tr class="odd">
+<td align="left">avg_temp_yearly:race_ethnicityOther-NH</td>
+<td align="right">-0.0432929</td>
+<td align="right">0.1867374</td>
+<td align="right">-0.2318381</td>
+<td align="right">0.8166832</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly:race_ethnicityOther NH</td>
+<td align="right">-0.1246312</td>
+<td align="right">0.1405590</td>
+<td align="right">-0.8866820</td>
+<td align="right">0.3753378</td>
+</tr>
+<tr class="odd">
+<td align="left">avg_temp_yearly:race_ethnicityWhite-NH</td>
+<td align="right">-0.0390210</td>
+<td align="right">0.1867374</td>
+<td align="right">-0.2089619</td>
+<td align="right">0.8344955</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly:race_ethnicityWhite NH</td>
+<td align="right">-0.0497766</td>
+<td align="right">0.1404473</td>
+<td align="right">-0.3544151</td>
+<td align="right">0.7230586</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>plot(interaction_model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-10-3.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
+</div>
+<div id="logistic-fit" class="section level4">
+<h4>Logistic Fit:</h4>
+<pre class="r"><code>fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+                   data = race_asthma_df, 
+                   family = binomial())
+
+broom::tidy(fit_logistic) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<colgroup>
+<col width="39%" />
+<col width="15%" />
+<col width="14%" />
+<col width="15%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-1.5051760</td>
+<td align="right">0.4069662</td>
+<td align="right">-3.6985286</td>
+<td align="right">0.0002169</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.0107981</td>
+<td align="right">0.0116396</td>
+<td align="right">-0.9277022</td>
+<td align="right">0.3535621</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityBlack NH</td>
+<td align="right">0.0394836</td>
+<td align="right">0.4063661</td>
+<td align="right">0.0971626</td>
+<td align="right">0.9225973</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityHispanic</td>
+<td align="right">-0.2068794</td>
+<td align="right">0.4074283</td>
+<td align="right">-0.5077689</td>
+<td align="right">0.6116154</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityMultirace-NH</td>
+<td align="right">0.4072706</td>
+<td align="right">0.5145261</td>
+<td align="right">0.7915450</td>
+<td align="right">0.4286260</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityMultirace NH</td>
+<td align="right">0.4498840</td>
+<td align="right">0.4018567</td>
+<td align="right">1.1195136</td>
+<td align="right">0.2629211</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityOther-NH</td>
+<td align="right">-0.2611228</td>
+<td align="right">0.5722670</td>
+<td align="right">-0.4562954</td>
+<td align="right">0.6481776</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityOther NH</td>
+<td align="right">-0.2385367</td>
+<td align="right">0.4103378</td>
+<td align="right">-0.5813178</td>
+<td align="right">0.5610263</td>
+</tr>
+<tr class="odd">
+<td align="left">race_ethnicityWhite-NH</td>
+<td align="right">-0.1305753</td>
+<td align="right">0.5580578</td>
+<td align="right">-0.2339817</td>
+<td align="right">0.8149992</td>
+</tr>
+<tr class="even">
+<td align="left">race_ethnicityWhite NH</td>
+<td align="right">-0.2029822</td>
+<td align="right">0.4093124</td>
+<td align="right">-0.4959103</td>
+<td align="right">0.6199577</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>plot(fit_logistic)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-11-1.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-11-2.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-11-3.png" width="672" /><img src="regression_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
+</div>
+</div>
+<div id="mlr-of-race-income-and-yearly-temp" class="section level3">
+<h3>MLR of Race, Income, and Yearly temp</h3>
+<div id="check-distribution" class="section level4">
+<h4>Check distribution</h4>
+<pre class="r"><code># distribution of outcome variable
+ggplot(full_df, aes(x = log_prevalence)) + 
+  geom_histogram() +
+labs(
+  title = &quot;distribution of log-transformed outcome variable&quot;,
+  xlab = &quot;Log-prevalence&quot;,
+  ylab = &quot;Frequency&quot;
+)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+Distribution after log-transform looks normal</p>
+</div>
+<div id="regression-results-1" class="section level4">
+<h4>Regression Results:</h4>
+<pre class="r"><code>model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
+summary(model)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.4991143</td>
+<td align="right">0.0169730</td>
+<td align="right">29.4063771</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">raceMulti</td>
+<td align="right">0.2850025</td>
+<td align="right">0.0134295</td>
+<td align="right">21.2220995</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">raceOther</td>
+<td align="right">-0.3190599</td>
+<td align="right">0.0127209</td>
+<td align="right">-25.0816247</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">raceWhite</td>
+<td align="right">-0.1719038</td>
+<td align="right">0.0126481</td>
+<td align="right">-13.5912996</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">raceMultirace</td>
+<td align="right">0.3402026</td>
+<td align="right">0.0242162</td>
+<td align="right">14.0485801</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">raceBlack NH</td>
+<td align="right">0.2853422</td>
+<td align="right">0.0394680</td>
+<td align="right">7.2297192</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">raceHispanic</td>
+<td align="right">-0.0381076</td>
+<td align="right">0.0388345</td>
+<td align="right">-0.9812799</td>
+<td align="right">0.3264773</td>
+</tr>
+<tr class="even">
+<td align="left">raceOther NH</td>
+<td align="right">0.0325564</td>
+<td align="right">0.0371548</td>
+<td align="right">0.8762364</td>
+<td align="right">0.3809215</td>
+</tr>
+<tr class="odd">
+<td align="left">raceWhite NH</td>
+<td align="right">0.0403672</td>
+<td align="right">0.0356929</td>
+<td align="right">1.1309595</td>
+<td align="right">0.2580979</td>
+</tr>
+<tr class="even">
+<td align="left">income$25-$49,999</td>
+<td align="right">-0.2893334</td>
+<td align="right">0.0147869</td>
+<td align="right">-19.5668306</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">income$50-$74,999</td>
+<td align="right">-0.4159665</td>
+<td align="right">0.0147869</td>
+<td align="right">-28.1306808</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">income&lt; $15,000</td>
+<td align="right">0.3186433</td>
+<td align="right">0.0143553</td>
+<td align="right">22.1968687</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">income&gt;=$75,000</td>
+<td align="right">-0.4907071</td>
+<td align="right">0.0143553</td>
+<td align="right">-34.1829360</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">income$15–$24,999</td>
+<td align="right">0.1113978</td>
+<td align="right">0.0371826</td>
+<td align="right">2.9959654</td>
+<td align="right">0.0027422</td>
+</tr>
+<tr class="odd">
+<td align="left">income$25–$49,999</td>
+<td align="right">-0.1078389</td>
+<td align="right">0.0371826</td>
+<td align="right">-2.9002509</td>
+<td align="right">0.0037364</td>
+</tr>
+<tr class="even">
+<td align="left">income$50–$74,999</td>
+<td align="right">-0.2536880</td>
+<td align="right">0.0371826</td>
+<td align="right">-6.8227618</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">income$15,000–&lt;$25,000</td>
+<td align="right">0.0470593</td>
+<td align="right">0.0440802</td>
+<td align="right">1.0675836</td>
+<td align="right">0.2857329</td>
+</tr>
+<tr class="even">
+<td align="left">income$25,000–&lt;$50,000</td>
+<td align="right">-0.2222609</td>
+<td align="right">0.0439167</td>
+<td align="right">-5.0609690</td>
+<td align="right">0.0000004</td>
+</tr>
+<tr class="odd">
+<td align="left">income$50,000–&lt;$75,000</td>
+<td align="right">-0.3866814</td>
+<td align="right">0.0442464</td>
+<td align="right">-8.7392662</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.0257298</td>
+<td align="right">0.0009097</td>
+<td align="right">-28.2834870</td>
+<td align="right">0.0000000</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+R-squared: 0.4398 (~44%), meaning the model explains ~44% of the
+variance in the log-transformed prevalence. Adjusted R-squared: 0.4388,
+similar to the R-squared, indicating that the model generalizes well
+with the predictors.</p>
+<p>Race is a significant predictor overall, but not all race categories
+are significant. Different racial groups show varying relationships with
+the outcome. Income is a highly significant predictor, with lower income
+categories having significantly lower log-prevalence. As the yearly
+average temperature increases by 1 unit, the log-prevalence decreases
+slightly (negative association)</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

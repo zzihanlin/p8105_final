@@ -289,9 +289,9 @@ focus on asthma prevalence/incidence as hotter temperatures can lead to
 more pollen, air pollution, and other lung irritants. Studying these
 trends will help understand the health risks in vulnerable
 populations.</p>
-<p>Key Questions: 1. How do asthma cases correlate with temperature
-extremes? 2. Are there temporal or spatial patterns in asthma
-prevalence?</p>
+<p>Key Questions:<br />
+1. How do asthma cases correlate with temperature extremes?<br />
+2. Are there temporal or spatial patterns in asthma prevalence?</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -355,11 +355,43 @@ asthma_summary &lt;- asthma_data %&gt;%
     max_prevalence = max(prevalence_percent, na.rm = TRUE)
   )
 
-asthma_summary</code></pre>
+# Create a tidy table for asthma summary using kable
+asthma_summary %&gt;%
+  knitr::kable(
+    col.names = c(&quot;Average Prevalence (%)&quot;, &quot;Minimum Prevalence (%)&quot;, &quot;Maximum Prevalence (%)&quot;),
+    caption = &quot;Summary Statistics for Asthma Prevalence&quot;
+  )</code></pre>
+<table>
+<caption>Summary Statistics for Asthma Prevalence</caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">Average Prevalence (%)</th>
+<th align="right">Minimum Prevalence (%)</th>
+<th align="right">Maximum Prevalence (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">9.422719</td>
+<td align="right">6.2</td>
+<td align="right">13.2</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>asthma_summary</code></pre>
 <pre><code>## # A tibble: 1 × 3
 ##   avg_prevalence min_prevalence max_prevalence
 ##            &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
 ## 1           9.42            6.2           13.2</code></pre>
+<p>The average prevalence of asthma across the dataset is approximately
+9.42%. The minimum prevalence is 6.2%, while the maximum prevalence is
+13.2%. This range suggests notable variability in asthma prevalence
+across regions or time periods.</p>
 <pre class="r"><code># Summary of temperature data
 temp_summary &lt;- temp_data %&gt;%
   summarize(
@@ -368,11 +400,43 @@ temp_summary &lt;- temp_data %&gt;%
     max_temp = max(avg_temp, na.rm = TRUE)
   )
 
-temp_summary</code></pre>
+# Create a tidy table for temperature summary
+temp_summary %&gt;%
+  knitr::kable(
+    col.names = c(&quot;Average Temperature (°C)&quot;, &quot;Minimum Temperature (°C)&quot;, &quot;Maximum Temperature (°C)&quot;),
+    caption = &quot;Summary Statistics for Temperature Data&quot;
+  )</code></pre>
+<table>
+<caption>Summary Statistics for Temperature Data</caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">Average Temperature (°C)</th>
+<th align="right">Minimum Temperature (°C)</th>
+<th align="right">Maximum Temperature (°C)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">11.87722</td>
+<td align="right">-14.00078</td>
+<td align="right">30.258</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>temp_summary</code></pre>
 <pre><code>## # A tibble: 1 × 3
 ##   avg_temp_overall min_temp max_temp
 ##              &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
 ## 1             11.9    -14.0     30.3</code></pre>
+<p>The overall average temperature is approximately 11.88°C, with a wide
+range from -14.0°C (minimum) to 30.26°C (maximum). The large temperature
+range indicates that the dataset spans multiple regions with diverse
+climates.</p>
 <pre class="r"><code># Average temperature by year
 yearly_temp_summary &lt;- temp_data %&gt;%
   group_by(year) %&gt;%
@@ -380,7 +444,68 @@ yearly_temp_summary &lt;- temp_data %&gt;%
     avg_temp = mean(avg_temp, na.rm = TRUE)
   )
 
-yearly_temp_summary</code></pre>
+# Create a tidy table for yearly temperature summary
+yearly_temp_summary %&gt;%
+  knitr::kable(
+    col.names = c(&quot;Year&quot;, &quot;Average Temperature (°C)&quot;),
+    caption = &quot;Average Temperature by Year&quot;
+  )</code></pre>
+<table>
+<caption>Average Temperature by Year</caption>
+<thead>
+<tr class="header">
+<th align="right">Year</th>
+<th align="right">Average Temperature (°C)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2011</td>
+<td align="right">11.66251</td>
+</tr>
+<tr class="even">
+<td align="right">2012</td>
+<td align="right">12.65061</td>
+</tr>
+<tr class="odd">
+<td align="right">2013</td>
+<td align="right">11.12633</td>
+</tr>
+<tr class="even">
+<td align="right">2014</td>
+<td align="right">10.94758</td>
+</tr>
+<tr class="odd">
+<td align="right">2015</td>
+<td align="right">12.05795</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="right">12.56135</td>
+</tr>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">12.20775</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">11.68774</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">11.39799</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">12.12918</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">12.23760</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>yearly_temp_summary</code></pre>
 <pre><code>## # A tibble: 11 × 2
 ##     year avg_temp
 ##    &lt;dbl&gt;    &lt;dbl&gt;
@@ -395,21 +520,6 @@ yearly_temp_summary</code></pre>
 ##  9  2019     11.4
 ## 10  2020     12.1
 ## 11  2021     12.2</code></pre>
-<pre class="r"><code># Average temperature by season
-seasonal_temp_summary &lt;- temp_data %&gt;%
-  group_by(season) %&gt;%
-  summarize(
-    avg_temp = mean(avg_temp, na.rm = TRUE)
-  )
-
-seasonal_temp_summary</code></pre>
-<pre><code>## # A tibble: 4 × 2
-##   season avg_temp
-##   &lt;chr&gt;     &lt;dbl&gt;
-## 1 Fall      12.9 
-## 2 Spring    11.1 
-## 3 Summer    22.4 
-## 4 Winter     1.18</code></pre>
 <pre class="r"><code>ggplot(yearly_temp_summary, aes(x = year, y = avg_temp)) +
   geom_line(color = &quot;blue&quot;) +
   labs(
@@ -417,7 +527,62 @@ seasonal_temp_summary</code></pre>
     x = &quot;Year&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+The line plot shows annual average temperatures over the years. There
+are visible fluctuations, with some years showing higher average
+temperatures (e.g., 2012) and others lower (e.g., 2014). The average
+temperature peaked around 2012 and dipped notably around 2013-2014.
+There is no clear upward or downward trend in the dataset; instead,
+temperatures appear cyclical or influenced by short-term climate
+variations.</p>
+<pre class="r"><code># Average temperature by season
+seasonal_temp_summary &lt;- temp_data %&gt;%
+  group_by(season) %&gt;%
+  summarize(
+    avg_temp = mean(avg_temp, na.rm = TRUE)
+  )
+
+# Create a tidy table for seasonal temperature summary
+seasonal_temp_summary %&gt;%
+  knitr::kable(
+    col.names = c(&quot;Season&quot;, &quot;Average Temperature (°C)&quot;),
+    caption = &quot;Average Temperature by Season&quot;
+  )</code></pre>
+<table>
+<caption>Average Temperature by Season</caption>
+<thead>
+<tr class="header">
+<th align="left">Season</th>
+<th align="right">Average Temperature (°C)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Fall</td>
+<td align="right">12.850739</td>
+</tr>
+<tr class="even">
+<td align="left">Spring</td>
+<td align="right">11.056397</td>
+</tr>
+<tr class="odd">
+<td align="left">Summer</td>
+<td align="right">22.445812</td>
+</tr>
+<tr class="even">
+<td align="left">Winter</td>
+<td align="right">1.175468</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>seasonal_temp_summary</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   season avg_temp
+##   &lt;chr&gt;     &lt;dbl&gt;
+## 1 Fall      12.9 
+## 2 Spring    11.1 
+## 3 Summer    22.4 
+## 4 Winter     1.18</code></pre>
 <pre class="r"><code>ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
   geom_bar(stat = &quot;identity&quot;) +
   labs(
@@ -425,7 +590,14 @@ seasonal_temp_summary</code></pre>
     x = &quot;Season&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+The bar plot displays the average temperature for each season. Summer is
+significantly warmer (22.45°C on average), while Winter is coldest
+(1.18°C on average). Fall and Spring fall in between. The seasonal
+temperature differences are as expected, with clear distinctions between
+warmer and colder periods. The significant gap between Winter and Summer
+highlights the need to examine whether asthma prevalence increases
+during colder months due to weather-induced triggers.</p>
 <pre class="r"><code># Temperature by state
 state_temp_summary &lt;- temp_data %&gt;%
   group_by(state) %&gt;%
@@ -441,7 +613,14 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     x = &quot;State&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+The horizontal bar plot ranks states by their average temperature.
+States on the left (e.g., colder climates) have lower average
+temperatures, while those on the right (e.g., warmer climates) have
+higher averages. There is substantial geographic variation in average
+temperatures across states. States like Alaska are likely on the colder
+end, while southern states such as Florida or Texas may be on the warmer
+end.</p>
 </div>
 
 

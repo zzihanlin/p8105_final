@@ -10,14 +10,15 @@ library(tidyverse)
 library(lubridate)
 library(ggplot2)
 library(lubridate)
+library(knitr)
 ```
 
 ## Motivation
 
 Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence/incidence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
 
-Key Questions:
-1. How do asthma cases correlate with temperature extremes?
+Key Questions:                                                                                                                                
+1. How do asthma cases correlate with temperature extremes?                                                                                   
 2. Are there temporal or spatial patterns in asthma prevalence?
 
 ## Data
@@ -44,8 +45,17 @@ asthma_summary <- asthma_data %>%
     max_prevalence = max(prevalence_percent, na.rm = TRUE)
   )
 
-asthma_summary
+# Create a tidy table for asthma summary using kable
+asthma_summary %>%
+  knitr::kable(
+    col.names = c("Average Prevalence (%)", "Minimum Prevalence (%)", "Maximum Prevalence (%)"),
+    caption = "Summary Statistics for Asthma Prevalence"
+  )
 
+asthma_summary
+```
+The average prevalence of asthma across the dataset is approximately 9.42%. The minimum prevalence is 6.2%, while the maximum prevalence is 13.2%. This range suggests notable variability in asthma prevalence across regions or time periods.
+```{r}
 # Summary of temperature data
 temp_summary <- temp_data %>%
   summarize(
@@ -54,8 +64,17 @@ temp_summary <- temp_data %>%
     max_temp = max(avg_temp, na.rm = TRUE)
   )
 
-temp_summary
+# Create a tidy table for temperature summary
+temp_summary %>%
+  knitr::kable(
+    col.names = c("Average Temperature (°C)", "Minimum Temperature (°C)", "Maximum Temperature (°C)"),
+    caption = "Summary Statistics for Temperature Data"
+  )
 
+temp_summary
+```
+The overall average temperature is approximately 11.88°C, with a wide range from -14.0°C (minimum) to 30.26°C (maximum). The large temperature range indicates that the dataset spans multiple regions with diverse climates.
+```{r}
 # Average temperature by year
 yearly_temp_summary <- temp_data %>%
   group_by(year) %>%
@@ -63,16 +82,14 @@ yearly_temp_summary <- temp_data %>%
     avg_temp = mean(avg_temp, na.rm = TRUE)
   )
 
-yearly_temp_summary
-
-# Average temperature by season
-seasonal_temp_summary <- temp_data %>%
-  group_by(season) %>%
-  summarize(
-    avg_temp = mean(avg_temp, na.rm = TRUE)
+# Create a tidy table for yearly temperature summary
+yearly_temp_summary %>%
+  knitr::kable(
+    col.names = c("Year", "Average Temperature (°C)"),
+    caption = "Average Temperature by Year"
   )
 
-seasonal_temp_summary
+yearly_temp_summary
 ```
 
 ```{r}
@@ -84,6 +101,25 @@ ggplot(yearly_temp_summary, aes(x = year, y = avg_temp)) +
     y = "Average Temperature (°C)"
   )
 ```
+The line plot shows annual average temperatures over the years. There are visible fluctuations, with some years showing higher average temperatures (e.g., 2012) and others lower (e.g., 2014). The average temperature peaked around 2012 and dipped notably around 2013-2014. There is no clear upward or downward trend in the dataset; instead, temperatures appear cyclical or influenced by short-term climate variations.
+
+```{r}
+# Average temperature by season
+seasonal_temp_summary <- temp_data %>%
+  group_by(season) %>%
+  summarize(
+    avg_temp = mean(avg_temp, na.rm = TRUE)
+  )
+
+# Create a tidy table for seasonal temperature summary
+seasonal_temp_summary %>%
+  knitr::kable(
+    col.names = c("Season", "Average Temperature (°C)"),
+    caption = "Average Temperature by Season"
+  )
+
+seasonal_temp_summary
+```
 
 ```{r}
 ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
@@ -94,7 +130,7 @@ ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
     y = "Average Temperature (°C)"
   )
 ```
-
+The bar plot displays the average temperature for each season. Summer is significantly warmer (22.45°C on average), while Winter is coldest (1.18°C on average). Fall and Spring fall in between. The seasonal temperature differences are as expected, with clear distinctions between warmer and colder periods. The significant gap between Winter and Summer highlights the need to examine whether asthma prevalence increases during colder months due to weather-induced triggers.
 ```{r}
 # Temperature by state
 state_temp_summary <- temp_data %>%
@@ -112,3 +148,4 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     y = "Average Temperature (°C)"
   )
 ```
+The horizontal bar plot ranks states by their average temperature. States on the left (e.g., colder climates) have lower average temperatures, while those on the right (e.g., warmer climates) have higher averages. There is substantial geographic variation in average temperatures across states. States like Alaska are likely on the colder end, while southern states such as Florida or Texas may be on the warmer end.

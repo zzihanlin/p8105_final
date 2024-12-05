@@ -6,14 +6,15 @@ output:
     toc_float: true
 ---
 
-## Tasya Dita (tpd2121) 
+### Tasya Dita 
 
-## Zihan Lin (zl3543)
+### Zihan Lin 
 
-## Adeena Moghni (am6592) 
+### Adeena Moghni 
 
-## Kimberly Palaguachi-Lopez (kp2809) 
+[Adeena Moghni](https://adeenamoghni.github.io/) is currently an MS Biostatistics student at Columbia University Mailman School of Public Health, concentrating in Statistical Genetics
+### Kimberly Palaguachi-Lopez 
 
 [Kimberly Palaguachi-Lopez](https://klopez67.github.io/about.html) is currently persuing her master's in Biostatistics. 
 
-## Hanchuan Chen (hc3563)
+### Hanchuan Chen

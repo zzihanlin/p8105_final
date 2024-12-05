@@ -24,7 +24,7 @@ You can navigate through interactive [maps](https://klopez67.shinyapps.io/final_
 
 ## Report
 
-For more insight on our motivation, methods, and analyses, please read our report [here](final_report.html)
+For more insight on our motivation, methods, and analyses, please read our report [here](report.html)
 
 ## Meet Our Team Members!
 
@@ -34,7 +34,7 @@ Hanchuan Chen
 Tasya Dita   
 Zihan Lin  
 Adeena Moghni  
-<!-- Kimberly Palaguachi-Lopez   -->
+Kimberly Palaguachi-Lopez  
 
 ## Screencast
 

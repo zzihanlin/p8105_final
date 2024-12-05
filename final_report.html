@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Adeena Moghni" />
 
+<meta name="date" content="2024-12-03" />
 
-<title>Exploring the Link Between Asthma Trends and Climate Change</title>
+<title>final_report</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +31,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -224,69 +223,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -294,16 +230,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -384,53 +310,49 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Exploring the Link Between Asthma Trends
-and Climate Change</h1>
+<h1 class="title toc-ignore">final_report</h1>
+<h4 class="author">Adeena Moghni</h4>
+<h4 class="date">2024-12-03</h4>
 
 </div>
 
 
-<div id="welcome" class="section level2">
-<h2>Welcome!</h2>
-<p>Our project is focused on exploring the possible adverse health
-effects that could be associated to global climate change. Specifically,
-we focused on asthma prevalence as hotter temperatures can lead to more
-pollen, air pollution, and other lung irritants. Studying these trends
-will help understand the health risks in vulnerable populations.</p>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>Extreme weather is on the rise due to climate change, with many,
+especially those who come from a lower socioeconomic background, already
+feeling the adverse effects changing weather patterns. Asthma is a
+co-morbidity for other chronic diseases and also disproportionately
+affects those from a lower economic status. In this project, we want to
+focus on asthma prevalence/incidence as hotter temperatures can lead to
+more pollen, air pollution, and other lung irritants. Studying these
+trends will help understand the health risks in vulnerable
+populations.</p>
 </div>
-<div id="temperature-trends" class="section level2">
-<h2>Temperature Trends</h2>
-<p>You can navigate through interactive <a
-href="https://klopez67.shinyapps.io/final_draft/">maps</a> of asthma
-prevalence across the US</p>
-<p>(brief summary of findings and link to maps page here)</p>
-</div>
-<div id="regression-analysis" class="section level2">
-<h2>Regression Analysis</h2>
-<p>(brief summary of findings and link to regression here)</p>
-</div>
-<div id="report" class="section level2">
-<h2>Report</h2>
-<p>For more insight on our motivation, methods, and analyses, please
-read our report <a href="report.html">here</a></p>
-</div>
-<div id="meet-our-team-members" class="section level2">
-<h2>Meet Our Team Members!</h2>
-<p>This project was completed by:</p>
-<p>Hanchuan Chen<br />
-Tasya Dita<br />
-Zihan Lin<br />
-Adeena Moghni<br />
-Kimberly Palaguachi-Lopez</p>
-</div>
-<div id="screencast" class="section level2">
-<h2>Screencast</h2>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>To retrieve the temperature data, different options were explored
+from within the rnoaa package. meteo_pull_monitors() was first explored,
+but due to the number of monitors from each state, it was not realistic
+to pull data from each monitor to calculate the average temperature over
+a 10-year period. ncdc() was then investigated for use. This uses the
+National Climatic Data Center to access weather data and already has a
+TAVG variable for the average temperature. However, there were
+limitations as it could only gather data one year at a time and there
+was also issues with the API of this site. Using online resources was
+not realistic as datasets online were typically separated by
+year/month/day so getting a seasonal average was not possible. In the
+end, the temperature data was extracted using meteo_pull_monitors(). 30
+monitors from each state were randomly selected and the daily mean of
+each station was found by averaging the minimum and maximum temperatures
+(the TAVG as reported by meteo_pull_monitors() could not be used as many
+stations were missing this data) for every day from 1/1/2011 to
+12/31/2021 in every state. The data was then grouped by state, year, and
+season to find the seasonal average for every state in every year.</p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -463,35 +385,6 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -215,6 +215,54 @@ heat_plotly
 As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
 
 ### Initial Statistical Analysis** (Idk if we should keep this part )
+
+```{r, include = FALSE}
+# 1. merge asthma prevalance and temp data 
+# import two dataset
+temp_df = read_csv("data/temp_data.csv")
+summary(temp_df)
+
+asthma_df = read_csv("data/asthma_data.csv")
+summary(asthma_df)
+
+# find the yearly temperature by state
+temp_yearly_df = 
+  temp_df |> 
+  group_by(state, year) |> 
+  summarize(avg_yearly = mean(avg_temp)) |> 
+  select(state, year_name = year, avg_temp_yearly = avg_yearly)
+
+# merge two dataset
+merged_df = 
+  left_join(asthma_df, temp_yearly_df, by=c("state", "year_name")) |> 
+  drop_na() 
+# after merging yearly avg temperature and prevalence, DC has no temp data
+```
+
+
+```{r}
+# bar plot of temperature and line plot of prevalence by each state
+merged_df |> 
+  mutate(state = reorder(state, avg_temp_yearly)) |> 
+  group_by(state) |> 
+  summarize(prevalence = mean(prevalence_percent),
+            temp = mean(avg_temp_yearly)) |> 
+  ggplot(aes(x = state)) +
+    geom_bar(aes(y = temp), stat = "identity", fill = "skyblue") +
+    geom_line(aes(y = prevalence, group = 1)) +
+    geom_point(aes(y = prevalence), color = "red") +
+    scale_y_continuous(
+      name = "temperature",
+      sec.axis = sec_axis(~., name = "Prevalence (%)")
+    ) +
+  labs(
+    title = "Temperature and Prevalence by State",
+    color = "legend"
+  ) + 
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+```
+
 ```{r}
 final_df= 
   final_df |>

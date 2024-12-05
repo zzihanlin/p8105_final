@@ -12,7 +12,7 @@
 <meta name="author" content="Zihan Lin" />
 
 
-<title>Repot</title>
+<title>Report</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -272,7 +272,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Repot</h1>
+<h1 class="title toc-ignore">Report</h1>
 <h4 class="author">Zihan Lin</h4>
 
 </div>
@@ -621,6 +621,67 @@ higher averages. There is substantial geographic variation in average
 temperatures across states. States like Alaska are likely on the colder
 end, while southern states such as Florida or Texas may be on the warmer
 end.</p>
+<pre class="r"><code># Merge datasets by year and state
+merged_data &lt;- inner_join(
+  asthma_data,
+  temp_data,
+  by = c(&quot;year_name&quot; = &quot;year&quot;, &quot;state&quot; = &quot;state&quot;)
+)
+
+# Display first few rows of merged data
+head(merged_data)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   year_name state prevalence_percent season avg_temp
+##       &lt;dbl&gt; &lt;chr&gt;              &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1      2011 AL                   8   Fall      17.0 
+## 2      2011 AL                   8   Spring    17.9 
+## 3      2011 AL                   8   Summer    27.2 
+## 4      2011 AL                   8   Winter     7.25
+## 5      2011 AK                   8.2 Fall       1.83
+## 6      2011 AK                   8.2 Spring     2.12</code></pre>
+<p>The merged dataset includes columns for year_name, state,
+prevalence_percent, season, and avg_temp. Each row represents data for a
+specific state, year, and season, showing asthma prevalence percentages
+and average temperature.</p>
+<pre class="r"><code># Calculate correlation
+correlation &lt;- cor(
+  merged_data$prevalence_percent,
+  merged_data$avg_temp,
+  use = &quot;complete.obs&quot;
+)
+
+cat(&quot;The correlation between asthma prevalence and temperature is:&quot;, correlation)</code></pre>
+<pre><code>## The correlation between asthma prevalence and temperature is: -0.1330356</code></pre>
+<p>The correlation between asthma prevalence and temperature is
+-0.1330356. A correlation of -0.13 suggests a weak negative relationship
+between temperature and asthma prevalence. This implies that as
+temperatures increase, asthma prevalence slightly decreases, but the
+relationship is not strong. This weak correlation indicates that other
+factors may play more significant roles in asthma prevalence.</p>
+<pre class="r"><code># Scatter plot with regression line
+ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, color = &quot;blue&quot;) +
+  labs(
+    title = &quot;Asthma Prevalence vs Temperature&quot;,
+    x = &quot;Average Temperature (°C)&quot;,
+    y = &quot;Asthma Prevalence (%)&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The scatter plot visualizes the relationship between average
+temperature (x-axis) and asthma prevalence (y-axis). A regression line
+is overlaid, showing a slight downward slope, consistent with the weak
+negative correlation. The data points are widely scattered, confirming
+that temperature alone does not strongly predict asthma prevalence. The
+slight downward slope of the regression line reflects the weak negative
+correlation.</p>
+<p>Clusters of points around specific temperature ranges (e.g.,
+~10–20°C) suggest that more observations are concentrated in these
+moderate temperatures. Warmer temperatures might reduce asthma triggers
+like cold air exposure, leading to slightly lower prevalence. Other
+seasonal factors (e.g., pollen in Spring or high humidity in Summer)
+could interact with temperature and affect asthma prevalence.</p>
 </div>
 
 

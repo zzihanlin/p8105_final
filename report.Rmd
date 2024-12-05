@@ -1,5 +1,5 @@
 ---
-title: "Repot"
+title: "Report"
 author: "Zihan Lin"
 output: pdf_document
 ---
@@ -149,3 +149,43 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
   )
 ```
 The horizontal bar plot ranks states by their average temperature. States on the left (e.g., colder climates) have lower average temperatures, while those on the right (e.g., warmer climates) have higher averages. There is substantial geographic variation in average temperatures across states. States like Alaska are likely on the colder end, while southern states such as Florida or Texas may be on the warmer end.
+
+```{r}
+# Merge datasets by year and state
+merged_data <- inner_join(
+  asthma_data,
+  temp_data,
+  by = c("year_name" = "year", "state" = "state")
+)
+
+# Display first few rows of merged data
+head(merged_data)
+```
+The merged dataset includes columns for year_name, state, prevalence_percent, season, and avg_temp. Each row represents data for a specific state, year, and season, showing asthma prevalence percentages and average temperature.
+```{r}
+# Calculate correlation
+correlation <- cor(
+  merged_data$prevalence_percent,
+  merged_data$avg_temp,
+  use = "complete.obs"
+)
+
+cat("The correlation between asthma prevalence and temperature is:", correlation)
+```
+The correlation between asthma prevalence and temperature is -0.1330356. A correlation of -0.13 suggests a weak negative relationship between temperature and asthma prevalence. This implies that as temperatures increase, asthma prevalence slightly decreases, but the relationship is not strong. This weak correlation indicates that other factors may play more significant roles in asthma prevalence.
+```{r}
+# Scatter plot with regression line
+ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Asthma Prevalence vs Temperature",
+    x = "Average Temperature (°C)",
+    y = "Asthma Prevalence (%)"
+  )
+```
+
+
+The scatter plot visualizes the relationship between average temperature (x-axis) and asthma prevalence (y-axis). A regression line is overlaid, showing a slight downward slope, consistent with the weak negative correlation. The data points are widely scattered, confirming that temperature alone does not strongly predict asthma prevalence. The slight downward slope of the regression line reflects the weak negative correlation. 
+
+Clusters of points around specific temperature ranges (e.g., ~10–20°C) suggest that more observations are concentrated in these moderate temperatures. Warmer temperatures might reduce asthma triggers like cold air exposure, leading to slightly lower prevalence. Other seasonal factors (e.g., pollen in Spring or high humidity in Summer) could interact with temperature and affect asthma prevalence.

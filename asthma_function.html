@@ -871,6 +871,98 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   theme(legend.position=&quot;none&quot;)</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
+<div id="mlr-of-race-income-and-yearly-temp" class="section level2">
+<h2>MLR of race, income, and yearly temp</h2>
+<pre class="r"><code># We use asthma_dataset here, first need to unnest the data
+unnested_df = 
+  asthma_dataset |&gt; 
+  select(-prevalence_percent) |&gt; 
+  unnest(race) |&gt; 
+  rename(prevalence_race = prevalence_percent) |&gt; 
+  unnest(income) |&gt; 
+  rename(prevalence_income = prevalence_percent) |&gt; 
+  mutate(joint_prevalence = prevalence_race * prevalence_income / 100) |&gt; # here we assume race and income are independent 
+  select(-prevalence_income, -prevalence_race) 
+
+# full dataset contains race, income, yearly_temp, and joint prevalence
+full_df = 
+  left_join(unnested_df, merged_df, by = c(&quot;year_name&quot;, &quot;state&quot;)) |&gt; 
+  select(-prevalence_percent)</code></pre>
+<pre class="r"><code># data cleaning
+full_df = 
+  full_df |&gt; 
+  drop_na(c(joint_prevalence, avg_temp_yearly)) |&gt; 
+  filter(joint_prevalence != 0) |&gt; 
+  mutate(log_prevalence = log(joint_prevalence)) |&gt; 
+  mutate(race = as.factor(race),
+         income = as.factor(income))
+
+# distribution of outcome variable
+ggplot(full_df, aes(x = log_prevalence)) + 
+  geom_histogram() +
+labs(
+  title = &quot;distribution of log-transformed outcome variable&quot;,
+  xlab = &quot;Log-prevalence&quot;,
+  ylab = &quot;Frequency&quot;
+)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code># distribution after log-transform looks normal</code></pre>
+<pre class="r"><code>model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
+summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log_prevalence ~ race + income + avg_temp_yearly, 
+##     data = full_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.1872 -0.2353  0.0345  0.2761  1.7346 
+## 
+## Coefficients:
+##                          Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             0.4991143  0.0169730  29.406  &lt; 2e-16 ***
+## raceMulti               0.2850025  0.0134295  21.222  &lt; 2e-16 ***
+## raceOther              -0.3190599  0.0127209 -25.082  &lt; 2e-16 ***
+## raceWhite              -0.1719038  0.0126481 -13.591  &lt; 2e-16 ***
+## raceMultirace           0.3402026  0.0242162  14.049  &lt; 2e-16 ***
+## raceBlack NH            0.2853422  0.0394680   7.230 5.18e-13 ***
+## raceHispanic           -0.0381076  0.0388345  -0.981  0.32648    
+## raceOther NH            0.0325564  0.0371548   0.876  0.38092    
+## raceWhite NH            0.0403672  0.0356929   1.131  0.25810    
+## income$25-$49,999      -0.2893334  0.0147869 -19.567  &lt; 2e-16 ***
+## income$50-$74,999      -0.4159665  0.0147869 -28.131  &lt; 2e-16 ***
+## income&lt; $15,000         0.3186433  0.0143553  22.197  &lt; 2e-16 ***
+## income&gt;=$75,000        -0.4907071  0.0143553 -34.183  &lt; 2e-16 ***
+## income$15–$24,999       0.1113978  0.0371826   2.996  0.00274 ** 
+## income$25–$49,999      -0.1078389  0.0371826  -2.900  0.00374 ** 
+## income$50–$74,999      -0.2536880  0.0371826  -6.823 9.42e-12 ***
+## income$15,000–&lt;$25,000  0.0470593  0.0440802   1.068  0.28573    
+## income$25,000–&lt;$50,000 -0.2222609  0.0439167  -5.061 4.24e-07 ***
+## income$50,000–&lt;$75,000 -0.3866814  0.0442464  -8.739  &lt; 2e-16 ***
+## avg_temp_yearly        -0.0257298  0.0009097 -28.283  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.442 on 10517 degrees of freedom
+## Multiple R-squared:  0.4398, Adjusted R-squared:  0.4388 
+## F-statistic: 434.5 on 19 and 10517 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>R-squared: 0.4398 (~44%), meaning the model explains ~44% of the
+variance in the log-transformed prevalence. Adjusted R-squared: 0.4388,
+similar to the R-squared, indicating that the model generalizes well
+with the predictors.</p>
+<p>Race is a significant predictor overall, but not all race categories
+are significant. Different racial groups show varying relationships with
+the outcome. Income is a highly significant predictor, with lower income
+categories having significantly lower log-prevalence. As the yearly
+average temperature increases by 1 unit, the log-prevalence decreases
+slightly (negative association)</p>
+<pre class="r"><code># Diagnostic plots
+par(mfrow = c(2, 2))
+plot(model)</code></pre>
+<p><img src="asthma_function_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
 
 
 

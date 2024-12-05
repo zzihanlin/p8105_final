@@ -35,3 +35,80 @@ The analysis uses two primary datasets: Asthma Data and Temperature Data. The As
 The Temperature Data contains `r nrow(temp_data)` observations and `r ncol(temp_data)` variables, with key columns including the date of the temperature reading (date), the region (region), and the recorded temperature (temp). This dataset provides critical environmental context for analyzing the relationship between temperature and asthma cases. 
 
 ## Exploratory Data Analysis
+```{r}
+# Summary of asthma data
+asthma_summary <- asthma_data %>%
+  summarize(
+    avg_prevalence = mean(prevalence_percent, na.rm = TRUE),
+    min_prevalence = min(prevalence_percent, na.rm = TRUE),
+    max_prevalence = max(prevalence_percent, na.rm = TRUE)
+  )
+
+asthma_summary
+
+# Summary of temperature data
+temp_summary <- temp_data %>%
+  summarize(
+    avg_temp_overall = mean(avg_temp, na.rm = TRUE),
+    min_temp = min(avg_temp, na.rm = TRUE),
+    max_temp = max(avg_temp, na.rm = TRUE)
+  )
+
+temp_summary
+
+# Average temperature by year
+yearly_temp_summary <- temp_data %>%
+  group_by(year) %>%
+  summarize(
+    avg_temp = mean(avg_temp, na.rm = TRUE)
+  )
+
+yearly_temp_summary
+
+# Average temperature by season
+seasonal_temp_summary <- temp_data %>%
+  group_by(season) %>%
+  summarize(
+    avg_temp = mean(avg_temp, na.rm = TRUE)
+  )
+
+seasonal_temp_summary
+```
+
+```{r}
+ggplot(yearly_temp_summary, aes(x = year, y = avg_temp)) +
+  geom_line(color = "blue") +
+  labs(
+    title = "Average Temperature Over Time",
+    x = "Year",
+    y = "Average Temperature (°C)"
+  )
+```
+
+```{r}
+ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Temperature by Season",
+    x = "Season",
+    y = "Average Temperature (°C)"
+  )
+```
+
+```{r}
+# Temperature by state
+state_temp_summary <- temp_data %>%
+  group_by(state) %>%
+  summarize(
+    avg_temp = mean(avg_temp, na.rm = TRUE)
+  )
+
+ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Average Temperature by State",
+    x = "State",
+    y = "Average Temperature (°C)"
+  )
+```

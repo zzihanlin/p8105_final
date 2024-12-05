@@ -384,3 +384,60 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   ) +
   theme(legend.position="none")
 ```
+
+## MLR of race, income, and yearly temp
+```{r}
+# We use asthma_dataset here, first need to unnest the data
+unnested_df = 
+  asthma_dataset |> 
+  select(-prevalence_percent) |> 
+  unnest(race) |> 
+  rename(prevalence_race = prevalence_percent) |> 
+  unnest(income) |> 
+  rename(prevalence_income = prevalence_percent) |> 
+  mutate(joint_prevalence = prevalence_race * prevalence_income / 100) |> # here we assume race and income are independent 
+  select(-prevalence_income, -prevalence_race) 
+
+# full dataset contains race, income, yearly_temp, and joint prevalence
+full_df = 
+  left_join(unnested_df, merged_df, by = c("year_name", "state")) |> 
+  select(-prevalence_percent)
+```
+
+```{r}
+# data cleaning
+full_df = 
+  full_df |> 
+  drop_na(c(joint_prevalence, avg_temp_yearly)) |> 
+  filter(joint_prevalence != 0) |> 
+  mutate(log_prevalence = log(joint_prevalence)) |> 
+  mutate(race = as.factor(race),
+         income = as.factor(income))
+
+# distribution of outcome variable
+ggplot(full_df, aes(x = log_prevalence)) + 
+  geom_histogram() +
+labs(
+  title = "distribution of log-transformed outcome variable",
+  xlab = "Log-prevalence",
+  ylab = "Frequency"
+)
+
+# distribution after log-transform looks normal
+```
+
+```{r}
+model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
+summary(model)
+```
+R-squared: 0.4398 (~44%), meaning the model explains ~44% of the variance in the log-transformed prevalence.
+Adjusted R-squared: 0.4388, similar to the R-squared, indicating that the model generalizes well with the predictors.
+
+Race is a significant predictor overall, but not all race categories are significant. Different racial groups show varying relationships with the outcome. Income is a highly significant predictor, with lower income categories having significantly lower log-prevalence. As the yearly average temperature increases by 1 unit, the log-prevalence decreases slightly (negative association)
+
+
+```{r}
+# Diagnostic plots
+par(mfrow = c(2, 2))
+plot(model)
+```

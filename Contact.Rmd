@@ -1,0 +1,31 @@
+---
+title: "Contact"
+author: "Zihan Lin"
+date: "2024-12-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Contact Us
+
+For questions or feedback about this project, please reach out:
+
+- **GitHub Repository**: [Asthma Project Repo](https://github.com/zzihanlin/p8105_final_project.github.io.git)
+
+- **Author**: Tasya Dita (tpd2121)
+- **Email**: tpd2121@cumc.columbia.edu
+
+- **Author**: Zihan Lin (zl3543)
+- **Email**: zl3543@cumc.columbia.edu
+
+- **Author**: Adeena Moghni (am6592)
+- **Email**: am6592@cumc.columbia.edu
+
+- **Author**: Kimberly Palaguachi-Lopez (kp2809)
+- **Email**: kp2809@cumc.columbia.edu
+
+- **Author**: Hanchuan Chen (hc3563)
+- **Email**: hc3563@cumc.columbia.edu

@@ -427,7 +427,7 @@ par(mfrow = c(2, 2))
 plot(model)
 ```
 
-The R-squared is 0.4398, meaning the model explains about 44% of the variance in the log-transformed prevalence, which is ever higher than previous two predictors model. The adjusted R-squared is 0.4388, similar to the R-squared, indicating that the model generalizes well with the predictors.
+The R-squared is 0.4363, meaning the model explains about 44% of the variance in the log-transformed prevalence, which is ever higher than previous two predictors model. The adjusted R-squared is 0.4356, similar to the R-squared, indicating that the model generalizes well with the predictors.
 
 Race is a significant predictor overall, but not all race categories are significant. Different racial groups show varying relationships with the outcome. Income is a highly significant predictor, with lower income categories having significantly lower log-prevalence. As the yearly average temperature increases by 1 unit, the log-prevalence decreases slightly (negative association).
 

@@ -30,7 +30,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -219,7 +223,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -229,6 +299,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -316,6 +396,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Report</h1>
@@ -359,6 +447,8 @@ each station was found by averaging the minimum and maximum temperatures
 stations were missing this data) for every day from 1/1/2011 to
 12/31/2021 in every state. The data was then grouped by state, year, and
 season to find the seasonal average for every state in every year.</p>
+<p>The analysis uses two primary datasets: Asthma Data and Temperature
+Data.</p>
 <pre class="r"><code># Load datasets
 asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
@@ -369,6 +459,12 @@ asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p>The Asthma Data consists of 559 observations and 3 variables, which
+include details such as the date of record, the region, and the number
+of asthma cases reported (cases). A brief look at the first few rows
+reveals the following column names: year_name, state,
+prevalence_percent, NA, NA, providing an overview of the key information
+captured.</p>
 <pre class="r"><code>temp_data &lt;- read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -378,13 +474,6 @@ asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>The analysis uses two primary datasets: Asthma Data and Temperature
-Data. The Asthma Data consists of 559 observations and 3 variables,
-which include details such as the date of record, the region, and the
-number of asthma cases reported (cases). A brief look at the first few
-rows reveals the following column names: year_name, state,
-prevalence_percent, NA, NA, providing an overview of the key information
-captured.</p>
 <p>The Temperature Data contains 2193 observations and 4 variables, with
 key columns including the date of the temperature reading (date), the
 region (region), and the recorded temperature (temp). This dataset
@@ -429,11 +518,6 @@ asthma_summary %&gt;%
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>asthma_summary</code></pre>
-<pre><code>## # A tibble: 1 × 3
-##   avg_prevalence min_prevalence max_prevalence
-##            &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
-## 1           9.42            6.2           13.2</code></pre>
 <p>The average prevalence of asthma across the dataset is approximately
 9.42%. The minimum prevalence is 6.2%, while the maximum prevalence is
 13.2%. This range suggests notable variability in asthma prevalence
@@ -573,7 +657,7 @@ yearly_temp_summary %&gt;%
     x = &quot;Year&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The line plot shows annual average temperatures over the years. There
 are visible fluctuations, with some years showing higher average
 temperatures (e.g., 2012) and others lower (e.g., 2014). The average
@@ -636,7 +720,7 @@ seasonal_temp_summary %&gt;%
     x = &quot;Season&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>The bar plot displays the average temperature for each season. Summer
 is significantly warmer (22.45°C on average), while Winter is coldest
 (1.18°C on average). Fall and Spring fall in between. The seasonal
@@ -659,7 +743,7 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     x = &quot;State&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>The horizontal bar plot ranks states by their average temperature.
 States on the left (e.g., colder climates) have lower average
 temperatures, while those on the right (e.g., warmer climates) have
@@ -714,7 +798,7 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line
 is overlaid, showing a slight downward slope, consistent with the weak
@@ -732,6 +816,8 @@ could interact with temperature and affect asthma prevalence.</p>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -763,7 +849,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

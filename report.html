@@ -17,7 +17,7 @@
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -251,14 +251,60 @@ $(document).ready(function () {
         <li>
   <a href="about.html">About</a>
 </li>
-<li>
-  <a href="mailto:&lt;you@youremail.com&gt;">
-    <span class="fa fa-envelope fa-lg"></span>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Data Import
      
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="temp_function.html">Temperature Data</a>
+    </li>
+    <li>
+      <a href="asthma_function.html">Asthma Data</a>
+    </li>
+  </ul>
 </li>
 <li>
-  <a href="http://github.com/&lt;YOUR_GH_NAME&gt;/">
+  <a href="regression.html">Regression Analysis</a>
+</li>
+<li>
+  <a href="mapping.html">Data Visualization/ EDA</a>
+</li>
+<li>
+  <a href="https://klopez67.shinyapps.io/final_draft/">Shiny</a>
+</li>
+<li>
+  <a href="report.html">Report</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mailto:&lt;hc3563@cumc.columbia.edu&gt;">Hanchuan Chen</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;tpd2121@cumc.columbia.edu&gt;">Tasya Dita</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;zl3543@cumc.columbia.edu&gt;">Zihan Lin</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;am6592@cumc.columbia.edu&gt;">Adeena Moghni</a>
+    </li>
+    <li>
+      <a href="mailto:&lt;kp2809@cumc.columbia.edu&gt;">Kimberly Palaguachi-Lopez</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="https://github.com/zzihanlin/p8105_final_project.git">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -527,8 +573,8 @@ yearly_temp_summary %&gt;%
     x = &quot;Year&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-5-1.png" width="672" />
-The line plot shows annual average temperatures over the years. There
+<p><img src="Report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The line plot shows annual average temperatures over the years. There
 are visible fluctuations, with some years showing higher average
 temperatures (e.g., 2012) and others lower (e.g., 2014). The average
 temperature peaked around 2012 and dipped notably around 2013-2014.
@@ -590,9 +636,9 @@ seasonal_temp_summary %&gt;%
     x = &quot;Season&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-7-1.png" width="672" />
-The bar plot displays the average temperature for each season. Summer is
-significantly warmer (22.45°C on average), while Winter is coldest
+<p><img src="Report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The bar plot displays the average temperature for each season. Summer
+is significantly warmer (22.45°C on average), while Winter is coldest
 (1.18°C on average). Fall and Spring fall in between. The seasonal
 temperature differences are as expected, with clear distinctions between
 warmer and colder periods. The significant gap between Winter and Summer
@@ -613,8 +659,8 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     x = &quot;State&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-8-1.png" width="672" />
-The horizontal bar plot ranks states by their average temperature.
+<p><img src="Report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The horizontal bar plot ranks states by their average temperature.
 States on the left (e.g., colder climates) have lower average
 temperatures, while those on the right (e.g., warmer climates) have
 higher averages. There is substantial geographic variation in average
@@ -668,7 +714,7 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="Report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line
 is overlaid, showing a slight downward slope, consistent with the weak

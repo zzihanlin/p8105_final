@@ -101,6 +101,9 @@ ggplot(yearly_temp_summary, aes(x = year, y = avg_temp)) +
     y = "Average Temperature (°C)"
   )
 ```
+
+
+                      
 The line plot shows annual average temperatures over the years. There are visible fluctuations, with some years showing higher average temperatures (e.g., 2012) and others lower (e.g., 2014). The average temperature peaked around 2012 and dipped notably around 2013-2014. There is no clear upward or downward trend in the dataset; instead, temperatures appear cyclical or influenced by short-term climate variations.
 
 ```{r}
@@ -130,6 +133,9 @@ ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
     y = "Average Temperature (°C)"
   )
 ```
+
+              
+
 The bar plot displays the average temperature for each season. Summer is significantly warmer (22.45°C on average), while Winter is coldest (1.18°C on average). Fall and Spring fall in between. The seasonal temperature differences are as expected, with clear distinctions between warmer and colder periods. The significant gap between Winter and Summer highlights the need to examine whether asthma prevalence increases during colder months due to weather-induced triggers.
 ```{r}
 # Temperature by state
@@ -148,6 +154,9 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     y = "Average Temperature (°C)"
   )
 ```
+
+                                            
+
 The horizontal bar plot ranks states by their average temperature. States on the left (e.g., colder climates) have lower average temperatures, while those on the right (e.g., warmer climates) have higher averages. There is substantial geographic variation in average temperatures across states. States like Alaska are likely on the colder end, while southern states such as Florida or Texas may be on the warmer end.
 
 ```{r}

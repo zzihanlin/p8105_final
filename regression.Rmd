@@ -17,20 +17,6 @@ library(patchwork)
 ```
 
 ```{r asthma dataset,include=FALSE }
-#write the data loading steps
-asthma_2011 = read_html("https://www.cdc.gov/asthma/brfss/2011/tableC1.htm") %>% 
-  html_table() %>% 
-  bind_rows() %>% 
-  janitor::clean_names() %>% 
-  select(1:4) %>% 
-  filter(!state %in% c("U.S. Total**", "Territories", "PR")) %>% 
-  mutate(year = "2011")
-
-#i use current asthma prevalence (table c1) rather than lifetime prevalence and only keep the prevalence percent (instead of numbers) 
-#i am excluding PR, VI, and GU
-
-#write the functions for data loading
-
 asthma_hmtl = function(url) {
   
   df = 
@@ -65,12 +51,6 @@ asthma_prevalence =
   unnest(asthma_byyear) %>% 
   select(-data_url, -sample_size, -sample_sizec, -standard_error) %>% 
   group_by(year_name)
-
-#starting from 2016, has column called "weighted_number" instead of prevalence number
-#2016 and 2021 includes VI (removed)
-#2020 and 2021 has U.S. totalf (removed)
-#2019 and 2021 only has 49 states (-NJ and -FL)
-
 
 #function 2 for race and income data
 asthma_hmtl2 = function(url) {
@@ -110,7 +90,8 @@ asthma_prace = asthma_prace %>%
   select(-data_url, -sample_size, -sample_sizec) %>% 
   mutate(
     race = ifelse(is.na(race), raceg, race), 
-    race = ifelse(is.na(race), race_ethnicityg, race)
+    race = ifelse(is.na(race), race_ethnicityg, race), 
+    race = case_when(race == "Multi" ~ "Multirace", TRUE ~ race)
     ) %>% 
   select(-raceg, -race_ethnicityg) %>%
   nest(race, prevalence_percent)
@@ -135,6 +116,14 @@ asthma_pincome =
   mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %>% 
   unnest(asthma_byyear) %>% 
   select(-data_url, -sample_size, -sample_sizec) %>% 
+  mutate(
+    income = case_when(income == "$15-$24,999" ~ "$15–$24,999", TRUE ~ income),
+    income = case_when(income == "$15,000–<$25,000" ~ "$15–$24,999", TRUE ~ income),
+    income = case_when(income == "$25-$49,999" ~ "$25–$49,999", TRUE ~ income),
+    income = case_when(income == "$25,000–<$50,000" ~ "$25–$49,999", TRUE ~ income),
+    income = case_when(income == "$50-$74,999" ~ "$50–$74,999", TRUE ~ income), 
+    income = case_when(income == "$50,000–<$75,000" ~ "$50–$74,999", TRUE ~ income)
+    ) %>% 
   nest(income, prevalence_percent)
 
 #asthma dataset

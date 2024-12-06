@@ -90,6 +90,8 @@ asthma_prevalence %>%
   theme_minimal()
 ```
 
+Looking at the annual trend, we see that asthma prevalence show a slightly increasing trend since 2014. Looking at the states data, the highest prevalence are found in RI, ME, KY, WV and VT while the lowest prevalence are found in TX, FL, NE, LA, SD. 
+
 <h4> Race and income data</h4>
 
 New function was developed to scrape race and income data as they had additional columns. 
@@ -109,7 +111,7 @@ asthma_hmtl2 = function(url) {
 ```
 
 <b>Race</b>
-In the race data, we merged "multi" and "multirace" as the same category to help simplify the category available.  
+For race data, since 2021 the survey collected race and ethinicity data, so the categories are slightly different. We keep the new terms, however we merged "multi" and "multirace" as the same category to help simplify the category available.  
 
 ```{r race, message=FALSE, warning=FALSE}
 asthma_prace = 
@@ -142,7 +144,8 @@ asthma_prace = asthma_prace %>%
 
 asthma_prace %>% 
   ggplot(aes(x = year_name, y = prevalence_percent, color = race)) + 
-  geom_point(alpha = 0.5) + 
+  geom_boxplot() + 
+  facet_wrap(~ race) +
   labs(
     x = "Year",
     y = "Prevalence_percent",
@@ -150,11 +153,18 @@ asthma_prace %>%
   ) +
   theme_minimal()
 
+
+```
+
+People identified as Black and Multirace have higher asthma prevalence distribution compared to the other groups, while While and White NH have the lowest. This suggest that asthma may be correlated with race, which will be investigated further in the analysis.
+
+```{r race2, warning=FALSE, message=FALSE}
 asthma_prace = asthma_prace %>%
   nest(race, prevalence_percent)
 ```
 
 <b>Income data</b>
+For the income data, in 2020 they used "-" instead of "–" and in 2021 they changed the upper limit in the range to <$25,000, $50,000 and $75,000 (instead of $24,999, $49,999 and $74,000). We merged the data by mutating the dash and the categories. 
 
 ```{r income, message=FALSE, warning=FALSE}
 asthma_pincome = 
@@ -175,7 +185,15 @@ asthma_pincome =
   ) %>% 
   mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %>% 
   unnest(asthma_byyear) %>% 
-  select(-data_url, -sample_size, -sample_sizec)
+  select(-data_url, -sample_size, -sample_sizec) %>% 
+  mutate(
+    income = case_when(income == "$15-$24,999" ~ "$15–$24,999", TRUE ~ income),
+    income = case_when(income == "$15,000–<$25,000" ~ "$15–$24,999", TRUE ~ income),
+    income = case_when(income == "$25-$49,999" ~ "$25–$49,999", TRUE ~ income),
+    income = case_when(income == "$25,000–<$50,000" ~ "$25–$49,999", TRUE ~ income),
+    income = case_when(income == "$50-$74,999" ~ "$50–$74,999", TRUE ~ income), 
+    income = case_when(income == "$50,000–<$75,000" ~ "$50–$74,999", TRUE ~ income)
+    )
 
 asthma_pincome %>% 
   ggplot(aes(x = year_name, y = prevalence_percent, color = income)) + 
@@ -186,10 +204,15 @@ asthma_pincome %>%
     title = "Asthma prevalence by year by income"
   ) +
   theme_minimal()
+```
 
+People in the lowest income level (<$15,000) has the highest asthma prevalence across all years while people in the highest income level (>=$75,000) has the lowest prevalence. This suggest that asthma is correlated with income, which will be investigated further in the analysis. 
+
+```{r income2, warning=FALSE, message=FALSE}
 asthma_pincome = asthma_pincome %>% 
   nest(income, prevalence_percent)
 ```
+
 
 <h4>Complete dataset</h4>
 

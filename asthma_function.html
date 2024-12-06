@@ -422,6 +422,10 @@ asthma_prevalence %&gt;%
   ) +
   theme_minimal()</code></pre>
 <p><img src="asthma_function_files/figure-html/asthma%20prevalence-2.png" width="672" /></p>
+<p>Looking at the annual trend, we see that asthma prevalence show a
+slightly increasing trend since 2014. Looking at the states data, the
+highest prevalence are found in RI, ME, KY, WV and VT while the lowest
+prevalence are found in TX, FL, NE, LA, SD.</p>
 <h4>
 Race and income data
 </h4>
@@ -439,8 +443,10 @@ asthma_hmtl2 = function(url) {
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }</code></pre>
-<p><b>Race</b> In the race data, we merged “multi” and “multirace” as
-the same category to help simplify the category available.</p>
+<p><b>Race</b> For race data, since 2021 the survey collected race and
+ethinicity data, so the categories are slightly different. We keep the
+new terms, however we merged “multi” and “multirace” as the same
+category to help simplify the category available.</p>
 <pre class="r"><code>asthma_prace = 
   tibble(
     year_name = 2011:2021,
@@ -471,7 +477,8 @@ asthma_prace = asthma_prace %&gt;%
 
 asthma_prace %&gt;% 
   ggplot(aes(x = year_name, y = prevalence_percent, color = race)) + 
-  geom_point(alpha = 0.5) + 
+  geom_boxplot() + 
+  facet_wrap(~ race) +
   labs(
     x = &quot;Year&quot;,
     y = &quot;Prevalence_percent&quot;,
@@ -479,9 +486,17 @@ asthma_prace %&gt;%
   ) +
   theme_minimal()</code></pre>
 <p><img src="asthma_function_files/figure-html/race-1.png" width="672" /></p>
+<p>People identified as Black and Multirace have higher asthma
+prevalence distribution compared to the other groups, while While and
+White NH have the lowest. This suggest that asthma may be correlated
+with race, which will be investigated further in the analysis.</p>
 <pre class="r"><code>asthma_prace = asthma_prace %&gt;%
   nest(race, prevalence_percent)</code></pre>
-<p><b>Income data</b></p>
+<p><b>Income data</b> For the income data, in 2020 they used “-” instead
+of “–” and in 2021 they changed the upper limit in the range to
+&lt;$25,000, $50,000 and $75,000 (instead of $24,999, $49,999 and
+$74,000). We merged the data by mutating the dash and the
+categories.</p>
 <pre class="r"><code>asthma_pincome = 
   tibble(
     year_name = 2011:2021,
@@ -500,7 +515,15 @@ asthma_prace %&gt;%
   ) %&gt;% 
   mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %&gt;% 
   unnest(asthma_byyear) %&gt;% 
-  select(-data_url, -sample_size, -sample_sizec)
+  select(-data_url, -sample_size, -sample_sizec) %&gt;% 
+  mutate(
+    income = case_when(income == &quot;$15-$24,999&quot; ~ &quot;$15–$24,999&quot;, TRUE ~ income),
+    income = case_when(income == &quot;$15,000–&lt;$25,000&quot; ~ &quot;$15–$24,999&quot;, TRUE ~ income),
+    income = case_when(income == &quot;$25-$49,999&quot; ~ &quot;$25–$49,999&quot;, TRUE ~ income),
+    income = case_when(income == &quot;$25,000–&lt;$50,000&quot; ~ &quot;$25–$49,999&quot;, TRUE ~ income),
+    income = case_when(income == &quot;$50-$74,999&quot; ~ &quot;$50–$74,999&quot;, TRUE ~ income), 
+    income = case_when(income == &quot;$50,000–&lt;$75,000&quot; ~ &quot;$50–$74,999&quot;, TRUE ~ income)
+    )
 
 asthma_pincome %&gt;% 
   ggplot(aes(x = year_name, y = prevalence_percent, color = income)) + 
@@ -512,6 +535,11 @@ asthma_pincome %&gt;%
   ) +
   theme_minimal()</code></pre>
 <p><img src="asthma_function_files/figure-html/income-1.png" width="672" /></p>
+<p>People in the lowest income level (&lt;$15,000) has the highest
+asthma prevalence across all years while people in the highest income
+level (&gt;=$75,000) has the lowest prevalence. This suggest that asthma
+is correlated with income, which will be investigated further in the
+analysis.</p>
 <pre class="r"><code>asthma_pincome = asthma_pincome %&gt;% 
   nest(income, prevalence_percent)</code></pre>
 <h4>
@@ -955,35 +983,29 @@ summary(model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.1874 -0.2347  0.0337  0.2761  1.7347 
+## -3.1842 -0.2364  0.0347  0.2758  1.7361 
 ## 
 ## Coefficients:
-##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)             0.4986322  0.0169748  29.375  &lt; 2e-16 ***
-## raceMultirace           0.2942920  0.0127702  23.045  &lt; 2e-16 ***
-## raceOther              -0.3190703  0.0127233 -25.078  &lt; 2e-16 ***
-## raceWhite              -0.1720466  0.0126503 -13.600  &lt; 2e-16 ***
-## raceBlack NH            0.2853540  0.0394754   7.229 5.22e-13 ***
-## raceHispanic           -0.0381239  0.0388419  -0.982  0.32636    
-## raceOther NH            0.0325311  0.0371618   0.875  0.38138    
-## raceWhite NH            0.0403489  0.0356996   1.130  0.25840    
-## income$25-$49,999      -0.2893334  0.0147897 -19.563  &lt; 2e-16 ***
-## income$50-$74,999      -0.4159665  0.0147897 -28.125  &lt; 2e-16 ***
-## income&lt; $15,000         0.3194432  0.0143536  22.255  &lt; 2e-16 ***
-## income&gt;=$75,000        -0.4899071  0.0143536 -34.131  &lt; 2e-16 ***
-## income$15–$24,999       0.1213614  0.0369204   3.287  0.00102 ** 
-## income$25–$49,999      -0.0978752  0.0369204  -2.651  0.00804 ** 
-## income$50–$74,999      -0.2437244  0.0369204  -6.601 4.27e-11 ***
-## income$15,000–&lt;$25,000  0.0478602  0.0440871   1.086  0.27769    
-## income$25,000–&lt;$50,000 -0.2214611  0.0439235  -5.042 4.68e-07 ***
-## income$50,000–&lt;$75,000 -0.3858799  0.0442533  -8.720  &lt; 2e-16 ***
-## avg_temp_yearly        -0.0257547  0.0009098 -28.308  &lt; 2e-16 ***
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        0.5072159  0.0165999  30.555   &lt;2e-16 ***
+## raceMultirace      0.2931188  0.0128027  22.895   &lt;2e-16 ***
+## raceOther         -0.3189356  0.0127565 -25.002   &lt;2e-16 ***
+## raceWhite         -0.1697599  0.0126798 -13.388   &lt;2e-16 ***
+## raceBlack NH       0.3068400  0.0343620   8.930   &lt;2e-16 ***
+## raceHispanic      -0.0163320  0.0335693  -0.487   0.6266    
+## raceOther NH       0.0542074  0.0316902   1.711   0.0872 .  
+## raceWhite NH       0.0620622  0.0298948   2.076   0.0379 *  
+## income$25–$49,999 -0.2825581  0.0136528 -20.696   &lt;2e-16 ***
+## income$50–$74,999 -0.4135786  0.0136593 -30.278   &lt;2e-16 ***
+## income&lt; $15,000    0.3067330  0.0136560  22.461   &lt;2e-16 ***
+## income&gt;=$75,000   -0.5026359  0.0136528 -36.816   &lt;2e-16 ***
+## avg_temp_yearly   -0.0255751  0.0009119 -28.047   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.4421 on 10518 degrees of freedom
-## Multiple R-squared:  0.4395, Adjusted R-squared:  0.4386 
-## F-statistic: 458.2 on 18 and 10518 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.4432 on 10524 degrees of freedom
+## Multiple R-squared:  0.4363, Adjusted R-squared:  0.4356 
+## F-statistic: 678.7 on 12 and 10524 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>R-squared: 0.4398 (~44%), meaning the model explains ~44% of the
 variance in the log-transformed prevalence. Adjusted R-squared: 0.4388,
 similar to the R-squared, indicating that the model generalizes well

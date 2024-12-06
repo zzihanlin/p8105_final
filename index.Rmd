@@ -9,7 +9,7 @@ output:
 
 ## Welcome!
 
-Our project is focused on exploring the possible adverse health effects that could be associated to global climate change.  Specifically, we focused on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
+Our project is focused on exploring the possible adverse health effects that could be associated to global climate change. Specifically, we focused on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
 
 
 ## Temperature Trends
@@ -20,7 +20,9 @@ To learn more about the trends, you can navigate through interactive [maps](http
 
 ## Regression Analysis
 
-For more analysis details and results, please access [here](regression.html)
+After performing regression analysis, we found that temperature has a statistically significant but small effect on asthma prevalence, indicating other factors are likely more important. Although Race/ethnicity is an important factor, the effect of racial/ethnic groups on asthma prevalence varies. Certain groups (e.g., Multirace-NH) have significantly higher prevalence, while others (e.g., Hispanic) have lower prevalence. 
+
+You can access analysis details and results from [here](regression.html)
 
 ## Report
 

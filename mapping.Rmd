@@ -1,0 +1,328 @@
+---
+title: "Data Visualizations"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 4
+    toc_float: true
+---
+ 
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tigris)
+library(sf)
+library(usmap) # May need to install.packages to run this 
+library(ggplot2)
+library(dplyr)
+library(forecast)
+library(plotly)
+
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+**Goals of Data Visualization**
+
+We aim to display the distribution of asthma cases from 2001-2021 using box or violin plots to guide the direction of our analysis to plot weather temperatures in these states with the most density of asthma cases. We intend to draw insight for the following questions regarding our hypothesis: 
+
+- What states have the most amount of asthma cases?
+- Does this state have higher or cooler temperatures compared to the rest of the US?
+- Have temperatures changed overtime? 
+- Do regions with higher asthma prevalence overlap with areas of lower average temperature?
+- Does analyzing prevalence data stratified by time and temperature make a difference?
+  - could stratify by creating temperature categories 
+  - could then conduct if prevalence differs across temperatures categories 
+  
+### Data Merging 
+
+To see more on how we merged the datasets for our visualizations, please click "Show More"
+
+#### Downloading state shape file Data:
+
+```{r message=FALSE, warning=FALSE}
+shape_files = usmap::us_map()
+
+asthma_df = read_csv("data/asthma_data.csv")|>
+  mutate(year= year_name)
+
+weather_df = read_csv("data/temp_data.csv")
+
+
+```
+
+#### Merging Asthma & temp & shape file data:
+```{r}
+
+asthma_weather = 
+  asthma_df |>
+  left_join(weather_df, by = c("state", "year")) 
+
+
+final_df =
+  shape_files |>
+  mutate(state = abbr) |>                           
+  left_join(asthma_weather, by = "state") |>        
+  drop_na()                                         
+```
+
+### Mapping Prevalence Data by State:
+
+Sample year shown for 2021.
+```{r}
+
+ggplot= 
+  final_df|> 
+  filter(year==2021)|> 
+  ggplot() +
+  geom_sf(aes(fill = prevalence_percent), color = "white") +
+  scale_fill_viridis_c(na.value = "grey90") + 
+  theme_minimal() +
+  labs(
+    title = "Adult Asthma Prevalence by State (2021)",
+    fill = "Prevalence (%)"
+  ) +
+  theme(
+    panel.grid = element_blank(), 
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.ticks = element_blank()
+  )
+
+ggplot|>
+  ggplotly()
+
+```
+
+### Asthma Trend Across the Us over time: 
+```{r}
+aggregated_data=
+  final_df|>
+  group_by(year)|>
+  summarise(avg_prevalence = mean(prevalence_percent, na.rm = TRUE))
+
+aggregated_data |>
+  ggplot(aes(x = year, y = avg_prevalence)) +
+  geom_line() +  # Line for the time series
+  geom_point(color = "red") +  # Scatter points
+  labs(
+    title = "Adult Asthma Trend Across the US Over Time",
+    x = "Year",
+    y = "Average Asthma Prevalence (%)"
+  ) +
+  theme_minimal()
+```
+
+The first figure shows that asthma prevalence in adults varies across the US. Moreover, asthma prevalence has been steadily increasing overtime. Can this increase and differences we see be associated to rising temperatures and temperature differences in different regions of the country?
+
+
+### Distribution of Asthma Across States
+
+The box plot method provided a clearer visual representation compared to the violin density plot, effectively illustrating the distribution of data and highlighting the concentration of values within each state.
+
+```{r}
+
+ggplotly( 
+  final_df|>
+  group_by(full)|>
+  ggplot(aes(x= reorder(full,prevalence_percent), y= prevalence_percent, fill = state))+ 
+  geom_boxplot()+
+  labs(title= "Distribution of Adult Asthma Across States" )+
+  xlab("State")+
+  ylab("Asthma Prevalance (%)")+
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5,),
+    legend.position = "none"
+  ))
+
+```
+
+This plot shows the distribution of asthma across states across all years 2011-2021. States located further right on the plot are shown to have higher asthma prevalence by percent compared to other states. States located in the upper North East such as Maine, Rhode Island, Vermont, and New Hampshire had consistently higher asthma prevalence from 2011-2021 compared to other states. States with some of the lowest asthma prevalence (%) were Texas, South Dakota, Florida, Nebraska, and Minnesota. 
+
+### Distribution of Temperatures Across States
+
+```{r}
+ggplotly( 
+  final_df|> 
+  group_by(full)|>
+  ggplot(aes(x= reorder(full, avg_temp), y= avg_temp, fill = state))+ 
+  geom_boxplot()+
+  labs(title= "Distribution of Temperature Across States" )+
+  xlab("State")+
+  ylab("Temperature (C)")+
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+    legend.position = "none"
+  ))
+```
+
+When comparing states with higher asthma prevalence to their temperature distributions, we observe that states such as Maine, Rhode Island, Vermont, and New Hampshire exhibit lower median average temperatures and larger interquartile ranges. This variation reflects the significant seasonal temperature fluctuations in these regions. Notably, when comparing the upper and lower 25% of temperature distributions in these states, the temperatures in the upper quartile are more variable. This variability is important to highlight, as previous studies have suggested that extreme temperatures may increase the risk of asthma exacerbation. Overall, varying temperature conditions (both high and low extremes) might influence asthma prevalence across states. 
+
+
+### Have Temperatures Changed Overtime? 
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
+temp_df = read_csv("data/temp_data.csv", show_col_types = FALSE)
+
+temp_yearly_df = 
+  temp_df |> 
+  group_by(state, year) |> 
+  summarize(avg_yearly = mean(avg_temp)) |> 
+  select(state, year_name = year, avg_temp_yearly = avg_yearly)
+```
+
+```{r, message = FALSE, warning = FALSE}
+line_plotly = 
+  plot_ly(data = temp_yearly_df, 
+          x = ~year_name, 
+          y = ~avg_temp_yearly, 
+          color = ~state, 
+          type = 'scatter', 
+          mode = 'lines' ) %>% 
+  layout(title = "Seasonal Averages by State Over Time", 
+          xaxis = list(title = "Year"), 
+          yaxis = list(title = "Yearly Average"))
+
+heat_plotly =
+  plot_ly(data = temp_yearly_df, 
+          x = ~year_name, 
+          y = ~state, 
+          z = ~avg_temp_yearly, 
+          type = "heatmap", 
+          colorscale = "Viridis" ) %>% 
+  layout(title = "Heatmap of Yearly Averages by State and Year", 
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "State"), 
+         colorbar = list(title = "Yearly Avg"))
+line_plotly
+heat_plotly
+```
+
+As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
+
+### Initial Statistical Analysis** (Idk if we should keep this part )
+
+```{r, include = FALSE}
+# 1. merge asthma prevalance and temp data 
+# import two dataset
+temp_df = read_csv("data/temp_data.csv")
+summary(temp_df)
+
+asthma_df = read_csv("data/asthma_data.csv")
+summary(asthma_df)
+
+# find the yearly temperature by state
+temp_yearly_df = 
+  temp_df |> 
+  group_by(state, year) |> 
+  summarize(avg_yearly = mean(avg_temp)) |> 
+  select(state, year_name = year, avg_temp_yearly = avg_yearly)
+
+# merge two dataset
+merged_df = 
+  left_join(asthma_df, temp_yearly_df, by=c("state", "year_name")) |> 
+  drop_na() 
+# after merging yearly avg temperature and prevalence, DC has no temp data
+```
+
+
+```{r}
+# bar plot of temperature and line plot of prevalence by each state
+merged_df |> 
+  mutate(state = reorder(state, avg_temp_yearly)) |> 
+  group_by(state) |> 
+  summarize(prevalence = mean(prevalence_percent),
+            temp = mean(avg_temp_yearly)) |> 
+  ggplot(aes(x = state)) +
+    geom_bar(aes(y = temp), stat = "identity", fill = "skyblue") +
+    geom_line(aes(y = prevalence, group = 1)) +
+    geom_point(aes(y = prevalence), color = "red") +
+    scale_y_continuous(
+      name = "temperature",
+      sec.axis = sec_axis(~., name = "Prevalence (%)")
+    ) +
+  labs(
+    title = "Temperature and Prevalence by State",
+    color = "legend"
+  ) + 
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+```
+
+```{r}
+final_df= 
+  final_df |>
+  mutate(
+    temp_category = case_when(
+      avg_temp < 0 ~ "Cold",
+      avg_temp >= 0 & avg_temp < 15 ~ "Mild",
+      avg_temp >= 15 ~ "Warm"))|> 
+  select(-c("abbr","fips", "year_name"))|>
+  select(state,prevalence_percent,avg_temp, season,year,temp_category,everything())
+  
+
+final_df
+
+```
+#### Does Correlation differ by state?
+
+```{r}
+cor_results= 
+  final_df |>
+  group_by(state) |>
+  summarise(
+    cor_test = list(cor.test(avg_temp, prevalence_percent)),
+    .groups = "drop")|>
+  rowwise()|>
+  mutate(
+    corr=cor_test[["estimate"]],
+    p_value= cor_test[["p.value"]])|>
+  ungroup()|>
+  select(-cor_test) %>% 
+  knitr::kable(digits=5)
+
+cor_results
+```
+Correlation of prevalence and average temperature is small across all states- could this mean we need to stratify by different factors (such as income level or race)?
+
+#### Does the Effect of Prevalence Differ by State: 
+```{r}
+
+state_trends= 
+  final_df |>
+  group_by(state) |>
+  summarise(
+    model = list(lm(prevalence_percent ~ year)))
+
+
+state_trends=   state_trends |>
+  mutate(
+    model_summary = map(model, broom::tidy)) |>
+  unnest(model_summary)|>
+  filter(term == "year")|>
+  select(
+    state, 
+    slope = estimate, 
+    intercept = NULL, 
+    p_value = p.value)|>
+  st_drop_geometry()|>
+  knitr::kable(digits=5)
+
+state_trends
+
+```
+

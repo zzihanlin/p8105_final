@@ -1,18 +1,39 @@
-name: "Adeena Moghni"
+name: "Exploring the Link Between Asthma Trends and Climate Changet!"
 output_dir: "."
 navbar:
-  title: "Adeena Moghni"
+  title: "Home"
   right:
-    - text: "Resume"
-      href: resume.html
-    - text: "Dashboard"
-      href: dashboard.html
+    - text: "About"
+      href: about.html
+    - text: Data Import
+      menu:
+        - text: Temperature Data
+          href: temp_function.html
+        - text: Asthma Data
+          href: asthma_function.html
+    - text: "Regression Analysis"
+      href: regression.html
+    - text: "Data Visualization/ EDA"
+      href: mapping.html
+    - text: "Shiny"
+      href: https://klopez67.shinyapps.io/final_draft/
+    - text: "Report"
+      href: report.html
     - icon: fa-envelope fa-lg
-      href: mailto:<adeenamoghni@gmail.com>
+      menu:
+        - text: Hanchuan Chen
+          href: mailto:<hc3563@cumc.columbia.edu>
+        - text: Tasya Dita
+          href: mailto:<tpd2121@cumc.columbia.edu>
+        - text: Zihan Lin
+          href: mailto:<zl3543@cumc.columbia.edu>
+        - text: Adeena Moghni
+          href: mailto:<am6592@cumc.columbia.edu>
+        - text: Kimberly Palaguachi-Lopez
+          href: mailto:<kp2809@cumc.columbia.edu>
     - icon: fa-github fa-lg
-      href: http://github.com/adeenamoghni/
-    - icon: fa-brands fa-linkedin
-      href: https://www.linkedin.com/in/adeena-moghni/
+      href: https://github.com/zzihanlin/p8105_final_project.git
 output:
   html_document:
-    theme: cosmo
+    self_contained: true
+    theme: flatly

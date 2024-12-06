@@ -13,6 +13,7 @@ library(tidyverse)
 library(rnoaa)
 library(rvest)
 library(httr)
+library(patchwork)
 ```
 
 ```{r asthma dataset,include=FALSE }
@@ -282,6 +283,7 @@ asthma_df |>
 
 
 ```
+
 As seen, the two variables generally follow normal distribution
 
 ## Regression Results
@@ -294,7 +296,7 @@ model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
 
 summary(model) %>% 
   broom::tidy() %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
 par(mfrow = c(2,2))
 plot(model)
@@ -310,7 +312,7 @@ model_log =
 
 summary(model_log) %>% 
   broom::tidy() %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
 par(mfrow = c(2,2))
 plot(model_log)
@@ -324,8 +326,9 @@ lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = ra
 
 summary(lm_by_race)%>% 
   broom::tidy() %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
+par(mfrow = c(2,2))
 plot(lm_by_race)
 
 race_asthma_df =
@@ -345,14 +348,17 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   theme(legend.position="none")
 ```
 
+From the scatterplot shown above, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have significant association with asthma prevalence. 
+
 #### Linear Regression (interaction model):
 ```{r, message = FALSE, warning = FALSE}
 interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
 
 summary(interaction_model)%>% 
   broom::tidy() %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
+par(mfrow = c(2,2))
 plot(interaction_model)
 ```
 
@@ -363,8 +369,9 @@ fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity,
                    family = binomial())
 
 broom::tidy(fit_logistic) %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
+par(mfrow = c(2,2))
 plot(fit_logistic)
 ```
 
@@ -399,15 +406,25 @@ full_df =
 #### Check distribution
 ```{r, message = FALSE, warning = FALSE}
 # distribution of outcome variable
-ggplot(full_df, aes(x = log_prevalence)) + 
-  geom_histogram() +
-labs(
-  title = "distribution of log-transformed outcome variable",
-  xlab = "Log-prevalence",
-  ylab = "Frequency"
-)
+dist_plot = 
+  ggplot(full_df, aes(x = joint_prevalence)) + 
+    geom_histogram() +
+  labs(
+    title = "distribution of original outcome variable",
+    xlab = "joint prevalence",
+    ylab = "Frequency"
+  )
 
+log_dist_plot = 
+  ggplot(full_df, aes(x = log_prevalence)) + 
+    geom_histogram() +
+  labs(
+    title = "distribution of log-transformed outcome variable",
+    xlab = "Log-prevalence",
+    ylab = "Frequency"
+  )
 
+dist_plot + log_dist_plot
 ```
 Distribution after log-transform looks normal
 
@@ -416,7 +433,7 @@ Distribution after log-transform looks normal
 model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
 summary(model)%>% 
   broom::tidy() %>% 
-  knitr::kable()
+  knitr::kable(digit = 3)
 
 par(mfrow = c(2, 2))
 plot(model)

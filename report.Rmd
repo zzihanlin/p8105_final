@@ -79,8 +79,6 @@ temp_summary %>%
     col.names = c("Average Temperature (°C)", "Minimum Temperature (°C)", "Maximum Temperature (°C)"),
     caption = "Summary Statistics for Temperature Data"
   )
-
-temp_summary
 ```
 The overall average temperature is approximately 11.88°C, with a wide range from -14.0°C (minimum) to 30.26°C (maximum). The large temperature range indicates that the dataset spans multiple regions with diverse climates.
 ```{r}
@@ -97,8 +95,6 @@ yearly_temp_summary %>%
     col.names = c("Year", "Average Temperature (°C)"),
     caption = "Average Temperature by Year"
   )
-
-yearly_temp_summary
 ```
 
 ```{r}
@@ -129,8 +125,6 @@ seasonal_temp_summary %>%
     col.names = c("Season", "Average Temperature (°C)"),
     caption = "Average Temperature by Season"
   )
-
-seasonal_temp_summary
 ```
 
 ```{r}

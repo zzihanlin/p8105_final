@@ -561,7 +561,7 @@ asthma_dataset =
 # import two dataset
 temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -578,7 +578,7 @@ temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 ##                     Max.   :2021                      Max.   : 30.26</code></pre>
 <pre class="r"><code>asthma_df = read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -599,8 +599,8 @@ temp_yearly_df =
   group_by(state, year) |&gt; 
   summarize(avg_yearly = mean(avg_temp)) |&gt; 
   select(state, year_name = year, avg_temp_yearly = avg_yearly)</code></pre>
-<pre><code>## `summarise()` has grouped output by &#39;state&#39;. You can override using the
-## `.groups` argument.</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;state&#39;. You can
+## override using the `.groups` argument.</code></pre>
 <pre class="r"><code># merge two dataset
 merged_df = 
   left_join(asthma_df, temp_yearly_df, by=c(&quot;state&quot;, &quot;year_name&quot;)) |&gt; 
@@ -615,7 +615,8 @@ temp_df |&gt;
     xlab = &quot;average temperature&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>asthma_df |&gt; 
   ggplot(aes(x = prevalence_percent)) +
@@ -625,7 +626,8 @@ temp_df |&gt;
     xlab = &quot;prevalence (percent)&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code># two variables generally follows normal distribution</code></pre>
 <pre class="r"><code># bar plot of temperature and line plot of prevalence by each state
@@ -971,7 +973,8 @@ labs(
   xlab = &quot;Log-prevalence&quot;,
   ylab = &quot;Frequency&quot;
 )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <pre class="r"><code># distribution after log-transform looks normal</code></pre>
 <pre class="r"><code>model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)

@@ -362,7 +362,7 @@ season to find the seasonal average for every state in every year.</p>
 <pre class="r"><code># Load datasets
 asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -371,7 +371,7 @@ asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>temp_data &lt;- read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -573,7 +573,7 @@ yearly_temp_summary %&gt;%
     x = &quot;Year&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The line plot shows annual average temperatures over the years. There
 are visible fluctuations, with some years showing higher average
 temperatures (e.g., 2012) and others lower (e.g., 2014). The average
@@ -636,7 +636,7 @@ seasonal_temp_summary %&gt;%
     x = &quot;Season&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>The bar plot displays the average temperature for each season. Summer
 is significantly warmer (22.45°C on average), while Winter is coldest
 (1.18°C on average). Fall and Spring fall in between. The seasonal
@@ -659,7 +659,7 @@ ggplot(state_temp_summary, aes(x = reorder(state, -avg_temp), y = avg_temp)) +
     x = &quot;State&quot;,
     y = &quot;Average Temperature (°C)&quot;
   )</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>The horizontal bar plot ranks states by their average temperature.
 States on the left (e.g., colder climates) have lower average
 temperatures, while those on the right (e.g., warmer climates) have
@@ -714,7 +714,7 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="Report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="report_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line
 is overlaid, showing a slight downward slope, consistent with the weak

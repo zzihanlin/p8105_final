@@ -22,13 +22,13 @@ To learn more about the trends, you can navigate through interactive [maps](http
 
 After performing regression analysis, we found that temperature has a statistically significant but small effect on asthma prevalence, indicating other factors are likely more important. Although Race/ethnicity is an important factor, the effect of racial/ethnic groups on asthma prevalence varies. Certain groups (e.g., Multirace-NH) have significantly higher prevalence, while others (e.g., Hispanic) have lower prevalence. 
 
-You can access analysis details and results from [here](regression.html)
+You can access analysis details and results from [here](regression.html).
 
 ## Report
 
 Extreme weather is on the rise due to climate change. However, we found for those who come from a lower socioeconomic background, the adverse effects changing weather patterns are especially obvious. We are planning to do researches on the trends of weather by studying asthma prevalence/incidence, and to understand the hidden risks that our populations might face.
 
-For more insight on our motivation, methods, and analyses, please read our report [here](report.html)
+For more insight on our motivation, methods, and analyses, please read our report [here](report.html).
 
 ## Meet Our Team Members!
 
@@ -40,7 +40,7 @@ Zihan Lin
 Adeena Moghni  
 Kimberly Palaguachi-Lopez  
 
-Feel free to contact us via [Contact](Contact.html)
+Feel free to contact us via [Contact](Contact.html).
 
 ## Screencast
 

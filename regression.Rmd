@@ -255,44 +255,45 @@ race_asthma_df =
 ```
 
 
-We first conducted a linear regression on all data (no stratification), then on data stratified by race, then on data stratificed by race and income to see which was a better fit model
+We first conducted a single linear regression with annual average temperature of each state as only predictor, then on data stratified by race, finallt on data stratificed by race, income, and temperature to see which was a better fit model
 
 
-## Initial Regression on all data
+## Initial Analysis: Simple Linear Regression
 
-### Check distribution assumption
+For this part, we want to know if temperature is the significant factor that influence asthma prevalence. Before we perform linear regression model, it is necessary to check if data follows normal distribution:
 
 ```{r, message = FALSE, warning = FALSE}
-temp_df |> 
-  ggplot(aes(x = avg_temp)) +
-  geom_histogram() +
-  labs(
-    title = "distribution of average temperature in 2011-2021",
-    xlab = "average temperature",
-    ylab = "frequency"
-  )
+temp_dist = 
+  temp_df |> 
+    ggplot(aes(x = avg_temp)) +
+    geom_histogram() +
+    labs(
+      title = "distribution of average temperature in 2011-2021",
+      xlab = "average temperature",
+      ylab = "frequency"
+    )
 
-asthma_df |> 
-  ggplot(aes(x = prevalence_percent)) +
-  geom_histogram() +
-  labs(
-    title = "distribution of prevalence in 2011-2021",
-    xlab = "prevalence (percent)",
-    ylab = "frequency"
-  )
+asthma_dist = 
+  asthma_df |> 
+    ggplot(aes(x = prevalence_percent)) +
+    geom_histogram() +
+    labs(
+      title = "distribution of prevalence in 2011-2021",
+      xlab = "prevalence (percent)",
+      ylab = "frequency"
+    )
 
-
+temp_dist + asthma_dist
 ```
 
-As seen, the two variables generally follow normal distribution
+As seen, the two variables generally follow normal distribution, so we can perform the regression model.
 
-## Regression Results
+### Linear Regression Results
 
-
-### Linear Regression:
 ```{r, message = FALSE, warning = FALSE}
 
 model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
+model_summary = summary(model)
 
 summary(model) %>% 
   broom::tidy() %>% 
@@ -302,27 +303,20 @@ par(mfrow = c(2,2))
 plot(model)
 ```
 
-### Linear Regression on Log Transformed Data:
+The diagnostic plot shows that the model follows normality, but may exist heteroscedasticity. From the model summary, annual average temperature is significant with small estimate with R-Squared of `r round(model_summary$r.squared,3)`, indicating that although temperature is a influential factor, it does not explain much about asthma prevalence. As a result, we keep investigating some other factors that could result in asthma prevalence. The formula for this model is:
 
-```{r, message = FALSE, warning = FALSE}
-model_log = 
-  merged_df |> 
-    mutate(log_precalence = log(prevalence_percent)) |> 
-    lm(log_precalence ~ avg_temp_yearly, data = _)
-
-summary(model_log) %>% 
-  broom::tidy() %>% 
-  knitr::kable(digit = 3)
-
-par(mfrow = c(2,2))
-plot(model_log)
-```
+$$
+Prevalence = 10.186 -0.067 \cdot temperature + \epsilon
+$$
 
 ### Regression of Data Stratified by Race
+
+Next, we want to know if race also has impact on asthma prevalence. Since race is a categorical data, we factorize it and perform multiple linear regression model starting with main effect:
 
 #### Linear Regression (main effects):
 ```{r, message = FALSE, warning = FALSE}
 lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = race_asthma_df)
+model_summary = summary(lm_by_race)
 
 summary(lm_by_race)%>% 
   broom::tidy() %>% 
@@ -348,7 +342,9 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   theme(legend.position="none")
 ```
 
-From the scatterplot shown above, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have significant association with asthma prevalence. 
+From the scatterplot of prevalence by race and temperature, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have much association with asthma prevalence. 
+
+The model shows that all race but Black are significant, with R-squared of `r round(model_summary$r.squared, 3)`, which is much higher than simple linear regression model. The diagnostic plots also show better results than previous model.
 
 #### Linear Regression (interaction model):
 ```{r, message = FALSE, warning = FALSE}
@@ -377,6 +373,9 @@ plot(fit_logistic)
 
 
 ### MLR of Race, Income, and Yearly temp
+
+At last, we want to combine all factor together to obtain the regression model. Since in CDC website the prevalence rates for race and for income by each state are different, here we assume the race and income are independent variables so the joint prevalence are their seperate prevalence rate multiplying together. So we need to check the distribution of joint prevalence:
+
 ```{r include = FALSE}
 # We use asthma_dataset here, first need to unnest the data
 unnested_df = 
@@ -426,7 +425,7 @@ log_dist_plot =
 
 dist_plot + log_dist_plot
 ```
-Distribution after log-transform looks normal
+Distribution after log-transform looks normal. Now we perform multiple linear regression model: 
 
 #### Regression Results:
 ```{r, message = FALSE, warning = FALSE}
@@ -438,9 +437,9 @@ summary(model)%>%
 par(mfrow = c(2, 2))
 plot(model)
 ```
-R-squared: 0.4398 (~44%), meaning the model explains ~44% of the variance in the log-transformed prevalence.
-Adjusted R-squared: 0.4388, similar to the R-squared, indicating that the model generalizes well with the predictors.
 
-Race is a significant predictor overall, but not all race categories are significant. Different racial groups show varying relationships with the outcome. Income is a highly significant predictor, with lower income categories having significantly lower log-prevalence. As the yearly average temperature increases by 1 unit, the log-prevalence decreases slightly (negative association)
+The R-squared is 0.4398, meaning the model explains about 44% of the variance in the log-transformed prevalence, which is ever higher than previous two predictors model. The adjusted R-squared is 0.4388, similar to the R-squared, indicating that the model generalizes well with the predictors.
+
+Race is a significant predictor overall, but not all race categories are significant. Different racial groups show varying relationships with the outcome. Income is a highly significant predictor, with lower income categories having significantly lower log-prevalence. As the yearly average temperature increases by 1 unit, the log-prevalence decreases slightly (negative association).
 
 

@@ -1,19 +1,39 @@
 name: "Exploring the Link Between Asthma Trends and Climate Changet!"
 output_dir: "."
 navbar:
-  title: "Asthma Analysis"
-  left:
-    - text: "Home"
-      href: index.html
+  title: "Home"
+  right:
+    - text: "About"
+      href: about.html
+    - text: Data Import
+      menu:
+        - text: Temperature Data
+          href: temp_function.html
+        - text: Asthma Data
+          href: asthma_function.html
+    - text: "Regression Analysis"
+      href: regression.html
+    - text: "Data Visualization/ EDA"
+      href: mapping.html
+    - text: "Shiny"
+      href: https://klopez67.shinyapps.io/final_draft/
     - text: "Report"
       href: report.html
-    - text: "Mapping"
-      href: mapping.html
-    - text: "Data"
-      href: data.html
-    - text: "Contact"
-      href: contact.html
+    - icon: fa-envelope fa-lg
+      menu:
+        - text: Hanchuan Chen
+          href: mailto:<hc3563@cumc.columbia.edu>
+        - text: Tasya Dita
+          href: mailto:<tpd2121@cumc.columbia.edu>
+        - text: Zihan Lin
+          href: mailto:<zl3543@cumc.columbia.edu>
+        - text: Adeena Moghni
+          href: mailto:<am6592@cumc.columbia.edu>
+        - text: Kimberly Palaguachi-Lopez
+          href: mailto:<kp2809@cumc.columbia.edu>
+    - icon: fa-github fa-lg
+      href: https://github.com/zzihanlin/p8105_final_project.git
 output:
   html_document:
-    toc: true
-    toc_depth: 2
+    self_contained: true
+    theme: flatly

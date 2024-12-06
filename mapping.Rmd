@@ -309,8 +309,7 @@ state_trends=
     model = list(lm(prevalence_percent ~ year)))
 
 
-state_trends= 
-  state_trends |>
+state_trends=   state_trends |>
   mutate(
     model_summary = map(model, broom::tidy)) |>
   unnest(model_summary)|>

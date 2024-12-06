@@ -7,7 +7,7 @@ output:
 ---
 
 ### Tasya Dita 
-<a href="https://tpd2121.github.io/tpd2121_hw4.github.io/">[Tasya Dita]</a> is currently on her 2nd year of MPH at Mailman School of Public Health, under the Population & Family Health department, with interest in maternal health and health promotion. 
+[Tasya Dita](https://tpd2121.github.io/tpd2121_hw4.github.io/) is currently on her 2nd year of MPH at Mailman School of Public Health, under the Population & Family Health department, with interest in maternal health and health promotion. 
 
 ### Zihan Lin 
 

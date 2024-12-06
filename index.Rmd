@@ -20,7 +20,7 @@ You can navigate through interactive [maps](https://klopez67.shinyapps.io/final_
 
 ## Regression Analysis
 
-(brief summary of findings and link to regression here)
+(brief summary of findings and link to regression here) For motr analysis details, please access [here](regression.html)
 
 ## Report
 
@@ -35,6 +35,8 @@ Tasya Dita
 Zihan Lin  
 Adeena Moghni  
 Kimberly Palaguachi-Lopez  
+
+Feel free to contact us via [Contact](Contact.html)
 
 ## Screencast
 

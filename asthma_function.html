@@ -324,23 +324,49 @@ $(document).ready(function () {
 
 <p>For maps and figures on weather trends, please refer to the <a
 href="https://klopez67.shinyapps.io/final_draft/">maps page.</a></p>
-<div id="asthma-data" class="section level2">
-<h2>Asthma data</h2>
-<pre class="r"><code>#write the data loading steps
-asthma_2011 = read_html(&quot;https://www.cdc.gov/asthma/brfss/2011/tableC1.htm&quot;) %&gt;% 
-  html_table() %&gt;% 
-  bind_rows() %&gt;% 
-  janitor::clean_names() %&gt;% 
-  select(1:4) %&gt;% 
-  filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;Territories&quot;, &quot;PR&quot;)) %&gt;% 
-  mutate(year = &quot;2011&quot;)
-
-#i use current asthma prevalence (table c1) rather than lifetime prevalence and only keep the prevalence percent (instead of numbers) 
-#i am excluding PR, VI, and GU
-
-#write the functions for data loading
-
-asthma_hmtl = function(url) {
+<div id="asthma-dataset" class="section level2">
+<h2>Asthma dataset</h2>
+<p>The asthma dataset was obtained from the
+<a href="https://www.cdc.gov/asthma/brfss/default.htm">CDC Behavioral
+Risk Factor Surveillance System (BRFSS)</a> data. While initially we
+wanted to use data from 2001 to 2021, there was a change in weighting
+method in 2011 that made data collected from the previous period
+incomparable with data collected 2011 onwards. Therefore, for this
+analysis, we only use data from 2011 to 2021 (the most recent year
+available) period.</p>
+<p>For the dataset, our group use the current asthma prevalence (C)
+tables rather than lifetime prevalence as it captures active asthma
+cases during the data collection period. We also only keep relevant
+variables (state, race, income) and use prevalence percent rather than
+prevalence numbers as it better capture the different sample size each
+state had. Finally, we only cover the 50 states and excluding
+territories (PR, VI, and GU).</p>
+During the data scraping and cleaning process, we found several
+inconsistencies between year such as:
+<ul>
+<li>
+Different column name, for example, starting from 2016, the column for
+“prevalence number” in C1 data change to “weighted number”. For race
+data, in 2020, race designation is in column raceg while in 2021, the
+data is put in column race_ethnicitygcolumn.
+</li>
+<li>
+Missing states in several years. In 2019, the prevalence data did not
+include NJ while in 2021 it did not include FL.
+</li>
+<li>
+Superscript that is included as part of the data: For the race data, the
+total prevalence is listed as “U.S. totalf” in 2020 and 2021, rather
+than the usual “U.S. total” due to the “f” superscript.
+</li>
+</ul>
+<p>All of these disrepancies are solved during the cleaning process.</p>
+<h4>
+Prevalence data
+</h4>
+<p>We made the function to obtain the prevalence data as they are
+located at different links.</p>
+<pre class="r"><code>asthma_hmtl = function(url) {
   
   df = 
     read_html(url) %&gt;% 
@@ -351,9 +377,9 @@ asthma_hmtl = function(url) {
     mutate(standard_error = as.numeric(standard_error)) %&gt;% 
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
-}
-
-#prevalence
+}</code></pre>
+<p><b>Prevalence data</b></p>
+<pre class="r"><code>#prevalence
 asthma_prevalence = 
   tibble(
     year_name = 2011:2021,
@@ -373,31 +399,7 @@ asthma_prevalence =
   mutate(asthma_byyear = map(data_url, asthma_hmtl)) %&gt;% 
   unnest(asthma_byyear) %&gt;% 
   select(-data_url, -sample_size, -sample_sizec, -standard_error) %&gt;% 
-  group_by(year_name)</code></pre>
-<pre><code>## New names:
-## • `` -&gt; `...9`</code></pre>
-<pre><code>## Warning: There were 4 warnings in
-## `mutate()`.
-## The first warning was:
-## ℹ In argument:
-##   `standard_error =
-##   as.numeric(standard_error)`.
-## Caused by warning:
-## ! There was 1 warning in
-## `mutate()`.
-## ℹ In argument:
-##   `standard_error =
-##   as.numeric(standard_error)`.
-## Caused by warning:
-## ! NAs introduced by coercion
-## ℹ Run
-##   `dplyr::last_dplyr_warnings()`
-##   to see the 3 remaining
-##   warnings.</code></pre>
-<pre class="r"><code>#starting from 2016, has column called &quot;weighted_number&quot; instead of prevalence number
-#2016 and 2021 includes VI (removed)
-#2020 and 2021 has U.S. totalf (removed)
-#2019 and 2021 only has 49 states (-NJ and -FL)
+  group_by(year_name)
 
 asthma_prevalence %&gt;% 
   mutate(year_name = as.factor(year_name)) %&gt;% 
@@ -409,7 +411,7 @@ asthma_prevalence %&gt;%
     title = &quot;Asthma cases by year&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="asthma_function_files/figure-html/asthma%20dataset-1.png" width="672" /></p>
+<p><img src="asthma_function_files/figure-html/asthma%20prevalence-1.png" width="672" /></p>
 <pre class="r"><code>asthma_prevalence %&gt;% 
   ggplot(aes(x = state, y = prevalence_percent)) + 
   geom_boxplot() + 
@@ -419,7 +421,12 @@ asthma_prevalence %&gt;%
     title = &quot;Asthma cases by state&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="asthma_function_files/figure-html/asthma%20dataset-2.png" width="672" /></p>
+<p><img src="asthma_function_files/figure-html/asthma%20prevalence-2.png" width="672" /></p>
+<h4>
+Race and income data
+</h4>
+<p>New function was developed to scrape race and income data as they had
+additional columns.</p>
 <pre class="r"><code>#function 2 for race and income data
 asthma_hmtl2 = function(url) {
   
@@ -431,10 +438,10 @@ asthma_hmtl2 = function(url) {
     select(1:4) %&gt;% 
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
-}
-
-#race
-asthma_prace = 
+}</code></pre>
+<p><b>Race</b> In the race data, we merged “multi” and “multirace” as
+the same category to help simplify the category available.</p>
+<pre class="r"><code>asthma_prace = 
   tibble(
     year_name = 2011:2021,
     data_url = c(
@@ -453,29 +460,29 @@ asthma_prace =
   mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %&gt;% 
   unnest(asthma_byyear)
 
-#2020, race designation is in column raceg. 2021 in column race_ethnicityg
 asthma_prace = asthma_prace %&gt;% 
   select(-data_url, -sample_size, -sample_sizec) %&gt;% 
   mutate(
     race = ifelse(is.na(race), raceg, race), 
-    race = ifelse(is.na(race), race_ethnicityg, race)
+    race = ifelse(is.na(race), race_ethnicityg, race), 
+    race = case_when(race == &quot;Multi&quot; ~ &quot;Multirace&quot;, TRUE ~ race)
     ) %&gt;% 
-  select(-raceg, -race_ethnicityg) %&gt;%
+  select(-raceg, -race_ethnicityg)
+
+asthma_prace %&gt;% 
+  ggplot(aes(x = year_name, y = prevalence_percent, color = race)) + 
+  geom_point(alpha = 0.5) + 
+  labs(
+    x = &quot;Year&quot;,
+    y = &quot;Prevalence_percent&quot;,
+    title = &quot;Asthma prevalence by year by race &amp; ethnicity&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="asthma_function_files/figure-html/race-1.png" width="672" /></p>
+<pre class="r"><code>asthma_prace = asthma_prace %&gt;%
   nest(race, prevalence_percent)</code></pre>
-<pre><code>## Warning: Supplying `...` without names
-## was deprecated in tidyr
-## 1.0.0.
-## ℹ Please specify a name for
-##   each selection.
-## ℹ Did you want `data =
-##   c(race,
-##   prevalence_percent)`?
-## Call
-## `lifecycle::last_lifecycle_warnings()`
-## to see where this warning was
-## generated.</code></pre>
-<pre class="r"><code>#income
-asthma_pincome = 
+<p><b>Income data</b></p>
+<pre class="r"><code>asthma_pincome = 
   tibble(
     year_name = 2011:2021,
     data_url = c(
@@ -493,20 +500,26 @@ asthma_pincome =
   ) %&gt;% 
   mutate(asthma_byyear = map(data_url, asthma_hmtl2)) %&gt;% 
   unnest(asthma_byyear) %&gt;% 
-  select(-data_url, -sample_size, -sample_sizec) %&gt;% 
+  select(-data_url, -sample_size, -sample_sizec)
+
+asthma_pincome %&gt;% 
+  ggplot(aes(x = year_name, y = prevalence_percent, color = income)) + 
+  geom_point(alpha = 0.5) +
+  labs(
+    x = &quot;Year&quot;,
+    y = &quot;Prevalence_percent&quot;,
+    title = &quot;Asthma prevalence by year by income&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="asthma_function_files/figure-html/income-1.png" width="672" /></p>
+<pre class="r"><code>asthma_pincome = asthma_pincome %&gt;% 
   nest(income, prevalence_percent)</code></pre>
-<pre><code>## Warning: Supplying `...` without names
-## was deprecated in tidyr
-## 1.0.0.
-## ℹ Please specify a name for
-##   each selection.
-## ℹ Did you want `data =
-##   c(income,
-##   prevalence_percent)`?
-## Call
-## `lifecycle::last_lifecycle_warnings()`
-## to see where this warning was
-## generated.</code></pre>
+<h4>
+Complete dataset
+</h4>
+<p>For the final dataset that we are using in the analysis, we combine
+the state prevalence, race and income data into 1 dataframe. We put the
+race and income into a listcol as they are stratified in each state.</p>
 <pre class="r"><code>#asthma dataset
 asthma_dataset = 
   inner_join(asthma_prevalence, asthma_prace, by = c(&quot;year_name&quot;, &quot;state&quot;)) %&gt;% 
@@ -520,7 +533,7 @@ asthma_dataset =
 # import two dataset
 temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ──────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -537,7 +550,7 @@ temp_df = read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 ##                     Max.   :2021                      Max.   : 30.26</code></pre>
 <pre class="r"><code>asthma_df = read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ──────
+## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -558,10 +571,8 @@ temp_yearly_df =
   group_by(state, year) |&gt; 
   summarize(avg_yearly = mean(avg_temp)) |&gt; 
   select(state, year_name = year, avg_temp_yearly = avg_yearly)</code></pre>
-<pre><code>## `summarise()` has grouped
-## output by &#39;state&#39;. You can
-## override using the `.groups`
-## argument.</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;state&#39;. You can override using the
+## `.groups` argument.</code></pre>
 <pre class="r"><code># merge two dataset
 merged_df = 
   left_join(asthma_df, temp_yearly_df, by=c(&quot;state&quot;, &quot;year_name&quot;)) |&gt; 
@@ -576,9 +587,7 @@ temp_df |&gt;
     xlab = &quot;average temperature&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins =
-## 30`. Pick better value with
-## `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>asthma_df |&gt; 
   ggplot(aes(x = prevalence_percent)) +
@@ -588,9 +597,7 @@ temp_df |&gt;
     xlab = &quot;prevalence (percent)&quot;,
     ylab = &quot;frequency&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins =
-## 30`. Pick better value with
-## `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code># two variables generally follows normal distribution</code></pre>
 <pre class="r"><code># bar plot of temperature and line plot of prevalence by each state
@@ -936,9 +943,7 @@ labs(
   xlab = &quot;Log-prevalence&quot;,
   ylab = &quot;Frequency&quot;
 )</code></pre>
-<pre><code>## `stat_bin()` using `bins =
-## 30`. Pick better value with
-## `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="asthma_function_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <pre class="r"><code># distribution after log-transform looks normal</code></pre>
 <pre class="r"><code>model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
@@ -950,36 +955,35 @@ summary(model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.1872 -0.2353  0.0345  0.2761  1.7346 
+## -3.1874 -0.2347  0.0337  0.2761  1.7347 
 ## 
 ## Coefficients:
 ##                          Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)             0.4991143  0.0169730  29.406  &lt; 2e-16 ***
-## raceMulti               0.2850025  0.0134295  21.222  &lt; 2e-16 ***
-## raceOther              -0.3190599  0.0127209 -25.082  &lt; 2e-16 ***
-## raceWhite              -0.1719038  0.0126481 -13.591  &lt; 2e-16 ***
-## raceMultirace           0.3402026  0.0242162  14.049  &lt; 2e-16 ***
-## raceBlack NH            0.2853422  0.0394680   7.230 5.18e-13 ***
-## raceHispanic           -0.0381076  0.0388345  -0.981  0.32648    
-## raceOther NH            0.0325564  0.0371548   0.876  0.38092    
-## raceWhite NH            0.0403672  0.0356929   1.131  0.25810    
-## income$25-$49,999      -0.2893334  0.0147869 -19.567  &lt; 2e-16 ***
-## income$50-$74,999      -0.4159665  0.0147869 -28.131  &lt; 2e-16 ***
-## income&lt; $15,000         0.3186433  0.0143553  22.197  &lt; 2e-16 ***
-## income&gt;=$75,000        -0.4907071  0.0143553 -34.183  &lt; 2e-16 ***
-## income$15–$24,999       0.1113978  0.0371826   2.996  0.00274 ** 
-## income$25–$49,999      -0.1078389  0.0371826  -2.900  0.00374 ** 
-## income$50–$74,999      -0.2536880  0.0371826  -6.823 9.42e-12 ***
-## income$15,000–&lt;$25,000  0.0470593  0.0440802   1.068  0.28573    
-## income$25,000–&lt;$50,000 -0.2222609  0.0439167  -5.061 4.24e-07 ***
-## income$50,000–&lt;$75,000 -0.3866814  0.0442464  -8.739  &lt; 2e-16 ***
-## avg_temp_yearly        -0.0257298  0.0009097 -28.283  &lt; 2e-16 ***
+## (Intercept)             0.4986322  0.0169748  29.375  &lt; 2e-16 ***
+## raceMultirace           0.2942920  0.0127702  23.045  &lt; 2e-16 ***
+## raceOther              -0.3190703  0.0127233 -25.078  &lt; 2e-16 ***
+## raceWhite              -0.1720466  0.0126503 -13.600  &lt; 2e-16 ***
+## raceBlack NH            0.2853540  0.0394754   7.229 5.22e-13 ***
+## raceHispanic           -0.0381239  0.0388419  -0.982  0.32636    
+## raceOther NH            0.0325311  0.0371618   0.875  0.38138    
+## raceWhite NH            0.0403489  0.0356996   1.130  0.25840    
+## income$25-$49,999      -0.2893334  0.0147897 -19.563  &lt; 2e-16 ***
+## income$50-$74,999      -0.4159665  0.0147897 -28.125  &lt; 2e-16 ***
+## income&lt; $15,000         0.3194432  0.0143536  22.255  &lt; 2e-16 ***
+## income&gt;=$75,000        -0.4899071  0.0143536 -34.131  &lt; 2e-16 ***
+## income$15–$24,999       0.1213614  0.0369204   3.287  0.00102 ** 
+## income$25–$49,999      -0.0978752  0.0369204  -2.651  0.00804 ** 
+## income$50–$74,999      -0.2437244  0.0369204  -6.601 4.27e-11 ***
+## income$15,000–&lt;$25,000  0.0478602  0.0440871   1.086  0.27769    
+## income$25,000–&lt;$50,000 -0.2214611  0.0439235  -5.042 4.68e-07 ***
+## income$50,000–&lt;$75,000 -0.3858799  0.0442533  -8.720  &lt; 2e-16 ***
+## avg_temp_yearly        -0.0257547  0.0009098 -28.308  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.442 on 10517 degrees of freedom
-## Multiple R-squared:  0.4398, Adjusted R-squared:  0.4388 
-## F-statistic: 434.5 on 19 and 10517 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.4421 on 10518 degrees of freedom
+## Multiple R-squared:  0.4395, Adjusted R-squared:  0.4386 
+## F-statistic: 458.2 on 18 and 10518 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>R-squared: 0.4398 (~44%), meaning the model explains ~44% of the
 variance in the log-transformed prevalence. Adjusted R-squared: 0.4388,
 similar to the R-squared, indicating that the model generalizes well

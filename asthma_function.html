@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
@@ -218,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -228,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -315,6 +395,14 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Asthma Data</h1>
@@ -322,50 +410,52 @@ $(document).ready(function () {
 </div>
 
 
-<p>For maps and figures on weather trends, please refer to the <a
-href="https://klopez67.shinyapps.io/final_draft/">maps page.</a></p>
-<div id="asthma-dataset" class="section level2">
-<h2>Asthma dataset</h2>
+<p>This page walks through the data import methods for gathering the
+asthma data. Please click on the buttons to the side to see the code
+used.</p>
+<div id="data-sourcing-and-clean-up" class="section level2">
+<h2>Data Sourcing and Clean-up</h2>
 <p>The asthma dataset was obtained from the
 <a href="https://www.cdc.gov/asthma/brfss/default.htm">CDC Behavioral
 Risk Factor Surveillance System (BRFSS)</a> data. While initially we
 wanted to use data from 2001 to 2021, there was a change in weighting
 method in 2011 that made data collected from the previous period
-incomparable with data collected 2011 onwards. Therefore, for this
-analysis, we only use data from 2011 to 2021 (the most recent year
+incomparable with data collected 2011 on wards. Therefore, for this
+analysis, we only use data from the 2011 to 2021 (the most recent year
 available) period.</p>
-<p>For the dataset, our group use the current asthma prevalence (C)
+<p>For the dataset, our group used the current asthma prevalence (C)
 tables rather than lifetime prevalence as it captures active asthma
 cases during the data collection period. We also only keep relevant
-variables (state, race, income) and use prevalence percent rather than
+variables (state, race, income) and used prevalence percent rather than
 prevalence numbers as it better capture the different sample size each
-state had. Finally, we only cover the 50 states and excluding
+state had. Finally, we only covered the 50 states and excluded
 territories (PR, VI, and GU).</p>
 During the data scraping and cleaning process, we found several
 inconsistencies between year such as:
 <ul>
 <li>
-Different column name, for example, starting from 2016, the column for
-“prevalence number” in C1 data change to “weighted number”. For race
-data, in 2020, race designation is in column raceg while in 2021, the
-data is put in column race_ethnicitygcolumn.
+<strong>Different column names:</strong> for example, starting from
+2016, the column for “prevalence number” in C1 data change to “weighted
+number”. For race data, in 2020, race designation is in column raceg
+while in 2021, the data is put in column race_ethnicitygcolumn.
 </li>
 <li>
-Missing states in several years. In 2019, the prevalence data did not
-include NJ while in 2021 it did not include FL.
+<strong>Missing states:</strong>For example, in 2019, the prevalence
+data did not include NJ while in 2021 it did not include FL.
 </li>
 <li>
-Superscript that is included as part of the data: For the race data, the
-total prevalence is listed as “U.S. totalf” in 2020 and 2021, rather
-than the usual “U.S. total” due to the “f” superscript.
+<strong>Superscript that is included as part of the data:</strong> For
+the race data, the total prevalence is listed as “U.S. totalf” in 2020
+and 2021, rather than the usual “U.S. total” due to the “f” superscript.
 </li>
 </ul>
-<p>All of these disrepancies are solved during the cleaning process.</p>
-<h4>
-Prevalence data
-</h4>
-<p>We made the function to obtain the prevalence data as they are
-located at different links.</p>
+<p>All of these discrepancies were solved during the cleaning
+process.</p>
+</div>
+<div id="prevalence-data" class="section level2">
+<h2>Prevalence data</h2>
+<p><strong>Importing Data</strong> Since the data are located at
+different links, we made a function to obtain the prevalence data</p>
 <pre class="r"><code>asthma_hmtl = function(url) {
   
   df = 
@@ -378,7 +468,9 @@ located at different links.</p>
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }</code></pre>
-<p><b>Prevalence data</b></p>
+<p><strong>Calculating prevalence</strong> Using the function we
+defined, we calculated the prevalence in each year by state. Below is a
+graph that shows the distributions of asthma case by year.</p>
 <pre class="r"><code>#prevalence
 asthma_prevalence = 
   tibble(
@@ -413,24 +505,25 @@ asthma_prevalence %&gt;%
   theme_minimal()</code></pre>
 <p><img src="asthma_function_files/figure-html/asthma%20prevalence-1.png" width="672" /></p>
 <pre class="r"><code>asthma_prevalence %&gt;% 
-  ggplot(aes(x = state, y = prevalence_percent)) + 
+  ggplot(aes(x = reorder(state, prevalence_percent, FUN = median), y = prevalence_percent)) + 
   geom_boxplot() + 
   labs(
     x = &quot;State&quot;,
     y = &quot;Prevalence_percent&quot;,
     title = &quot;Asthma cases by state&quot;
   ) +
-  theme_minimal()</code></pre>
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5,))</code></pre>
 <p><img src="asthma_function_files/figure-html/asthma%20prevalence-2.png" width="672" /></p>
 <p>Looking at the annual trend, we see that asthma prevalence show a
 slightly increasing trend since 2014. Looking at the states data, the
 highest prevalence are found in RI, ME, KY, WV and VT while the lowest
 prevalence are found in TX, FL, NE, LA, SD.</p>
-<h4>
-Race and income data
-</h4>
-<p>New function was developed to scrape race and income data as they had
-additional columns.</p>
+</div>
+<div id="race-and-income-data" class="section level2">
+<h2>Race and Income Data</h2>
+<p>A new function was developed to scrape asthma cases by race and
+income as they had additional columns to include in our analysis</p>
 <pre class="r"><code>#function 2 for race and income data
 asthma_hmtl2 = function(url) {
   
@@ -443,10 +536,12 @@ asthma_hmtl2 = function(url) {
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }</code></pre>
-<p><b>Race</b> For race data, since 2021 the survey collected race and
-ethinicity data, so the categories are slightly different. We keep the
-new terms, however we merged “multi” and “multirace” as the same
-category to help simplify the category available.</p>
+<div id="race" class="section level3">
+<h3>Race</h3>
+<p>For race data, since 2021 the survey collected race and ethinicity
+data, the categories are slightly different. We kept the new terms,
+however we merged “multi” and “multirace” as the same category to help
+simplify the category available.</p>
 <pre class="r"><code>asthma_prace = 
   tibble(
     year_name = 2011:2021,
@@ -492,11 +587,13 @@ White NH have the lowest. This suggest that asthma may be correlated
 with race, which will be investigated further in the analysis.</p>
 <pre class="r"><code>asthma_prace = asthma_prace %&gt;%
   nest(race, prevalence_percent)</code></pre>
-<p><b>Income data</b> For the income data, in 2020 they used “-” instead
-of “–” and in 2021 they changed the upper limit in the range to
-&lt;$25,000, $50,000 and $75,000 (instead of $24,999, $49,999 and
-$74,000). We merged the data by mutating the dash and the
-categories.</p>
+</div>
+<div id="income-data" class="section level3">
+<h3>Income Data</h3>
+<p>For the income data, in 2020 they used “-” instead of “–” and in 2021
+they changed the upper limit in the range to &lt;$25,000, $50,000 and
+$75,000 (instead of $24,999, $49,999 and $74,000). We merged the data by
+mutating the dash and the categories.</p>
 <pre class="r"><code>asthma_pincome = 
   tibble(
     year_name = 2011:2021,
@@ -538,13 +635,14 @@ asthma_pincome %&gt;%
 <p>People in the lowest income level (&lt;$15,000) has the highest
 asthma prevalence across all years while people in the highest income
 level (&gt;=$75,000) has the lowest prevalence. This suggest that asthma
-is correlated with income, which will be investigated further in the
-analysis.</p>
+is correlated with income, which will be investigated further in our <a
+href="regression.html">analysis</a>.</p>
 <pre class="r"><code>asthma_pincome = asthma_pincome %&gt;% 
   nest(income, prevalence_percent)</code></pre>
-<h4>
-Complete dataset
-</h4>
+</div>
+</div>
+<div id="complete-dataset" class="section level2">
+<h2>Complete Dataset</h2>
 <p>For the final dataset that we are using in the analysis, we combine
 the state prevalence, race and income data into 1 dataframe. We put the
 race and income into a listcol as they are stratified in each state.</p>
@@ -558,6 +656,8 @@ asthma_dataset =
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -589,7 +689,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

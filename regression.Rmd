@@ -333,7 +333,7 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   theme(legend.position="none")
 ```
 
-From the scatterplot of prevalence by race and temperature, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have much association with asthma prevalence. 
+From the scatter plot of prevalence by race and temperature, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have much association with asthma prevalence. 
 
 The model shows that all race but Black are significant, with R-squared of `r round(model_summary$r.squared, 3)`, which is much higher than simple linear regression model. The diagnostic plots also show better results than previous model.
 
@@ -352,6 +352,7 @@ par(mfrow = c(2,2))
 plot(interaction_model)
 ```
 
+<<<<<<< HEAD
 The regression model predicts prevalence_percent using the interaction between avg_temp_yearly and race_ethnicity as predictors. The interaction effects suggest that the relationship between average temperature and asthma prevalence varies across race groups, but only a few interactions are statistically significant.
 Independent of temperature, some racial groups such as Hispanic, White-NH, Other-NH have significantly different asthma prevalence rates compared to the baseline group since they have larger coefficients.
 
@@ -372,6 +373,9 @@ par(mfrow = c(2,2))
 plot(fit_logistic)
 ```
 
+=======
+As seen, most of the predictors in the interaction model are not significant. Although the r-squared value is slightly higher (R-squared = .3955), the value is not much higher compared to main  effects model. This suggests the need for more stratification. 
+>>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
 
 ### MLR of Race, Income, and Yearly temp
 

@@ -1,6 +1,11 @@
 ---
 title: "Asthma Data"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 4
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -9,25 +14,26 @@ library(rnoaa)
 library(rvest)
 library(httr)
 ```
+This page walks through the data import methods for gathering the asthma data. Please click on the buttons to the side to see the code used.
 
-For maps and figures on weather trends, please refer to the [maps page.](https://klopez67.shinyapps.io/final_draft/) 
+## Data Sourcing and Clean-up
+The asthma dataset was obtained from the <a href="https://www.cdc.gov/asthma/brfss/default.htm">CDC Behavioral Risk Factor Surveillance System (BRFSS)</a> data. While initially we wanted to use data from 2001 to 2021, there was a change in weighting method in 2011 that made data collected from the previous period incomparable with data collected 2011 on wards. Therefore, for this analysis, we only use data from the 2011 to 2021 (the most recent year available) period. 
 
-## Asthma dataset
-The asthma dataset was obtained from the <a href="https://www.cdc.gov/asthma/brfss/default.htm">CDC Behavioral Risk Factor Surveillance System (BRFSS)</a> data. While initially we wanted to use data from 2001 to 2021, there was a change in weighting method in 2011 that made data collected from the previous period incomparable with data collected 2011 onwards. Therefore, for this analysis, we only use data from 2011 to 2021 (the most recent year available) period. 
-
-For the dataset, our group use the current asthma prevalence (C) tables rather than lifetime prevalence as it captures active asthma cases during the data collection period. We also only keep relevant variables (state, race, income) and use prevalence percent rather than prevalence numbers as it better capture the different sample size each state had. Finally, we only cover the 50 states and excluding territories (PR, VI, and GU).
+For the dataset, our group used the current asthma prevalence (C) tables rather than lifetime prevalence as it captures active asthma cases during the data collection period. We also only keep relevant variables (state, race, income) and used prevalence percent rather than prevalence numbers as it better capture the different sample size each state had. Finally, we only covered the 50 states and excluded territories (PR, VI, and GU).
 
 During the data scraping and cleaning process, we found several inconsistencies between year such as: 
 <ul>
-      <li>Different column name, for example, starting from 2016, the column for "prevalence number" in C1 data change to "weighted number". For race data, in 2020, race designation is in column raceg while in 2021, the data is put in column race_ethnicitygcolumn.</li>
-      <li>Missing states in several years. In 2019, the prevalence data did not include NJ while in 2021 it did not include FL.</li>
-      <li>Superscript that is included as part of the data: For the race data, the total prevalence is listed as "U.S. totalf" in 2020 and 2021, rather than the usual "U.S. total" due to the "f" superscript.</li>
+      <li> **Different column names:** for example, starting from 2016, the column for "prevalence number" in C1 data change to "weighted number". For race data, in 2020, race designation is in column raceg while in 2021, the data is put in column race_ethnicitygcolumn.</li>
+      <li>**Missing states:**For example, in 2019, the prevalence data did not include NJ while in 2021 it did not include FL.</li>
+      <li>**Superscript that is included as part of the data:** For the race data, the total prevalence is listed as "U.S. totalf" in 2020 and 2021, rather than the usual "U.S. total" due to the "f" superscript.</li>
     </ul>
 
-All of these disrepancies are solved during the cleaning process.
+All of these discrepancies were solved during the cleaning process.
 
-<h4>Prevalence data</h4>
-We made the function to obtain the prevalence data as they are located at different links.
+## Prevalence data
+
+**Importing Data**
+Since the data are located at different links, we made a function to obtain the prevalence data 
 ```{r asthma function, warning=FALSE, message=FALSE}
 asthma_hmtl = function(url) {
   
@@ -42,9 +48,8 @@ asthma_hmtl = function(url) {
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }
 ```
-
-<b>Prevalence data</b>
-
+**Calculating prevalence**
+Using the function we defined, we calculated the prevalence in each year by state. Below is a graph that shows the distributions of asthma case by year. 
 ```{r asthma prevalence, message=FALSE, warning=FALSE}
 #prevalence
 asthma_prevalence = 
@@ -80,21 +85,22 @@ asthma_prevalence %>%
   theme_minimal()
 
 asthma_prevalence %>% 
-  ggplot(aes(x = state, y = prevalence_percent)) + 
+  ggplot(aes(x = reorder(state, prevalence_percent, FUN = median), y = prevalence_percent)) + 
   geom_boxplot() + 
   labs(
     x = "State",
     y = "Prevalence_percent",
     title = "Asthma cases by state"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5,))
 ```
 
 Looking at the annual trend, we see that asthma prevalence show a slightly increasing trend since 2014. Looking at the states data, the highest prevalence are found in RI, ME, KY, WV and VT while the lowest prevalence are found in TX, FL, NE, LA, SD. 
 
-<h4> Race and income data</h4>
+## Race and Income Data
 
-New function was developed to scrape race and income data as they had additional columns. 
+A new function was developed to scrape asthma cases by race and income as they had additional columns to include in our analysis 
 ```{r function2, warning=FALSE, message=FALSE}
 #function 2 for race and income data
 asthma_hmtl2 = function(url) {
@@ -110,8 +116,8 @@ asthma_hmtl2 = function(url) {
 }
 ```
 
-<b>Race</b>
-For race data, since 2021 the survey collected race and ethinicity data, so the categories are slightly different. We keep the new terms, however we merged "multi" and "multirace" as the same category to help simplify the category available.  
+### Race  
+For race data, since 2021 the survey collected race and ethinicity data, the categories are slightly different. We kept the new terms, however we merged "multi" and "multirace" as the same category to help simplify the category available.  
 
 ```{r race, message=FALSE, warning=FALSE}
 asthma_prace = 
@@ -163,7 +169,7 @@ asthma_prace = asthma_prace %>%
   nest(race, prevalence_percent)
 ```
 
-<b>Income data</b>
+### Income Data
 For the income data, in 2020 they used "-" instead of "–" and in 2021 they changed the upper limit in the range to <$25,000, $50,000 and $75,000 (instead of $24,999, $49,999 and $74,000). We merged the data by mutating the dash and the categories. 
 
 ```{r income, message=FALSE, warning=FALSE}
@@ -206,7 +212,7 @@ asthma_pincome %>%
   theme_minimal()
 ```
 
-People in the lowest income level (<$15,000) has the highest asthma prevalence across all years while people in the highest income level (>=$75,000) has the lowest prevalence. This suggest that asthma is correlated with income, which will be investigated further in the analysis. 
+People in the lowest income level (<$15,000) has the highest asthma prevalence across all years while people in the highest income level (>=$75,000) has the lowest prevalence. This suggest that asthma is correlated with income, which will be investigated further in our [analysis](regression.html). 
 
 ```{r income2, warning=FALSE, message=FALSE}
 asthma_pincome = asthma_pincome %>% 
@@ -214,7 +220,7 @@ asthma_pincome = asthma_pincome %>%
 ```
 
 
-<h4>Complete dataset</h4>
+## Complete Dataset
 
 For the final dataset that we are using in the analysis, we combine the state prevalence, race and income data into 1 dataframe. We put the race and income into a listcol as they are stratified in each state. 
 

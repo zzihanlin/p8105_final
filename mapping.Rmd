@@ -153,7 +153,7 @@ ggplotly(
 
 This plot shows the distribution of asthma across states across all years 2011-2021. States located further right on the plot are shown to have higher asthma prevalence by percent compared to other states. States located in the upper North East such as Maine, Rhode Island, Vermont, and New Hampshire had consistently higher asthma prevalence from 2011-2021 compared to other states. States with some of the lowest asthma prevalence (%) were Texas, South Dakota, Florida, Nebraska, and Minnesota. 
 
-### Distribution of Temperatures Across States
+### Distribution of Temperatures (2011-2021)
 
 ```{r}
 ggplotly( 

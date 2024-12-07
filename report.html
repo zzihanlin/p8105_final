@@ -37916,7 +37916,8 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     x = &quot;Average Temperature (°C)&quot;,
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula
+## = &#39;y ~ x&#39;</code></pre>
 <p><img src="Report_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line
@@ -37931,6 +37932,1214 @@ moderate temperatures. Warmer temperatures might reduce asthma triggers
 like cold air exposure, leading to slightly lower prevalence. Other
 seasonal factors (e.g., pollen in Spring or high humidity in Summer)
 could interact with temperature and affect asthma prevalence.</p>
+</div>
+<div id="additional-analysis" class="section level2">
+<h2>Additional Analysis</h2>
+<p>We first conducted a single linear regression with annual average
+temperature of each state as only predictor, then on data stratified by
+race, finally on data stratified by race, income, and temperature to see
+which was a better fit model</p>
+<div id="initial-analysis-simple-linear-regression"
+class="section level3">
+<h3>Initial Analysis: Simple Linear Regression</h3>
+<p>For this part, we want to know if temperature is the significant
+factor that influence asthma prevalence. Before we perform linear
+regression model, it is necessary to check if data follows normal
+distribution:</p>
+<pre class="r"><code>temp_dist = 
+  temp_df |&gt; 
+    ggplot(aes(x = avg_temp)) +
+    geom_histogram() +
+    labs(
+      title = &quot;distribution of average temperature in 2011-2021&quot;,
+      xlab = &quot;average temperature&quot;,
+      ylab = &quot;frequency&quot;
+    )
+
+asthma_dist = 
+  asthma_df |&gt; 
+    ggplot(aes(x = prevalence_percent)) +
+    geom_histogram() +
+    labs(
+      title = &quot;distribution of prevalence in 2011-2021&quot;,
+      xlab = &quot;prevalence (percent)&quot;,
+      ylab = &quot;frequency&quot;
+    )
+
+temp_dist + asthma_dist</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>As seen, the two variables generally follow normal distribution, so
+we can perform the regression model.</p>
+</div>
+<div id="linear-regression-results" class="section level3">
+<h3>Linear Regression Results</h3>
+<pre class="r"><code>model = lm(prevalence_percent ~ avg_temp_yearly, data = merged_df)
+model_summary = summary(model)
+
+summary(model) %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable(digit = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">10.186</td>
+<td align="right">0.139</td>
+<td align="right">73.544</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">avg_temp_yearly</td>
+<td align="right">-0.067</td>
+<td align="right">0.011</td>
+<td align="right">-6.187</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(model)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>The diagnostic plot shows that the model follows normality, but may
+exist heteroscedasticity. From the model summary, annual average
+temperature is significant with small estimate with R-Squared of 0.066,
+indicating that although temperature is a influential factor, it does
+not explain much about asthma prevalence. As a result, we keep
+investigating some other factors that could result in asthma prevalence.
+The formula for this model is:</p>
+<p><span class="math display">\[
+\widehat{Prevalence} = 10.186 -0.067 \cdot temperature + \epsilon
+\]</span></p>
+</div>
+<div id="regression-of-data-stratified-by-race" class="section level3">
+<h3>Regression of Data Stratified by Race</h3>
+<p>Next, we want to know if race also has impact on asthma prevalence.
+Since race is a categorical data, we factorize it and perform multiple
+linear regression model starting with main effect:</p>
+<div id="linear-regression-main-effects" class="section level4">
+<h4>Linear Regression (main effects):</h4>
+<pre class="r"><code>lm_by_race = lm(prevalence_percent ~ avg_temp_yearly + race_ethnicity, data = race_asthma_df)
+model_summary = summary(lm_by_race)
+
+summary(lm_by_race)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable(digit = 3) |&gt; 
+  kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;), font_size = 12) |&gt; 
+  kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+std.error
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+statistic
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+18.059
+</td>
+<td style="text-align:right;">
+0.725
+</td>
+<td style="text-align:right;">
+24.910
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly
+</td>
+<td style="text-align:right;">
+-0.144
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+-7.068
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityBlack NH
+</td>
+<td style="text-align:right;">
+0.541
+</td>
+<td style="text-align:right;">
+0.725
+</td>
+<td style="text-align:right;">
+0.747
+</td>
+<td style="text-align:right;">
+0.455
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityHispanic
+</td>
+<td style="text-align:right;">
+-2.641
+</td>
+<td style="text-align:right;">
+0.721
+</td>
+<td style="text-align:right;">
+-3.663
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+6.371
+</td>
+<td style="text-align:right;">
+0.972
+</td>
+<td style="text-align:right;">
+6.556
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace NH
+</td>
+<td style="text-align:right;">
+7.101
+</td>
+<td style="text-align:right;">
+0.725
+</td>
+<td style="text-align:right;">
+9.799
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther-NH
+</td>
+<td style="text-align:right;">
+-3.278
+</td>
+<td style="text-align:right;">
+0.972
+</td>
+<td style="text-align:right;">
+-3.372
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-3.010
+</td>
+<td style="text-align:right;">
+0.724
+</td>
+<td style="text-align:right;">
+-4.155
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+-1.714
+</td>
+<td style="text-align:right;">
+0.972
+</td>
+<td style="text-align:right;">
+-1.764
+</td>
+<td style="text-align:right;">
+0.078
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite NH
+</td>
+<td style="text-align:right;">
+-2.594
+</td>
+<td style="text-align:right;">
+0.724
+</td>
+<td style="text-align:right;">
+-3.584
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(lm_by_race)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre class="r"><code>race_asthma_df =
+  race_asthma_df %&gt;% 
+  mutate(yhat = predict(lm_by_race, newdata = race_asthma_df)) 
+
+ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = race_ethnicity)) +
+  geom_point() +
+  geom_line(aes(y = yhat)) +
+  facet_wrap(~ race_ethnicity) +
+  labs(
+    title = &quot;Asthma Prevalence by Race and Temperature&quot;,
+    x = &quot;Average Yearly Temperature&quot;,
+    y = &quot;Asthma Prevalence (%)&quot;,
+    caption = &quot;line shows predicted prevalence % equation and data points show actual asthma prevalence&quot;
+  ) +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-23-2.png" width="672" /></p>
+<p>From the scatter plot of prevalence by race and temperature, we can
+see that the trend line is almost horizontal no matter what races are,
+which represents that temperature might not have much association with
+asthma prevalence.</p>
+<p>The model shows that all race but Black are significant, with
+R-squared of 0.392, which is much higher than simple linear regression
+model. The diagnostic plots also show better results than previous
+model.</p>
+</div>
+<div id="linear-regression-interaction-model" class="section level4">
+<h4>Linear Regression (interaction model):</h4>
+<pre class="r"><code>interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
+
+summary(interaction_model)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable(digit = 3) |&gt; 
+  kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;), font_size = 12) |&gt; 
+  kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+std.error
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+statistic
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+16.323
+</td>
+<td style="text-align:right;">
+1.650
+</td>
+<td style="text-align:right;">
+9.892
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly
+</td>
+<td style="text-align:right;">
+0.009
+</td>
+<td style="text-align:right;">
+0.132
+</td>
+<td style="text-align:right;">
+0.069
+</td>
+<td style="text-align:right;">
+0.945
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityBlack NH
+</td>
+<td style="text-align:right;">
+2.942
+</td>
+<td style="text-align:right;">
+1.766
+</td>
+<td style="text-align:right;">
+1.666
+</td>
+<td style="text-align:right;">
+0.096
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityHispanic
+</td>
+<td style="text-align:right;">
+-0.442
+</td>
+<td style="text-align:right;">
+1.748
+</td>
+<td style="text-align:right;">
+-0.253
+</td>
+<td style="text-align:right;">
+0.801
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+7.230
+</td>
+<td style="text-align:right;">
+2.334
+</td>
+<td style="text-align:right;">
+3.099
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace NH
+</td>
+<td style="text-align:right;">
+9.986
+</td>
+<td style="text-align:right;">
+1.763
+</td>
+<td style="text-align:right;">
+5.664
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther-NH
+</td>
+<td style="text-align:right;">
+-2.786
+</td>
+<td style="text-align:right;">
+2.334
+</td>
+<td style="text-align:right;">
+-1.194
+</td>
+<td style="text-align:right;">
+0.233
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-1.608
+</td>
+<td style="text-align:right;">
+1.761
+</td>
+<td style="text-align:right;">
+-0.913
+</td>
+<td style="text-align:right;">
+0.361
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+-1.271
+</td>
+<td style="text-align:right;">
+2.334
+</td>
+<td style="text-align:right;">
+-0.545
+</td>
+<td style="text-align:right;">
+0.586
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite NH
+</td>
+<td style="text-align:right;">
+-2.082
+</td>
+<td style="text-align:right;">
+1.760
+</td>
+<td style="text-align:right;">
+-1.183
+</td>
+<td style="text-align:right;">
+0.237
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityBlack NH
+</td>
+<td style="text-align:right;">
+-0.208
+</td>
+<td style="text-align:right;">
+0.141
+</td>
+<td style="text-align:right;">
+-1.479
+</td>
+<td style="text-align:right;">
+0.139
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityHispanic
+</td>
+<td style="text-align:right;">
+-0.192
+</td>
+<td style="text-align:right;">
+0.140
+</td>
+<td style="text-align:right;">
+-1.375
+</td>
+<td style="text-align:right;">
+0.169
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+-0.076
+</td>
+<td style="text-align:right;">
+0.187
+</td>
+<td style="text-align:right;">
+-0.405
+</td>
+<td style="text-align:right;">
+0.686
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityMultirace NH
+</td>
+<td style="text-align:right;">
+-0.249
+</td>
+<td style="text-align:right;">
+0.141
+</td>
+<td style="text-align:right;">
+-1.773
+</td>
+<td style="text-align:right;">
+0.076
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityOther-NH
+</td>
+<td style="text-align:right;">
+-0.043
+</td>
+<td style="text-align:right;">
+0.187
+</td>
+<td style="text-align:right;">
+-0.232
+</td>
+<td style="text-align:right;">
+0.817
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-0.125
+</td>
+<td style="text-align:right;">
+0.141
+</td>
+<td style="text-align:right;">
+-0.887
+</td>
+<td style="text-align:right;">
+0.375
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+-0.039
+</td>
+<td style="text-align:right;">
+0.187
+</td>
+<td style="text-align:right;">
+-0.209
+</td>
+<td style="text-align:right;">
+0.834
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityWhite NH
+</td>
+<td style="text-align:right;">
+-0.050
+</td>
+<td style="text-align:right;">
+0.140
+</td>
+<td style="text-align:right;">
+-0.354
+</td>
+<td style="text-align:right;">
+0.723
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(interaction_model)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD The regression model predicts
+prevalence_percent using the interaction between avg_temp_yearly and
+race_ethnicity as predictors. The interaction effects suggest that the
+relationship between average temperature and asthma prevalence varies
+across race groups, but only a few interactions are statistically
+significant. Independent of temperature, some racial groups such as
+Hispanic, White-NH, Other-NH have significantly different asthma
+prevalence rates compared to the baseline group since they have larger
+coefficients.</p>
+<p>Overall, the model explains a moderate amount of variability in the
+data (~39%), and the predictors are collectively significant.</p>
+</div>
+<div id="logistic-fit" class="section level4">
+<h4>Logistic Fit:</h4>
+<pre class="r"><code>fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+                   data = race_asthma_df, 
+                   family = binomial())
+
+broom::tidy(fit_logistic) %&gt;% 
+  knitr::kable(digit = 3) |&gt; 
+  kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;), font_size = 12) |&gt; 
+  kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+std.error
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+statistic
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+-1.505
+</td>
+<td style="text-align:right;">
+0.407
+</td>
+<td style="text-align:right;">
+-3.699
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly
+</td>
+<td style="text-align:right;">
+-0.011
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+-0.928
+</td>
+<td style="text-align:right;">
+0.354
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityBlack NH
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:right;">
+0.406
+</td>
+<td style="text-align:right;">
+0.097
+</td>
+<td style="text-align:right;">
+0.923
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityHispanic
+</td>
+<td style="text-align:right;">
+-0.207
+</td>
+<td style="text-align:right;">
+0.407
+</td>
+<td style="text-align:right;">
+-0.508
+</td>
+<td style="text-align:right;">
+0.612
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+0.407
+</td>
+<td style="text-align:right;">
+0.515
+</td>
+<td style="text-align:right;">
+0.792
+</td>
+<td style="text-align:right;">
+0.429
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace NH
+</td>
+<td style="text-align:right;">
+0.450
+</td>
+<td style="text-align:right;">
+0.402
+</td>
+<td style="text-align:right;">
+1.120
+</td>
+<td style="text-align:right;">
+0.263
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther-NH
+</td>
+<td style="text-align:right;">
+-0.261
+</td>
+<td style="text-align:right;">
+0.572
+</td>
+<td style="text-align:right;">
+-0.456
+</td>
+<td style="text-align:right;">
+0.648
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-0.239
+</td>
+<td style="text-align:right;">
+0.410
+</td>
+<td style="text-align:right;">
+-0.581
+</td>
+<td style="text-align:right;">
+0.561
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+-0.131
+</td>
+<td style="text-align:right;">
+0.558
+</td>
+<td style="text-align:right;">
+-0.234
+</td>
+<td style="text-align:right;">
+0.815
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite NH
+</td>
+<td style="text-align:right;">
+-0.203
+</td>
+<td style="text-align:right;">
+0.409
+</td>
+<td style="text-align:right;">
+-0.496
+</td>
+<td style="text-align:right;">
+0.620
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>par(mfrow = c(2,2))
+plot(fit_logistic)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>As seen, most of the predictors in the interaction model are not
+significant. Although the r-squared value is slightly higher (R-squared
+= .3955), the value is not much higher compared to main effects model.
+This suggests the need for more stratification.</p>
+</div>
+</div>
+<div id="mlr-of-race-income-and-yearly-temp" class="section level3">
+<h3>MLR of Race, Income, and Yearly temp</h3>
+<p>At last, we want to combine all factor together to obtain the
+regression model. Since in CDC website the prevalence rates for race and
+for income by each state are different, here we assume the race and
+income are independent variables so the joint prevalence are their
+seperate prevalence rate multiplying together. So we need to check the
+distribution of joint prevalence:</p>
+<div id="check-distribution" class="section level4">
+<h4>Check distribution</h4>
+<pre class="r"><code># distribution of outcome variable
+dist_plot = 
+  ggplot(full_df, aes(x = joint_prevalence)) + 
+    geom_histogram() +
+  labs(
+    title = &quot;distribution of original outcome variable&quot;,
+    xlab = &quot;joint prevalence&quot;,
+    ylab = &quot;Frequency&quot;
+  )
+
+log_dist_plot = 
+  ggplot(full_df, aes(x = log_prevalence)) + 
+    geom_histogram() +
+  labs(
+    title = &quot;distribution of log-transformed outcome variable&quot;,
+    xlab = &quot;Log-prevalence&quot;,
+    ylab = &quot;Frequency&quot;
+  )
+
+dist_plot + log_dist_plot</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Distribution after log-transform looks normal. Now we perform
+multiple linear regression model:</p>
+</div>
+<div id="regression-results" class="section level4">
+<h4>Regression Results:</h4>
+<pre class="r"><code>model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
+summary(model)%&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable(digit = 3) |&gt; 
+  kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;), font_size = 12) |&gt; 
+  kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<div
+style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+term
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+estimate
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+std.error
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+statistic
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.507
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+<td style="text-align:right;">
+30.555
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceMultirace
+</td>
+<td style="text-align:right;">
+0.293
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+22.895
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceOther
+</td>
+<td style="text-align:right;">
+-0.319
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-25.002
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceWhite
+</td>
+<td style="text-align:right;">
+-0.170
+</td>
+<td style="text-align:right;">
+0.013
+</td>
+<td style="text-align:right;">
+-13.388
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceBlack NH
+</td>
+<td style="text-align:right;">
+0.307
+</td>
+<td style="text-align:right;">
+0.034
+</td>
+<td style="text-align:right;">
+8.930
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceHispanic
+</td>
+<td style="text-align:right;">
+-0.016
+</td>
+<td style="text-align:right;">
+0.034
+</td>
+<td style="text-align:right;">
+-0.487
+</td>
+<td style="text-align:right;">
+0.627
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceOther NH
+</td>
+<td style="text-align:right;">
+0.054
+</td>
+<td style="text-align:right;">
+0.032
+</td>
+<td style="text-align:right;">
+1.711
+</td>
+<td style="text-align:right;">
+0.087
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceWhite NH
+</td>
+<td style="text-align:right;">
+0.062
+</td>
+<td style="text-align:right;">
+0.030
+</td>
+<td style="text-align:right;">
+2.076
+</td>
+<td style="text-align:right;">
+0.038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income$25–$49,999
+</td>
+<td style="text-align:right;">
+-0.283
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-20.696
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income$50–$74,999
+</td>
+<td style="text-align:right;">
+-0.414
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-30.278
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income&lt; $15,000
+</td>
+<td style="text-align:right;">
+0.307
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+22.461
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income&gt;=$75,000
+</td>
+<td style="text-align:right;">
+-0.503
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-36.816
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly
+</td>
+<td style="text-align:right;">
+-0.026
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+-28.047
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(model)</code></pre>
+<p><img src="Report_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>The R-squared is 0.4363, meaning the model explains about 44% of the
+variance in the log-transformed prevalence, which is ever higher than
+previous two predictors model. The adjusted R-squared is 0.4356, similar
+to the R-squared, indicating that the model generalizes well with the
+predictors.</p>
+<p>If we rank the predictors by importance, Income is the strongest
+predictor category, especially for higher income groups. For example,
+one unit of income larger than 75K will decrease prevalence rate by 0.81
+unit, showing a large reduction in log_prevalence. These effects
+dominate the model and show a consistent trend of decreasing
+log_prevalence with higher income.</p>
+<p>Significant race effects also exist, for Black and Multi-race, the
+prevalence rate increase. Other and White decrease prevalence
+significantly, with Other having the largest absolute impact.</p>
+<p>Although temperature is still significant, its effect is smaller
+compared to income and race.</p>
+</div>
+</div>
 </div>
 
 

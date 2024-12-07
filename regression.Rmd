@@ -373,9 +373,7 @@ par(mfrow = c(2,2))
 plot(fit_logistic)
 ```
 
-=======
 As seen, most of the predictors in the interaction model are not significant. Although the r-squared value is slightly higher (R-squared = .3955), the value is not much higher compared to main  effects model. This suggests the need for more stratification. 
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
 
 ### MLR of Race, Income, and Yearly temp
 

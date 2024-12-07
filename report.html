@@ -37916,8 +37916,7 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     x = &quot;Average Temperature (°C)&quot;,
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using formula
-## = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="Report_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line
@@ -38063,13 +38062,13 @@ p.value
 (Intercept)
 </td>
 <td style="text-align:right;">
-18.059
+18.601
 </td>
 <td style="text-align:right;">
-0.725
+0.335
 </td>
 <td style="text-align:right;">
-24.910
+55.478
 </td>
 <td style="text-align:right;">
 0.000
@@ -38094,16 +38093,16 @@ avg_temp_yearly
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityBlack NH
+race_ethnicityBlack-NH
 </td>
 <td style="text-align:right;">
-0.541
+-0.541
 </td>
 <td style="text-align:right;">
 0.725
 </td>
 <td style="text-align:right;">
-0.747
+-0.747
 </td>
 <td style="text-align:right;">
 0.455
@@ -38114,30 +38113,13 @@ race_ethnicityBlack NH
 race_ethnicityHispanic
 </td>
 <td style="text-align:right;">
--2.641
+-3.182
 </td>
 <td style="text-align:right;">
-0.721
+0.317
 </td>
 <td style="text-align:right;">
--3.663
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityMultirace-NH
-</td>
-<td style="text-align:right;">
-6.371
-</td>
-<td style="text-align:right;">
-0.972
-</td>
-<td style="text-align:right;">
-6.556
+-10.047
 </td>
 <td style="text-align:right;">
 0.000
@@ -38148,13 +38130,47 @@ race_ethnicityMultirace-NH
 race_ethnicityMultirace NH
 </td>
 <td style="text-align:right;">
-7.101
+6.560
+</td>
+<td style="text-align:right;">
+0.325
+</td>
+<td style="text-align:right;">
+20.158
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+5.830
 </td>
 <td style="text-align:right;">
 0.725
 </td>
 <td style="text-align:right;">
-9.799
+8.042
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-3.552
+</td>
+<td style="text-align:right;">
+0.325
+</td>
+<td style="text-align:right;">
+-10.932
 </td>
 <td style="text-align:right;">
 0.000
@@ -38165,30 +38181,30 @@ race_ethnicityMultirace NH
 race_ethnicityOther-NH
 </td>
 <td style="text-align:right;">
--3.278
+-3.819
 </td>
 <td style="text-align:right;">
-0.972
+0.725
 </td>
 <td style="text-align:right;">
--3.372
+-5.268
 </td>
 <td style="text-align:right;">
-0.001
+0.000
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityOther NH
+race_ethnicityWhite NH
 </td>
 <td style="text-align:right;">
--3.010
+-3.135
 </td>
 <td style="text-align:right;">
-0.724
+0.323
 </td>
 <td style="text-align:right;">
--4.155
+-9.693
 </td>
 <td style="text-align:right;">
 0.000
@@ -38199,33 +38215,16 @@ race_ethnicityOther NH
 race_ethnicityWhite-NH
 </td>
 <td style="text-align:right;">
--1.714
+-2.256
 </td>
 <td style="text-align:right;">
-0.972
+0.725
 </td>
 <td style="text-align:right;">
--1.764
+-3.112
 </td>
 <td style="text-align:right;">
-0.078
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityWhite NH
-</td>
-<td style="text-align:right;">
--2.594
-</td>
-<td style="text-align:right;">
-0.724
-</td>
-<td style="text-align:right;">
--3.584
-</td>
-<td style="text-align:right;">
-0.000
+0.002
 </td>
 </tr>
 </tbody>
@@ -38296,13 +38295,13 @@ p.value
 (Intercept)
 </td>
 <td style="text-align:right;">
-16.323
+19.264
 </td>
 <td style="text-align:right;">
-1.650
+0.629
 </td>
 <td style="text-align:right;">
-9.892
+30.624
 </td>
 <td style="text-align:right;">
 0.000
@@ -38313,30 +38312,30 @@ p.value
 avg_temp_yearly
 </td>
 <td style="text-align:right;">
-0.009
+-0.199
 </td>
 <td style="text-align:right;">
-0.132
+0.049
 </td>
 <td style="text-align:right;">
-0.069
+-4.075
 </td>
 <td style="text-align:right;">
-0.945
+0.000
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityBlack NH
+race_ethnicityBlack-NH
 </td>
 <td style="text-align:right;">
-2.942
+-2.942
 </td>
 <td style="text-align:right;">
 1.766
 </td>
 <td style="text-align:right;">
-1.666
+-1.666
 </td>
 <td style="text-align:right;">
 0.096
@@ -38347,33 +38346,16 @@ race_ethnicityBlack NH
 race_ethnicityHispanic
 </td>
 <td style="text-align:right;">
--0.442
+-3.384
 </td>
 <td style="text-align:right;">
-1.748
+0.854
 </td>
 <td style="text-align:right;">
--0.253
+-3.960
 </td>
 <td style="text-align:right;">
-0.801
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityMultirace-NH
-</td>
-<td style="text-align:right;">
-7.230
-</td>
-<td style="text-align:right;">
-2.334
-</td>
-<td style="text-align:right;">
-3.099
-</td>
-<td style="text-align:right;">
-0.002
+0.000
 </td>
 </tr>
 <tr>
@@ -38381,13 +38363,47 @@ race_ethnicityMultirace-NH
 race_ethnicityMultirace NH
 </td>
 <td style="text-align:right;">
-9.986
+7.044
 </td>
 <td style="text-align:right;">
-1.763
+0.884
 </td>
 <td style="text-align:right;">
-5.664
+7.969
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+4.288
+</td>
+<td style="text-align:right;">
+1.766
+</td>
+<td style="text-align:right;">
+2.429
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityOther NH
+</td>
+<td style="text-align:right;">
+-4.550
+</td>
+<td style="text-align:right;">
+0.881
+</td>
+<td style="text-align:right;">
+-5.167
 </td>
 <td style="text-align:right;">
 0.000
@@ -38398,50 +38414,16 @@ race_ethnicityMultirace NH
 race_ethnicityOther-NH
 </td>
 <td style="text-align:right;">
--2.786
+-5.727
 </td>
 <td style="text-align:right;">
-2.334
+1.766
 </td>
 <td style="text-align:right;">
--1.194
+-3.243
 </td>
 <td style="text-align:right;">
-0.233
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityOther NH
-</td>
-<td style="text-align:right;">
--1.608
-</td>
-<td style="text-align:right;">
-1.761
-</td>
-<td style="text-align:right;">
--0.913
-</td>
-<td style="text-align:right;">
-0.361
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityWhite-NH
-</td>
-<td style="text-align:right;">
--1.271
-</td>
-<td style="text-align:right;">
-2.334
-</td>
-<td style="text-align:right;">
--0.545
-</td>
-<td style="text-align:right;">
-0.586
+0.001
 </td>
 </tr>
 <tr>
@@ -38449,30 +38431,47 @@ race_ethnicityWhite-NH
 race_ethnicityWhite NH
 </td>
 <td style="text-align:right;">
--2.082
+-5.023
 </td>
 <td style="text-align:right;">
-1.760
+0.878
 </td>
 <td style="text-align:right;">
--1.183
+-5.723
 </td>
 <td style="text-align:right;">
-0.237
+0.000
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-avg_temp_yearly:race_ethnicityBlack NH
+race_ethnicityWhite-NH
 </td>
 <td style="text-align:right;">
--0.208
+-4.213
+</td>
+<td style="text-align:right;">
+1.766
+</td>
+<td style="text-align:right;">
+-2.386
+</td>
+<td style="text-align:right;">
+0.017
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityBlack-NH
+</td>
+<td style="text-align:right;">
+0.208
 </td>
 <td style="text-align:right;">
 0.141
 </td>
 <td style="text-align:right;">
--1.479
+1.479
 </td>
 <td style="text-align:right;">
 0.139
@@ -38483,33 +38482,16 @@ avg_temp_yearly:race_ethnicityBlack NH
 avg_temp_yearly:race_ethnicityHispanic
 </td>
 <td style="text-align:right;">
--0.192
+0.016
 </td>
 <td style="text-align:right;">
-0.140
+0.067
 </td>
 <td style="text-align:right;">
--1.375
+0.245
 </td>
 <td style="text-align:right;">
-0.169
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-avg_temp_yearly:race_ethnicityMultirace-NH
-</td>
-<td style="text-align:right;">
--0.076
-</td>
-<td style="text-align:right;">
-0.187
-</td>
-<td style="text-align:right;">
--0.405
-</td>
-<td style="text-align:right;">
-0.686
+0.807
 </td>
 </tr>
 <tr>
@@ -38517,33 +38499,33 @@ avg_temp_yearly:race_ethnicityMultirace-NH
 avg_temp_yearly:race_ethnicityMultirace NH
 </td>
 <td style="text-align:right;">
--0.249
+-0.041
+</td>
+<td style="text-align:right;">
+0.069
+</td>
+<td style="text-align:right;">
+-0.599
+</td>
+<td style="text-align:right;">
+0.549
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityMultirace-NH
+</td>
+<td style="text-align:right;">
+0.133
 </td>
 <td style="text-align:right;">
 0.141
 </td>
 <td style="text-align:right;">
--1.773
+0.942
 </td>
 <td style="text-align:right;">
-0.076
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-avg_temp_yearly:race_ethnicityOther-NH
-</td>
-<td style="text-align:right;">
--0.043
-</td>
-<td style="text-align:right;">
-0.187
-</td>
-<td style="text-align:right;">
--0.232
-</td>
-<td style="text-align:right;">
-0.817
+0.346
 </td>
 </tr>
 <tr>
@@ -38551,33 +38533,33 @@ avg_temp_yearly:race_ethnicityOther-NH
 avg_temp_yearly:race_ethnicityOther NH
 </td>
 <td style="text-align:right;">
--0.125
+0.084
+</td>
+<td style="text-align:right;">
+0.069
+</td>
+<td style="text-align:right;">
+1.218
+</td>
+<td style="text-align:right;">
+0.223
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityOther-NH
+</td>
+<td style="text-align:right;">
+0.165
 </td>
 <td style="text-align:right;">
 0.141
 </td>
 <td style="text-align:right;">
--0.887
+1.171
 </td>
 <td style="text-align:right;">
-0.375
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-avg_temp_yearly:race_ethnicityWhite-NH
-</td>
-<td style="text-align:right;">
--0.039
-</td>
-<td style="text-align:right;">
-0.187
-</td>
-<td style="text-align:right;">
--0.209
-</td>
-<td style="text-align:right;">
-0.834
+0.242
 </td>
 </tr>
 <tr>
@@ -38585,16 +38567,33 @@ avg_temp_yearly:race_ethnicityWhite-NH
 avg_temp_yearly:race_ethnicityWhite NH
 </td>
 <td style="text-align:right;">
--0.050
+0.158
 </td>
 <td style="text-align:right;">
-0.140
+0.068
 </td>
 <td style="text-align:right;">
--0.354
+2.317
 </td>
 <td style="text-align:right;">
-0.723
+0.021
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_temp_yearly:race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+0.169
+</td>
+<td style="text-align:right;">
+0.141
+</td>
+<td style="text-align:right;">
+1.202
+</td>
+<td style="text-align:right;">
+0.230
 </td>
 </tr>
 </tbody>
@@ -38653,13 +38652,13 @@ p.value
 (Intercept)
 </td>
 <td style="text-align:right;">
--1.505
+-1.466
 </td>
 <td style="text-align:right;">
-0.407
+0.188
 </td>
 <td style="text-align:right;">
--3.699
+-7.801
 </td>
 <td style="text-align:right;">
 0.000
@@ -38684,16 +38683,16 @@ avg_temp_yearly
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityBlack NH
+race_ethnicityBlack-NH
 </td>
 <td style="text-align:right;">
-0.039
+-0.039
 </td>
 <td style="text-align:right;">
 0.406
 </td>
 <td style="text-align:right;">
-0.097
+-0.097
 </td>
 <td style="text-align:right;">
 0.923
@@ -38704,33 +38703,16 @@ race_ethnicityBlack NH
 race_ethnicityHispanic
 </td>
 <td style="text-align:right;">
--0.207
+-0.246
 </td>
 <td style="text-align:right;">
-0.407
+0.183
 </td>
 <td style="text-align:right;">
--0.508
+-1.344
 </td>
 <td style="text-align:right;">
-0.612
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-race_ethnicityMultirace-NH
-</td>
-<td style="text-align:right;">
-0.407
-</td>
-<td style="text-align:right;">
-0.515
-</td>
-<td style="text-align:right;">
-0.792
-</td>
-<td style="text-align:right;">
-0.429
+0.179
 </td>
 </tr>
 <tr>
@@ -38738,33 +38720,33 @@ race_ethnicityMultirace-NH
 race_ethnicityMultirace NH
 </td>
 <td style="text-align:right;">
-0.450
+0.410
 </td>
 <td style="text-align:right;">
-0.402
+0.171
 </td>
 <td style="text-align:right;">
-1.120
+2.407
 </td>
 <td style="text-align:right;">
-0.263
+0.016
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityOther-NH
+race_ethnicityMultirace-NH
 </td>
 <td style="text-align:right;">
--0.261
+0.368
 </td>
 <td style="text-align:right;">
-0.572
+0.364
 </td>
 <td style="text-align:right;">
--0.456
+1.011
 </td>
 <td style="text-align:right;">
-0.648
+0.312
 </td>
 </tr>
 <tr>
@@ -38772,33 +38754,33 @@ race_ethnicityOther-NH
 race_ethnicityOther NH
 </td>
 <td style="text-align:right;">
--0.239
+-0.278
 </td>
 <td style="text-align:right;">
-0.410
+0.190
 </td>
 <td style="text-align:right;">
--0.581
+-1.466
 </td>
 <td style="text-align:right;">
-0.561
+0.143
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-race_ethnicityWhite-NH
+race_ethnicityOther-NH
 </td>
 <td style="text-align:right;">
--0.131
+-0.301
 </td>
 <td style="text-align:right;">
-0.558
+0.442
 </td>
 <td style="text-align:right;">
--0.234
+-0.680
 </td>
 <td style="text-align:right;">
-0.815
+0.496
 </td>
 </tr>
 <tr>
@@ -38806,16 +38788,33 @@ race_ethnicityWhite-NH
 race_ethnicityWhite NH
 </td>
 <td style="text-align:right;">
--0.203
+-0.242
 </td>
 <td style="text-align:right;">
-0.409
+0.187
 </td>
 <td style="text-align:right;">
--0.496
+-1.294
 </td>
 <td style="text-align:right;">
-0.620
+0.196
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race_ethnicityWhite-NH
+</td>
+<td style="text-align:right;">
+-0.170
+</td>
+<td style="text-align:right;">
+0.423
+</td>
+<td style="text-align:right;">
+-0.402
+</td>
+<td style="text-align:right;">
+0.688
 </td>
 </tr>
 </tbody>
@@ -38900,13 +38899,13 @@ p.value
 (Intercept)
 </td>
 <td style="text-align:right;">
-0.507
+0.814
 </td>
 <td style="text-align:right;">
 0.017
 </td>
 <td style="text-align:right;">
-30.555
+49.037
 </td>
 <td style="text-align:right;">
 0.000
@@ -39033,16 +39032,50 @@ raceWhite NH
 </tr>
 <tr>
 <td style="text-align:left;">
-income$25–$49,999
+income&gt;=$75,000
 </td>
 <td style="text-align:right;">
--0.283
+-0.809
 </td>
 <td style="text-align:right;">
 0.014
 </td>
 <td style="text-align:right;">
--20.696
+-59.282
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income$15–$24,999
+</td>
+<td style="text-align:right;">
+-0.307
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-22.461
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income$25–$49,999
+</td>
+<td style="text-align:right;">
+-0.589
+</td>
+<td style="text-align:right;">
+0.014
+</td>
+<td style="text-align:right;">
+-43.163
 </td>
 <td style="text-align:right;">
 0.000
@@ -39053,47 +39086,13 @@ income$25–$49,999
 income$50–$74,999
 </td>
 <td style="text-align:right;">
--0.414
+-0.720
 </td>
 <td style="text-align:right;">
 0.014
 </td>
 <td style="text-align:right;">
--30.278
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-income&lt; $15,000
-</td>
-<td style="text-align:right;">
-0.307
-</td>
-<td style="text-align:right;">
-0.014
-</td>
-<td style="text-align:right;">
-22.461
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-income&gt;=$75,000
-</td>
-<td style="text-align:right;">
--0.503
-</td>
-<td style="text-align:right;">
-0.014
-</td>
-<td style="text-align:right;">
--36.816
+-52.734
 </td>
 <td style="text-align:right;">
 0.000
@@ -39139,6 +39138,42 @@ significantly, with Other having the largest absolute impact.</p>
 <p>Although temperature is still significant, its effect is smaller
 compared to income and race.</p>
 </div>
+</div>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<div id="key-finding" class="section level3">
+<h3>Key Finding</h3>
+<p>For the initial part, we investigated the association between asthma
+prevalence rate and annual average temperature by each state. By using
+simple linear regression model, we found that although temperature is a
+statistically significant predictor, it does not have much influence on
+asthma prevalence.</p>
+<p>As a result, we keep exploring if other factors impact the prevalence
+rate. By implementing multiple linear regression models and logistic
+regression model, our results show that race/ethnicity group and income
+are the important predictors, which have more association with asthma
+prevalence than temperature.</p>
+</div>
+<div id="limitations" class="section level3">
+<h3>Limitations</h3>
+<p>Since our data sources are collected within United States, the asthma
+prevalence prediction by using data outside United States might be
+biased. Moreover, because our asthma prevalence data source separates
+the asthma prevalence rate by race and income, we have to assume they
+are independent when calculating the joint prevalence, which means these
+two predictors might exist multicollinearity.</p>
+</div>
+<div id="next-step" class="section level3">
+<h3>Next step</h3>
+<p>Although our multiple linear regression model found the association
+between asthma prevalence and race, income, and temperature, these
+predictors might not fully explain the outcome, which means there still
+exist factors that have strong correlation with asthma prevalence.</p>
+<p>Furthermore, we noticed that temperature might not be the direct
+factor that influence asthma prevalence. As a result, we want to
+investigate the causal relationship between weather and asthma
+prevalence and improve our multiple linear regression model.</p>
 </div>
 </div>
 

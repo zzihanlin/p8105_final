@@ -898,6 +898,31 @@ Significant race effects also exist, for Black and Multi-race, the prevalence ra
 
 Although temperature is still significant,  its effect is smaller compared to income and race.
 
+## Discussion 
+
+### Key Finding
+
+For the initial part, we investigated the association between asthma prevalence rate and annual average temperature by each state. By using simple linear regression model, we found that although temperature is a statistically significant predictor, it does not have much influence on asthma prevalence. 
+
+As a result, we keep exploring if other factors impact the prevalence rate. By implementing multiple linear regression models and logistic regression model, our results show that race/ethnicity group and income are the important predictors, which have more association with asthma prevalence than temperature. 
+
+### Limitations
+
+Since our data sources are collected within United States, the asthma prevalence prediction by using data outside United States might be biased. Moreover, because our asthma prevalence data source separates the asthma prevalence rate by race and income, we have to assume they are independent when calculating the joint prevalence, which means these two predictors might exist multicollinearity. 
+
+### Next step 
+
+Although our multiple linear regression model found the association between asthma prevalence and race, income, and temperature, these predictors might not fully explain the outcome, which means there still exist factors that have strong correlation with asthma prevalence.  
+
+Furthermore, we noticed that temperature might not be the direct factor that influence asthma prevalence. As a result, we want to investigate the causal relationship between weather and asthma prevalence and improve our multiple linear regression model.
+
+
+
+
+
+
+
+
 
 
 

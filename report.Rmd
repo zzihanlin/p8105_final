@@ -31,7 +31,7 @@ Our analysis stems from data provided by the [Behavioral Risk Factor Surveillanc
 
 ## Data
 
-The analysis uses two primary datasets: Asthma Data and Temperature Data. 
+The analysis uses two primary datasets: Temperature Data and Asthma Data. 
 
 ### Temperature Data
 
@@ -111,19 +111,6 @@ seasonal_avg_temps = bind_rows(temp_data_list) %>%
 write.csv(seasonal_avg_temps, "temp_data.csv", row.names = FALSE)
 ```
 
-See the complete data set below:
-
-```{r}
-temp_data = read_csv(file = "./temp_data.csv", show_col_types = FALSE) %>%
-  janitor::clean_names() %>% 
-  drop_na()
-
-temp_data %>% 
-  knitr::kable(digit = 3) |> 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
-  kableExtra::scroll_box(width = "100%", height = "300px")
-```
-
 ### Asthma Data
 
 As mentioned, the asthma dataset was obtained from the <a href="https://www.cdc.gov/asthma/brfss/default.htm">CDC Behavioral Risk Factor Surveillance System (BRFSS)</a> data. While initially we wanted to use data from 2001 to 2021, there was a change in weighting method in 2011 that made data collected from the previous period incomparable with data collected 2011 on wards. Therefore, for this analysis, we only use data from the 2011 to 2021 (the most recent year available) period. 
@@ -185,7 +172,7 @@ asthma_prevalence =
 
 #### Race and Income Data
 
-A new function was developed to scrape asthma cases by race and income as they had additional columns to include in our analysis 
+A new function was developed to scrape asthma cases by race and income as they had additional columns to include in our analysis:
 ```{r function2, warning=FALSE, message=FALSE, eval = FALSE}
 #function 2 for race and income data
 asthma_hmtl2 = function(url) {
@@ -202,7 +189,7 @@ asthma_hmtl2 = function(url) {
 ```
 
 #### Race  
-For race data, since 2021 the survey collected race and ethinicity data, the categories are slightly different. We kept the new terms, however we merged "multi" and "multirace" as the same category to help simplify the category available.  
+For race data, since 2021 the survey collected race and ethinicity data, the categories are slightly different. We kept the new terms, however we merged "multi" and "multirace" as the same category to help simplify the category available:  
 
 ```{r race, message=FALSE, warning=FALSE, eval = FALSE}
 asthma_prace = 
@@ -270,6 +257,23 @@ asthma_pincome =
 
 #### Complete Dataset
 
+**Temperature Data:**  
+
+```{r}
+temp_data = read_csv(file = "data/temp_data.csv", show_col_types = FALSE) %>%
+  janitor::clean_names() %>% 
+  drop_na()
+
+temp_data %>% 
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
+```
+
+The Temperature Data contains `r nrow(temp_data)` observations and `r ncol(temp_data)` variables, with key columns including the date of the temperature reading (date), the region (region), and the recorded temperature (temp). This dataset provides critical environmental context for analyzing the relationship between temperature and asthma cases.  
+
+**Asthma Data:**  
+
 For the final dataset that we are using in the analysis, we combine the state prevalence, race and income data into 1 dataframe. We put the race and income into a listcol as they are stratified in each state. 
 
 ```{r final dataset, message=FALSE, warning=FALSE, eval = FALSE}
@@ -279,28 +283,20 @@ asthma_dataset =
   inner_join(asthma_pincome, by = c("year_name", "state")) %>% 
   janitor::clean_names() %>% 
   rename("race" = "data_x", "income" = "data_y")
+```
 
-asthma_dataset %>% 
+```{r}
+asthma_data = read_csv(file = "data/asthma_data.csv", show_col_types = FALSE) %>%
+  janitor::clean_names() %>% 
+  drop_na()
+
+asthma_data %>% 
   knitr::kable(digit = 3) |> 
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
   kableExtra::scroll_box(width = "100%", height = "300px")
 ```
 
-###
-```{r}
-# Load datasets
-asthma_data <- read_csv("data/asthma_data.csv")
-```
-
-The Asthma Data consists of `r nrow(asthma_data)` observations and `r ncol(asthma_data)` variables, which include details such as the date of record, the region, and the number of asthma cases reported (cases). A brief look at the first few rows reveals the following column names: `r paste(colnames(asthma_data)[1:5], collapse = ", ")`, providing an overview of the key information captured.
-```{r}
-temp_data <- read_csv("data/temp_data.csv")
-```
-
-
-The Temperature Data contains `r nrow(temp_data)` observations and `r ncol(temp_data)` variables, with key columns including the date of the temperature reading (date), the region (region), and the recorded temperature (temp). This dataset provides critical environmental context for analyzing the relationship between temperature and asthma cases. 
-
-
+The Asthma Data consists of `r nrow(asthma_data)` observations and `r ncol(asthma_data)` variables, which include details such as the date of record, the region, and the number of asthma cases reported (cases). A brief look at the first few rows reveals the following column names: `r paste(colnames(asthma_data), collapse = ", ")`, providing an overview of the key information captured.
 
 ## Exploratory Data Analysis
 ```{r}
@@ -362,8 +358,8 @@ ggplot(yearly_temp_summary, aes(x = year, y = avg_temp)) +
     y = "Average Temperature (°C)"
   )
 ```
-
-
+                      
+                      
                       
 The line plot shows annual average temperatures over the years. There are visible fluctuations, with some years showing higher average temperatures (e.g., 2012) and others lower (e.g., 2014). The average temperature peaked around 2012 and dipped notably around 2013-2014. There is no clear upward or downward trend in the dataset; instead, temperatures appear cyclical or influenced by short-term climate variations.
 
@@ -393,7 +389,7 @@ ggplot(seasonal_temp_summary, aes(x = season, y = avg_temp, fill = season)) +
   )
 ```
 
-              
+
 
 The bar plot displays the average temperature for each season. Summer is significantly warmer (22.45°C on average), while Winter is coldest (1.18°C on average). Fall and Spring fall in between. The seasonal temperature differences are as expected, with clear distinctions between warmer and colder periods. The significant gap between Winter and Summer highlights the need to examine whether asthma prevalence increases during colder months due to weather-induced triggers.
 ```{r}

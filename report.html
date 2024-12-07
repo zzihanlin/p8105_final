@@ -468,7 +468,7 @@ Data.</p>
 <pre class="r"><code># Load datasets
 asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -483,7 +483,7 @@ prevalence_percent, NA, NA, providing an overview of the key information
 captured.</p>
 <pre class="r"><code>temp_data &lt;- read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -785,7 +785,8 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     x = &quot;Average Temperature (°C)&quot;,
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula
+## = &#39;y ~ x&#39;</code></pre>
 <p><img src="Report_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line

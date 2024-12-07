@@ -333,7 +333,7 @@ ggplot(race_asthma_df, aes(x = avg_temp_yearly, y = prevalence_percent, color = 
   theme(legend.position="none")
 ```
 
-From the scatterplot of prevalence by race and temperature, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have much association with asthma prevalence. 
+From the scatter plot of prevalence by race and temperature, we can see that the trend line is almost horizontal no matter what races are, which represents that temperature might not have much association with asthma prevalence. 
 
 The model shows that all race but Black are significant, with R-squared of `r round(model_summary$r.squared, 3)`, which is much higher than simple linear regression model. The diagnostic plots also show better results than previous model.
 
@@ -351,21 +351,7 @@ par(mfrow = c(2,2))
 plot(interaction_model)
 ```
 
-#### Logistic Fit:
-```{r, message = FALSE, warning = FALSE}
-fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
-                   data = race_asthma_df, 
-                   family = binomial())
-
-broom::tidy(fit_logistic) %>% 
-  knitr::kable(digit = 3) |> 
-  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
-  kableExtra::scroll_box(width = "100%", height = "300px")
-
-par(mfrow = c(2,2))
-plot(fit_logistic)
-```
-
+As seen, most of the predictors in the interaction model are not significant. Although the r-squared value is slightly higher (R-squared = .3955), the value is not much higher compared to main  effects model. This suggests the need for more stratification. 
 
 ### MLR of Race, Income, and Yearly temp
 

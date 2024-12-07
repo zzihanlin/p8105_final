@@ -454,7 +454,7 @@ process.</p>
 </div>
 <div id="prevalence-data" class="section level2">
 <h2>Prevalence data</h2>
-<p><strong>Importing Data</strong> Since the data are located at
+<p><strong>Importing Data:</strong> since the data are located at
 different links, we made a function to obtain the prevalence data</p>
 <pre class="r"><code>asthma_hmtl = function(url) {
   
@@ -468,7 +468,7 @@ different links, we made a function to obtain the prevalence data</p>
     filter(!state %in% c(&quot;U.S. Total**&quot;, &quot;U.S. Totalf&quot;, &quot;Territories&quot;, &quot;PR&quot;, &quot;GU&quot;, &quot;VI&quot;)) %&gt;% 
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }</code></pre>
-<p><strong>Calculating prevalence</strong> Using the function we
+<p><strong>Calculating Prevalence:</strong> Using the function we
 defined, we calculated the prevalence in each year by state. Below is a
 graph that shows the distributions of asthma case by year.</p>
 <pre class="r"><code>#prevalence

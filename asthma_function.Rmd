@@ -32,8 +32,8 @@ All of these discrepancies were solved during the cleaning process.
 
 ## Prevalence data
 
-**Importing Data**
-Since the data are located at different links, we made a function to obtain the prevalence data 
+**Importing Data:**
+since the data are located at different links, we made a function to obtain the prevalence data 
 ```{r asthma function, warning=FALSE, message=FALSE}
 asthma_hmtl = function(url) {
   
@@ -48,7 +48,7 @@ asthma_hmtl = function(url) {
     mutate(prevalence_percent = as.numeric(prevalence_percent))
 }
 ```
-**Calculating prevalence**
+**Calculating Prevalence:**
 Using the function we defined, we calculated the prevalence in each year by state. Below is a graph that shows the distributions of asthma case by year. 
 ```{r asthma prevalence, message=FALSE, warning=FALSE}
 #prevalence

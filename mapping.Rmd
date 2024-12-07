@@ -17,6 +17,7 @@ library(ggplot2)
 library(dplyr)
 library(forecast)
 library(plotly)
+library(DT)
 
 
 knitr::opts_chunk$set(
@@ -214,70 +215,6 @@ heat_plotly
 
 As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
 
-### Initial Statistical Analysis** (Idk if we should keep this part )
-
-```{r, include = FALSE}
-# 1. merge asthma prevalance and temp data 
-# import two dataset
-temp_df = read_csv("data/temp_data.csv")
-summary(temp_df)
-
-asthma_df = read_csv("data/asthma_data.csv")
-summary(asthma_df)
-
-# find the yearly temperature by state
-temp_yearly_df = 
-  temp_df |> 
-  group_by(state, year) |> 
-  summarize(avg_yearly = mean(avg_temp)) |> 
-  select(state, year_name = year, avg_temp_yearly = avg_yearly)
-
-# merge two dataset
-merged_df = 
-  left_join(asthma_df, temp_yearly_df, by=c("state", "year_name")) |> 
-  drop_na() 
-# after merging yearly avg temperature and prevalence, DC has no temp data
-```
-
-
-```{r}
-# bar plot of temperature and line plot of prevalence by each state
-merged_df |> 
-  mutate(state = reorder(state, avg_temp_yearly)) |> 
-  group_by(state) |> 
-  summarize(prevalence = mean(prevalence_percent),
-            temp = mean(avg_temp_yearly)) |> 
-  ggplot(aes(x = state)) +
-    geom_bar(aes(y = temp), stat = "identity", fill = "skyblue") +
-    geom_line(aes(y = prevalence, group = 1)) +
-    geom_point(aes(y = prevalence), color = "red") +
-    scale_y_continuous(
-      name = "temperature",
-      sec.axis = sec_axis(~., name = "Prevalence (%)")
-    ) +
-  labs(
-    title = "Temperature and Prevalence by State",
-    color = "legend"
-  ) + 
-  theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-```
-
-```{r}
-final_df= 
-  final_df |>
-  mutate(
-    temp_category = case_when(
-      avg_temp < 0 ~ "Cold",
-      avg_temp >= 0 & avg_temp < 15 ~ "Mild",
-      avg_temp >= 15 ~ "Warm"))|> 
-  select(-c("abbr","fips", "year_name"))|>
-  select(state,prevalence_percent,avg_temp, season,year,temp_category,everything())
-  
-
-final_df
-
-```
 #### Does Correlation differ by state?
 
 ```{r}
@@ -301,28 +238,25 @@ Correlation of prevalence and average temperature is small across all states- co
 
 #### Does the Effect of Prevalence Differ by State: 
 ```{r}
-
-state_trends= 
-  final_df |>
+# Compute state trends
+state_trends <- final_df |>
   group_by(state) |>
-  summarise(
-    model = list(lm(prevalence_percent ~ year)))
+  summarise(model = list(lm(prevalence_percent ~ year))) |>
+  mutate(model_summary = map(model, broom::tidy)) |>
+  unnest(model_summary) |>
+  filter(term == "year") |>
+  select(state, slope = estimate, p_value = p.value) |>
+  st_drop_geometry()
 
-
-state_trends=   state_trends |>
-  mutate(
-    model_summary = map(model, broom::tidy)) |>
-  unnest(model_summary)|>
-  filter(term == "year")|>
-  select(
-    state, 
-    slope = estimate, 
-    intercept = NULL, 
-    p_value = p.value)|>
-  st_drop_geometry()|>
-  knitr::kable(digits=5)
-
-state_trends
-
+# Render the interactive table
+datatable(
+  state_trends,
+  options = list(
+    pageLength = 10, # Default number of rows displayed
+    lengthMenu = c(5, 10, 25, 50, 100), # Options for rows per page
+    scrollX = TRUE # Enable horizontal scrolling if needed
+  ),
+  rownames = FALSE # Remove row names
+)
 ```
 

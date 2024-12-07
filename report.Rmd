@@ -20,10 +20,10 @@ library(knitr)
 
 ## Motivation
 
-Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence/incidence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations.
+Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations and identify geographical trends across the US.
 
-Key Questions:                                                                                                                                
-1. How do asthma cases correlate with temperature extremes?                                                                                   
+**Key Questions: **                                                                                                                               
+1. Are asthma outcomes correlate with temperature?                                                                                   
 2. Are there temporal or spatial patterns in asthma prevalence?
 
 ## Data
@@ -43,7 +43,6 @@ temp_data <- read_csv("data/temp_data.csv")
 
 
 The Temperature Data contains `r nrow(temp_data)` observations and `r ncol(temp_data)` variables, with key columns including the date of the temperature reading (date), the region (region), and the recorded temperature (temp). This dataset provides critical environmental context for analyzing the relationship between temperature and asthma cases. 
-
 
 
 ## Exploratory Data Analysis

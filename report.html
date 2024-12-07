@@ -419,12 +419,12 @@ especially those who come from a lower socioeconomic background, already
 feeling the adverse effects changing weather patterns. Asthma is a
 co-morbidity for other chronic diseases and also disproportionately
 affects those from a lower economic status. In this project, we want to
-focus on asthma prevalence/incidence as hotter temperatures can lead to
-more pollen, air pollution, and other lung irritants. Studying these
-trends will help understand the health risks in vulnerable
-populations.</p>
-<p>Key Questions:<br />
-1. How do asthma cases correlate with temperature extremes?<br />
+focus on asthma prevalence as hotter temperatures can lead to more
+pollen, air pollution, and other lung irritants. Studying these trends
+will help understand the health risks in vulnerable populations and
+identify geographical trends across the US.</p>
+<p><strong>Key Questions: </strong><br />
+1. Are asthma outcomes correlate with temperature?<br />
 2. Are there temporal or spatial patterns in asthma prevalence?</p>
 </div>
 <div id="data" class="section level2">
@@ -452,7 +452,7 @@ Data.</p>
 <pre class="r"><code># Load datasets
 asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -467,7 +467,7 @@ prevalence_percent, NA, NA, providing an overview of the key information
 captured.</p>
 <pre class="r"><code>temp_data &lt;- read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp

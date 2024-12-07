@@ -45,8 +45,6 @@ We aim to display the distribution of asthma cases from 2001-2021 using box or v
 - Have temperatures changed overtime? 
 - Do regions with higher asthma prevalence overlap with areas of lower average temperature?
 - Does analyzing prevalence data stratified by time and temperature make a difference?
-  - could stratify by creating temperature categories 
-  - could then conduct if prevalence differs across temperatures categories 
   
 ### Data Merging 
 
@@ -65,7 +63,7 @@ weather_df = read_csv("data/temp_data.csv")
 
 ```
 
-#### Merging Asthma & temp & shape file data:
+#### Merging Asthma, Tempature, and shape file data:
 ```{r}
 
 asthma_weather = 
@@ -82,7 +80,7 @@ final_df =
 
 ### Mapping Prevalence Data by State:
 
-Sample year shown for 2021.
+Recent Adult Asthma Prevalance by state level is shown below:
 ```{r}
 
 ggplot= 
@@ -107,6 +105,8 @@ ggplot|>
   ggplotly()
 
 ```
+
+Regions in the North East and Mid East areas of the US had higher prevalence of adult asthma cases as shown by the lighter hue of green and yellow. This is surprising as these states are not southern states which experince warmer temperatures and seasons. We will further explore these trends next. 
 
 ### Asthma Trend Across the Us over time: 
 ```{r}
@@ -214,7 +214,7 @@ heat_plotly
 
 As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
 
-### Initial Statistical Analysis** (Idk if we should keep this part )
+### **Initial Statistical Analysis**
 
 ```{r, include = FALSE}
 # 1. merge asthma prevalance and temp data 
@@ -263,7 +263,7 @@ merged_df |>
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 final_df= 
   final_df |>
   mutate(
@@ -278,7 +278,7 @@ final_df=
 final_df
 
 ```
-#### Does Correlation differ by state?
+#### Does Correlation Between Asthma and Temperature differ by state?
 
 ```{r}
 cor_results= 
@@ -292,14 +292,15 @@ cor_results=
     corr=cor_test[["estimate"]],
     p_value= cor_test[["p.value"]])|>
   ungroup()|>
-  select(-cor_test) %>% 
-  knitr::kable(digits=5)
+  select(-cor_test)|>
+   st_drop_geometry()|>
+  knitr::kable(digits=5,  align = "c")
 
 cor_results
 ```
 Correlation of prevalence and average temperature is small across all states- could this mean we need to stratify by different factors (such as income level or race)?
 
-#### Does the Effect of Prevalence Differ by State: 
+#### Does the Effect of Temperature on Asthma Prevalence Differ by State: 
 ```{r}
 
 state_trends= 

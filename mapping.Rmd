@@ -236,7 +236,10 @@ cor_results
 ```
 Correlation of prevalence and average temperature is small across all states- could this mean we need to stratify by different factors (such as income level or race)?
 
-#### Does the Effect of Prevalence Differ by State: 
+#### Does the Effect of Prevalence Differ by State? 
+
+The analysis reveals state-by-state trends in asthma prevalence over time. For states with significant positive slopes, public health initiatives should focus on identifying the underlying causes (such as environmental factors, healthcare access, or socio-economic disparities) driving the increase in asthma cases. Conversely, states with non-significant or negative trends may reflect the effectiveness of existing public health policies or different underlying factors contributing to asthma prevalence.
+
 ```{r}
 # Compute state trends
 state_trends <- final_df |>
@@ -260,3 +263,4 @@ datatable(
 )
 ```
 
+In summary, while some states show increasing asthma prevalence over time, a deeper investigation into local factors is needed to understand these trends. The interactive table provides a clear and concise way to explore these trends across states, helping to prioritize actions where they are most needed.

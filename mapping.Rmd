@@ -215,28 +215,38 @@ heat_plotly
 
 As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
 
-#### Does Correlation differ by state?
-
+### Does Correlation differ by state?
 ```{r}
-cor_results= 
-  final_df |>
+cor_results <- final_df |>
   group_by(state) |>
   summarise(
     cor_test = list(cor.test(avg_temp, prevalence_percent)),
-    .groups = "drop")|>
-  rowwise()|>
+    .groups = "drop"
+  ) |>
+  rowwise() |>
   mutate(
-    corr=cor_test[["estimate"]],
-    p_value= cor_test[["p.value"]])|>
-  ungroup()|>
-  select(-cor_test) %>% 
-  knitr::kable(digits=5)
+    corr = cor_test$estimate,  # Extract correlation coefficient
+    p_value = cor_test$p.value,  # Extract p-value
+    geom_summary = st_as_text(st_centroid(geom))  # Convert geometry to text (centroid)
+  ) |>
+  ungroup() |>
+  select(state, corr, p_value, geom_summary)  # Exclude the `geom` column
 
-cor_results
+# Render the interactive table
+datatable(
+  cor_results,
+  options = list(
+    pageLength = 10,
+    lengthMenu = c(5, 10, 25, 50, 100),
+    scrollX = TRUE
+  ),
+  rownames = FALSE
+) %>%
+  formatRound(columns = c("corr", "p_value"), digits = 4)
 ```
 Correlation of prevalence and average temperature is small across all states- could this mean we need to stratify by different factors (such as income level or race)?
 
-#### Does the Effect of Prevalence Differ by State? 
+### Does the Effect of Prevalence Differ by State? 
 
 The analysis reveals state-by-state trends in asthma prevalence over time. For states with significant positive slopes, public health initiatives should focus on identifying the underlying causes (such as environmental factors, healthcare access, or socio-economic disparities) driving the increase in asthma cases. Conversely, states with non-significant or negative trends may reflect the effectiveness of existing public health policies or different underlying factors contributing to asthma prevalence.
 
@@ -251,7 +261,7 @@ state_trends <- final_df |>
   select(state, slope = estimate, p_value = p.value) |>
   st_drop_geometry()
 
-# Render the interactive table
+# Render the interactive table with 4 decimal places
 datatable(
   state_trends,
   options = list(
@@ -260,7 +270,9 @@ datatable(
     scrollX = TRUE # Enable horizontal scrolling if needed
   ),
   rownames = FALSE # Remove row names
-)
+) %>%
+  formatRound(columns = c("slope", "p_value"), digits = 4)
+
 ```
 
 In summary, while some states show increasing asthma prevalence over time, a deeper investigation into local factors is needed to understand these trends. The interactive table provides a clear and concise way to explore these trends across states, helping to prioritize actions where they are most needed.

@@ -109,13 +109,12 @@ ggplot|>
 
 ```
 
-<<<<<<< HEAD
-Regions in the North East and Mid East areas of the US had higher prevalence of adult asthma cases as shown by the lighter hue of green and yellow. This is surprising as these states are not southern states which experince warmer temperatures and seasons. We will further explore these trends next. 
+
+Regions in the North East and Mid East areas of the US had higher prevalence of adult asthma cases as shown by the lighter hue of green and yellow. This is surprising as these states are not southern states which experience warmer temperatures and seasons. We will further explore these trends next. 
 
 ### Asthma Trend Across the Us over time: 
-=======
-### Asthma Trend Across the Us over time:
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
+
+
 ```{r}
 aggregated_data=
   final_df|>
@@ -160,11 +159,8 @@ ggplotly(
 
 This plot shows the distribution of asthma across states across all years 2011-2021. States located further right on the plot are shown to have higher asthma prevalence by percent compared to other states. States located in the upper North East such as Maine, Rhode Island, Vermont, and New Hampshire had consistently higher asthma prevalence from 2011-2021 compared to other states. States with some of the lowest asthma prevalence (%) were Texas, South Dakota, Florida, Nebraska, and Minnesota. 
 
-<<<<<<< HEAD
+
 ### Distribution of Temperatures (2011-2021)
-=======
-### Distribution of Temperatures Across States:
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
 
 ```{r}
 ggplotly( 
@@ -228,6 +224,7 @@ cor_results <- final_df |>
     p_value = cor_test$p.value,  # Extract p-value
     geom_summary = st_as_text(st_centroid(geom))  # Convert geometry to text (centroid)
   ) |>
+  st_drop_geometry()|>
   ungroup() |>
   select(state, corr, p_value, geom_summary)  # Exclude the `geom` column
 
@@ -287,7 +284,7 @@ heat_plotly
 
 As seen from the graphs above, average temperatures varied across states at each year, as well as varied within each state over the years. How these variations affect asthma prevalence are explored on the [maps](https://klopez67.shinyapps.io/final_draft/) and [regression](regression.html) pages.
 
-<<<<<<< HEAD
+
 ### **Initial Statistical Analysis**
 
 ```{r, include = FALSE}
@@ -352,54 +349,5 @@ final_df=
 final_df
 
 ```
-#### Does Correlation Between Asthma and Temperature differ by state?
-
-```{r}
-cor_results= 
-  final_df |>
-  group_by(state) |>
-  summarise(
-    cor_test = list(cor.test(avg_temp, prevalence_percent)),
-    .groups = "drop")|>
-  rowwise()|>
-  mutate(
-    corr=cor_test[["estimate"]],
-    p_value= cor_test[["p.value"]])|>
-  ungroup()|>
-  select(-cor_test)|>
-   st_drop_geometry()|>
-  knitr::kable(digits=5,  align = "c")
-
-cor_results
-```
-Correlation of prevalence and average temperature is small across all states- could this mean we need to stratify by different factors (such as income level or race)?
-
-#### Does the Effect of Temperature on Asthma Prevalence Differ by State: 
-```{r}
-
-state_trends= 
-  final_df |>
-  group_by(state) |>
-  summarise(
-    model = list(lm(prevalence_percent ~ year)))
 
 
-state_trends=   state_trends |>
-  mutate(
-    model_summary = map(model, broom::tidy)) |>
-  unnest(model_summary)|>
-  filter(term == "year")|>
-  select(
-    state, 
-    slope = estimate, 
-    intercept = NULL, 
-    p_value = p.value)|>
-  st_drop_geometry()|>
-  knitr::kable(digits=5)
-
-state_trends
-
-```
-
-=======
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3

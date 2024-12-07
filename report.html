@@ -419,22 +419,14 @@ especially those who come from a lower socioeconomic background, already
 feeling the adverse effects changing weather patterns. Asthma is a
 co-morbidity for other chronic diseases and also disproportionately
 affects those from a lower economic status. In this project, we want to
-<<<<<<< HEAD
 focus on asthma prevalence as hotter temperatures can lead to more
 pollen, air pollution, and other lung irritants. Studying these trends
 will help understand the health risks in vulnerable populations and
 identify geographical trends across the US.</p>
-<p><strong>Key Questions: </strong><br />
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <strong>Key Questions:
+</strong><br />
 1. Are asthma outcomes correlate with temperature?<br />
-2. Are there temporal or spatial patterns in asthma prevalence?</p>
-=======
-focus on asthma prevalence/incidence as hotter temperatures can lead to
-more pollen, air pollution, and other lung irritants. Studying these
-trends will help understand the health risks in vulnerable
-populations.</p>
-</div>
-<div id="related-work" class="section level2">
-<h2>Related Work</h2>
+======= ## Related Work</p>
 <p>Our inspiration for this analysis stems from the <a
 href="https://www.cdc.gov/asthma/brfss/default.htm">Behavioral Risk
 Factor Surveillance System (BRFSS) Prevalence Data</a>. At first we only
@@ -447,11 +439,11 @@ prevalence.</p>
 <h2>Key Questions:</h2>
 <ol style="list-style-type: decimal">
 <li>How do asthma cases correlate with temperature extremes?<br />
-</li>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+218fed0c4ceed882b111c2b9c035dfdfd11a36f3</li>
 <li>Are there temporal or spatial patterns in asthma prevalence?</li>
 <li>Are there other factors influence asthma prevalence?</li>
 </ol>
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
@@ -478,11 +470,7 @@ Data.</p>
 <pre class="r"><code># Load datasets
 asthma_data &lt;- read_csv(&quot;data/asthma_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 559 Columns: 3
-<<<<<<< HEAD
-## ── Column specification ───────────────────────────────────────
-=======
-## ── Column specification ──────
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
+## ── Column specification ───────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (1): state
 ## dbl (2): year_name, prevalence_percent
@@ -497,11 +485,7 @@ prevalence_percent, NA, NA, providing an overview of the key information
 captured.</p>
 <pre class="r"><code>temp_data &lt;- read_csv(&quot;data/temp_data.csv&quot;)</code></pre>
 <pre><code>## Rows: 2193 Columns: 4
-<<<<<<< HEAD
-## ── Column specification ───────────────────────────────────────
-=======
-## ── Column specification ──────
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
+## ── Column specification ───────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr (2): state, season
 ## dbl (2): year, avg_temp
@@ -803,8 +787,7 @@ ggplot(merged_data, aes(x = avg_temp, y = prevalence_percent)) +
     x = &quot;Average Temperature (°C)&quot;,
     y = &quot;Asthma Prevalence (%)&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using formula
-## = &#39;y ~ x&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="Report_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>The scatter plot visualizes the relationship between average
 temperature (x-axis) and asthma prevalence (y-axis). A regression line

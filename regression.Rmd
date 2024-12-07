@@ -244,7 +244,7 @@ race_asthma_df =
 ```
 
 
-We first conducted a single linear regression with annual average temperature of each state as only predictor, then on data stratified by race, finallt on data stratificed by race, income, and temperature to see which was a better fit model
+We first conducted a single linear regression with annual average temperature of each state as only predictor, then on data stratified by race, finally on data stratified by race, income, and temperature to see which was a better fit model
 
 
 ## Initial Analysis: Simple Linear Regression
@@ -295,7 +295,7 @@ plot(model)
 The diagnostic plot shows that the model follows normality, but may exist heteroscedasticity. From the model summary, annual average temperature is significant with small estimate with R-Squared of `r round(model_summary$r.squared,3)`, indicating that although temperature is a influential factor, it does not explain much about asthma prevalence. As a result, we keep investigating some other factors that could result in asthma prevalence. The formula for this model is:
 
 $$
-Prevalence = 10.186 -0.067 \cdot temperature + \epsilon
+\widehat{Prevalence} = 10.186 -0.067 \cdot temperature + \epsilon
 $$
 
 ### Regression of Data Stratified by Race
@@ -309,7 +309,9 @@ model_summary = summary(lm_by_race)
 
 summary(lm_by_race)%>% 
   broom::tidy() %>% 
-  knitr::kable(digit = 3)
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
 
 par(mfrow = c(2,2))
 plot(lm_by_race)
@@ -341,7 +343,9 @@ interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, da
 
 summary(interaction_model)%>% 
   broom::tidy() %>% 
-  knitr::kable(digit = 3)
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
 
 par(mfrow = c(2,2))
 plot(interaction_model)
@@ -354,7 +358,9 @@ fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity,
                    family = binomial())
 
 broom::tidy(fit_logistic) %>% 
-  knitr::kable(digit = 3)
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
 
 par(mfrow = c(2,2))
 plot(fit_logistic)
@@ -421,7 +427,9 @@ Distribution after log-transform looks normal. Now we perform multiple linear re
 model = lm(log_prevalence ~ race + income + avg_temp_yearly, data = full_df)
 summary(model)%>% 
   broom::tidy() %>% 
-  knitr::kable(digit = 3)
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
 
 par(mfrow = c(2, 2))
 plot(model)

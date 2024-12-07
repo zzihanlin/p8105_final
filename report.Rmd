@@ -22,17 +22,12 @@ library(knitr)
 
 Extreme weather is on the rise due to climate change, with many, especially those who come from a lower socioeconomic background, already feeling the adverse effects changing weather patterns. Asthma is a co-morbidity for other chronic diseases and also disproportionately affects those from a lower economic status. In this project, we want to focus on asthma prevalence as hotter temperatures can lead to more pollen, air pollution, and other lung irritants. Studying these trends will help understand the health risks in vulnerable populations and identify geographical trends across the US.
 
-<<<<<<< HEAD
-**Key Questions: **                                                                                                                               
-1. Are asthma outcomes correlate with temperature?                                                                                   
-=======
 ## Related Work
 
-Our inspiration for this analysis stems from the [Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data](https://www.cdc.gov/asthma/brfss/default.htm). At first we only want to find the association between temperature and asthma prevalence. However, since CDC also provides infomation about race and income, we want to investigate if they are also associate with asthma prevalence.
+Our inspiration for this analysis stems from the [Behavioral Risk Factor Surveillance System (BRFSS) Prevalence Data](https://www.cdc.gov/asthma/brfss/default.htm). At first we only want to find the association between temperature and asthma prevalence. However, since CDC also provides information about race and income, we want to investigate if they are also associate with asthma prevalence.
 
-## Key Questions:                                                                                                                                
-1. How do asthma cases correlate with temperature extremes?                                                                                   
->>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
+## **Key Questions:**                                                                                                                                
+1. How do asthma cases correlate with temperature?                                      
 2. Are there temporal or spatial patterns in asthma prevalence?
 3. Are there other factors influence asthma prevalence?
 

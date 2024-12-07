@@ -337,6 +337,7 @@ From the scatter plot of prevalence by race and temperature, we can see that the
 
 The model shows that all race but Black are significant, with R-squared of `r round(model_summary$r.squared, 3)`, which is much higher than simple linear regression model. The diagnostic plots also show better results than previous model.
 
+
 #### Linear Regression (interaction model):
 ```{r, message = FALSE, warning = FALSE}
 interaction_model = lm(prevalence_percent ~ avg_temp_yearly * race_ethnicity, data = race_asthma_df)
@@ -351,7 +352,30 @@ par(mfrow = c(2,2))
 plot(interaction_model)
 ```
 
+<<<<<<< HEAD
+The regression model predicts prevalence_percent using the interaction between avg_temp_yearly and race_ethnicity as predictors. The interaction effects suggest that the relationship between average temperature and asthma prevalence varies across race groups, but only a few interactions are statistically significant.
+Independent of temperature, some racial groups such as Hispanic, White-NH, Other-NH have significantly different asthma prevalence rates compared to the baseline group since they have larger coefficients.
+
+Overall, the model explains a moderate amount of variability in the data (~39%), and the predictors are collectively significant.
+
+#### Logistic Fit:
+```{r, message = FALSE, warning = FALSE}
+fit_logistic = glm(prevalence_prop ~ avg_temp_yearly + race_ethnicity, 
+                   data = race_asthma_df, 
+                   family = binomial())
+
+broom::tidy(fit_logistic) %>% 
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
+
+par(mfrow = c(2,2))
+plot(fit_logistic)
+```
+
+=======
 As seen, most of the predictors in the interaction model are not significant. Although the r-squared value is slightly higher (R-squared = .3955), the value is not much higher compared to main  effects model. This suggests the need for more stratification. 
+>>>>>>> 218fed0c4ceed882b111c2b9c035dfdfd11a36f3
 
 ### MLR of Race, Income, and Yearly temp
 
@@ -406,6 +430,8 @@ log_dist_plot =
 
 dist_plot + log_dist_plot
 ```
+
+
 Distribution after log-transform looks normal. Now we perform multiple linear regression model: 
 
 #### Regression Results:
@@ -423,6 +449,16 @@ plot(model)
 
 The R-squared is 0.4363, meaning the model explains about 44% of the variance in the log-transformed prevalence, which is ever higher than previous two predictors model. The adjusted R-squared is 0.4356, similar to the R-squared, indicating that the model generalizes well with the predictors.
 
-Race is a significant predictor overall, but not all race categories are significant. Different racial groups show varying relationships with the outcome. Income is a highly significant predictor, with lower income categories having significantly lower log-prevalence. As the yearly average temperature increases by 1 unit, the log-prevalence decreases slightly (negative association).
+If we rank the predictors by importance, Income is the strongest predictor category, especially for higher income groups. For example, one unit of income larger than 75K will decrease prevalence rate by 0.81 unit, showing a large reduction in log_prevalence. These effects dominate the model and show a consistent trend of decreasing log_prevalence with higher income.
+
+Significant race effects also exist, for Black and Multi-race, the prevalence rate increase. Other and White decrease prevalence significantly, with Other having the largest absolute impact.
+
+Although temperature is still significant,  its effect is smaller compared to income and race.
+
+
+
+
+
+
 
 

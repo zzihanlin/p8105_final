@@ -51,7 +51,7 @@ Column {.sidebar}
 state_choices = 
   final_df|>
   st_drop_geometry()|>
-  select(state) |> 
+  select(full) |> 
   distinct()|>
   pull()
  
@@ -108,19 +108,19 @@ renderPlotly(
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### State Level Data
+### State Level Asthma Prevalance Data
 
 ```{r}
 
 renderPlotly( 
   final_df|> 
     filter(
-    state == input[["state_choice"]])|> 
-    ggplot( aes(x = year, y = prevalence_percent, group = state, color = state)) +
+    full == input[["state_choice"]])|> 
+    ggplot( aes(x = year, y = prevalence_percent, group = full)) +
     geom_line() +
     geom_point() +
     labs(
-      title = paste("Asthma Prevalence Over Time in", input$state_choice),
+      title = paste(" ", input$state_choice),
       x = "Year",
       y = "Asthma Prevalence (%)"
     ) +
@@ -130,21 +130,21 @@ renderPlotly(
       panel.grid = element_blank(),
       axis.text = element_text(angle = 45, hjust = 1)  
     ))
-
 ```
 
-### Chart C
+### State Level Temperature (C) Data
 
 ```{r}
 
-renderPlotly(
-  final_df|>
-    filter(
-    state == input[["state_choice"]], 
-    year == input[["year_choice"]]
-  )|>
-     mutate(state = fct_reorder(state, year))|>
-    plot_ly(x = ~state, y = ~prevalance_percent, type = "box" )
-  )
+renderPlot(final_df |> 
+  filter(full == input[["state_choice"]]) |> 
+  ggplot(aes(x = avg_temp, y = as.factor(year_name))) + 
+  geom_density_ridges() +
+  labs(
+    title = "Density of Average Temperature Across Years",
+    x = "Average Temperature",
+    y = "Year") +
+  theme_minimal()
+)
 ```
 

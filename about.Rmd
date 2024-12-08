@@ -20,7 +20,9 @@ output:
 
 ### Kimberly Palaguachi-Lopez 
 
-[Kimberly Palaguachi-Lopez](https://klopez67.github.io/about.html) is currently persuing her master's in Biostatistics. 
+[Kimberly Palaguachi-Lopez](https://klopez67.github.io/about.html) is currently a graduate student pursuing her Masters of Science in Biostatistics on the Health Data Science track at Columbia University Mailman School of Public Health.
+
+
 
 ### Hanchuan Chen
 

@@ -231,4 +231,13 @@ asthma_dataset =
   inner_join(asthma_pincome, by = c("year_name", "state")) %>% 
   janitor::clean_names() %>% 
   rename("race" = "data_x", "income" = "data_y")
+
+asthma_data = read_csv(file = "data/asthma_data.csv", show_col_types = FALSE) %>%
+  janitor::clean_names() %>% 
+  drop_na()
+
+asthma_data %>% 
+  knitr::kable(digit = 3) |> 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) |> 
+  kableExtra::scroll_box(width = "100%", height = "300px")
 ```

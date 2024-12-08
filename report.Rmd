@@ -258,7 +258,7 @@ asthma_pincome =
     )
 ```
 
-#### Complete Dataset
+### Complete Datasets
 
 **Temperature Data:**  
 
@@ -797,7 +797,6 @@ par(mfrow = c(2,2))
 plot(interaction_model)
 ```
 
-<<<<<<< HEAD
 The regression model predicts prevalence_percent using the interaction between avg_temp_yearly and race_ethnicity as predictors. The interaction effects suggest that the relationship between average temperature and asthma prevalence varies across race groups, but only a few interactions are statistically significant.
 Independent of temperature, some racial groups such as Hispanic, White-NH, Other-NH have significantly different asthma prevalence rates compared to the baseline group since they have larger coefficients.
 
@@ -900,19 +899,19 @@ Although temperature is still significant,  its effect is smaller compared to in
 
 ## Discussion 
 
-### Key Finding
+### Key Findings
 
-For the initial part, we investigated the association between asthma prevalence rate and annual average temperature by each state. By using simple linear regression model, we found that although temperature is a statistically significant predictor, it does not have much influence on asthma prevalence. 
+For the initial part, we investigated the association between asthma prevalence and annual average temperature by each state. By using simple linear regression model, we found that although temperature is a statistically significant predictor, it does not have much influence on asthma prevalence. 
 
 As a result, we keep exploring if other factors impact the prevalence rate. By implementing multiple linear regression models and logistic regression model, our results show that race/ethnicity group and income are the important predictors, which have more association with asthma prevalence than temperature. 
 
 ### Limitations
 
-Since our data sources are collected within United States, the asthma prevalence prediction by using data outside United States might be biased. Moreover, because our asthma prevalence data source separates the asthma prevalence rate by race and income, we have to assume they are independent when calculating the joint prevalence, which means these two predictors might exist multicollinearity. 
+Since our data sources are collected within United States, the asthma prevalence prediction by using data outside United States might be biased. We also originally hoped to use average seasonal temperatures as a predictor, as extreme temperatures, especially in the summer, can increase conditions that make people more vulnerable to contracting asthma. Extreme weather is also a marker of climate change. However, due to the available asthma data, we had to use year average temperature instead. Moreover, because our asthma prevalence data source separates the asthma prevalence rate by race and income, we have to assume they are independent when calculating the joint prevalence, which means these two predictors might exist multicollinearity. 
 
-### Next step 
+### Next Steps 
 
-Although our multiple linear regression model found the association between asthma prevalence and race, income, and temperature, these predictors might not fully explain the outcome, which means there still exist factors that have strong correlation with asthma prevalence.  
+Although our multiple linear regression model found the association between asthma prevalence and race, income, and temperature, these predictors might not fully explain the outcome, which means there still exist factors that have strong correlation with asthma prevalence. 
 
 Furthermore, we noticed that temperature might not be the direct factor that influence asthma prevalence. As a result, we want to investigate the causal relationship between weather and asthma prevalence and improve our multiple linear regression model.
 
